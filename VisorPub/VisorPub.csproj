@@ -293,10 +293,6 @@
       <Project>{9b5a7318-dbe7-4290-ac37-41e458168d53}</Project>
       <Name>ADPostgres</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ADSql\ADSql.csproj">
-      <Project>{8ad34e3a-b188-47dd-9764-5a484c22e8e7}</Project>
-      <Name>ADSql</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EPostgres\EPostgres.csproj">
       <Project>{06c5f304-a821-45df-9343-c6d7721c37ca}</Project>
       <Name>EPostgres</Name>
