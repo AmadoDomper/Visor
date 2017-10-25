@@ -1,0 +1,213 @@
+﻿@{
+    ViewBag.Title = "Editar";
+}
+
+<link type="text/css" rel="stylesheet" href="~/Content/css/jsgrid.css" />
+<link type="text/css" rel="stylesheet" href="~/Content/css/jsgrid-theme.css" />
+<link type="text/css" rel="stylesheet" href="~/Content/css/bootstrap-multiselect.css" />
+
+<script type="text/javascript" src="~/Content/js/jsgrid.js"></script>
+<script type="text/javascript" src="~/Content/js/bootstrap-multiselect.js"></script>
+
+
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Editar publicación</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <form id="frm" data-smk-icon="glyphicon-asterisk">
+            <h3>Información básica de la publicación</h3>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Titulo</label>
+                        <input type="text" class="form-control" placeholder="Titulo" id="txtTitulo" name="txtTitulo" required="">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Tipo</label>
+                                <select class="form-control" id="ddlTipo" name="ddlTipo" required></select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Año de publicación</label>
+                                <select class="form-control" id="txtAnoPublicacion" name="txtAnoPublicacion" required></select>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label>Área Temática</label><br />
+                                @*<select class="form-control" id="ddlTema" name="ddlTema" multiple="multiple" required></select>*@
+                                <select class="form-control" id="ddlTema" name="ddlTema" required></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Enlace (URL)</label>
+                                <input type="url" class="form-control" placeholder="Enlace" id="txtEnlace" name="txtEnlace" required="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Referencia bibliográfica</label>
+                                <textarea class="form-control" id="txtReferencia" name="txtReferencia" rows="5" placeholder="Ingrese aquí la referencia bibligráfica de acuerdo al formato." value="" minlength="1" required="" style="/* width: 500px; */margin: 0px;/* height: 112px; */background-color: white;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Información georeferencial</h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <input type="button" class="btn btn-success btn-block btn-fill" value="Agregar punto" id="btAddPunto" name="btAddPunto">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="jsGrid"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h3>Vista Previa</h3>
+                    <div class="col-md-12">
+                        <div style="width: 100%; height: 600px" id="map"></div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="row">
+                <div class="col-md-8"></div>
+                <div class="col-md-2">
+                    <input type="button" class="btn btn-default btn-block btn-fill" value="Cancelar" id="btcancelar" name="btcancelar">
+                </div>
+                <div class="col-md-2">
+                    <input type="button" class="btn btn-primary btn-block btn-fill" value="Editar" id="btenviar" name="btenviar">
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </form>
+
+        @*<form id="frm" data-smk-icon="glyphicon-asterisk">
+            <h3>Información básica de la publicación</h3>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Titulo</label>
+                        <input type="text" class="form-control" placeholder="Titulo" id="txtTitulo" name="txtTitulo" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Tipo</label>
+                        <select class="form-control" id="ddlTipo" name="ddlTipo" required></select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Área Temática</label><br />
+                        <select class="form-control" id="ddlTema" name="ddlTema" multiple="multiple" required></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Año de publicación</label>
+                        <input type="number" class="form-control" placeholder="Año de publicación" id="txtAnoPublicacion" name="txtAnoPublicacion" required>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <label>Enlace (URL)</label>
+                        <input type="url" class="form-control" placeholder="Enlace" id="txtEnlace" name="txtEnlace" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Referencia bibliográfica</label>
+                        <textarea id="txtReferencia" name="txtReferencia" rows="3" class="form-control" placeholder="Referencia biblioráfica" value="" minlength="1" required></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                <h3>Información georeferencial</h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                <input type="button" class="btn btn-default btn-block btn-fill" value="Agregar punto" id="btAddPunto" name="btAddPunto">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="button" class="btn btn-default btn-block btn-fill" value="Agregar Polígono" id="btAddPoli" name="btAddPoli">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <h4>Información agregada</h4>
+                        <div id="jsGrid"></div>
+                    </div>
+                </div>
+                </div>
+                <div class="col-md-6">
+                    <h3>Vista Previa</h3>
+                    <div class="col-md-12">
+                        <div style="width: 100%; height: 600px" id="map"></div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <br />
+            <div class="row">
+                <div class="col-md-8"></div>
+                <div class="col-md-2">
+                    <input type="button" class="btn btn-default btn-block btn-fill" value="Cancelar" id="btcancelar" name="btcancelar">
+                </div>
+                <div class="col-md-2">
+                    <input type="button" class="btn btn-primary btn-block btn-fill" value="Editar" id="btenviar" name="btenviar">
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+        </form>*@
+    </div>
+</div>
+
+
+<!--Pagina controlador de vista-->
+<script src="~/Content/js/content/publicacion/Editar.js"></script>

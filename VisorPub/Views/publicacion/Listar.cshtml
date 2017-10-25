@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Listar";
+}
+
+<link type="text/css" rel="stylesheet" href="~/Content/css/jsgrid.css" />
+<link type="text/css" rel="stylesheet" href="~/Content/css/jsgrid-theme.css" />
+<link type="text/css" rel="stylesheet" href="~/Content/css/bootstrap-multiselect.css" />
+
+<script type="text/javascript" src="~/Content/js/jsgrid.js"></script>
+<script type="text/javascript" src="~/Content/js/bootstrap-multiselect.js"></script>
+
+<form id="frm" name="frm" action="@Url.Action("Editar", "Publicacion")">
+    <input type="hidden" id="idpub" name="idpub"/>
+</form>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Publicaciones</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h4>Lista de publicaciones</h4>
+        <div id="jsGrid"></div>
+    </div>
+</div>
+
+<!--Pagina controlador de vista-->
+<script src="~/Content/js/content/publicacion/Listar.js"></script>

@@ -1,0 +1,399 @@
+﻿@{
+    ViewBag.Title = "Inicio";
+}
+
+<style>
+    .iframePop {
+        min-height: 200px;
+        border-width: 0px;
+        border-style: inset;
+        border-color: initial;
+        border-image: initial;
+    }
+
+    .ol-popup-content {
+        min-height: 210px;
+        min-width: 140px;
+        overflow-x: auto;
+    }
+
+    .ol-popup {
+        position: absolute;
+        background-color: white;
+        -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+        filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #cccccc;
+        bottom: 12px;
+        left: -50px;
+        min-width: 200px;
+        display: table;
+    }
+
+        .ol-popup:after, .ol-popup:before {
+            top: 100%;
+            border: solid transparent;
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .ol-popup:after {
+            border-top-color: white;
+            border-width: 10px;
+            left: 48px;
+            margin-left: -10px;
+        }
+
+        .ol-popup:before {
+            border-top-color: #cccccc;
+            border-width: 11px;
+            left: 48px;
+            margin-left: -11px;
+        }
+
+    .ol-popup-closer {
+        text-decoration: none;
+        position: absolute;
+        top: 2px;
+        right: 8px;
+        font-size: 150%;
+        padding: 0 4px;
+        color: #337ab7;
+    }
+
+        .ol-popup-closer:after {
+            content: "✖";
+        }
+
+
+    /*Full screen*/
+
+    .map:-moz-full-screen {
+        height: 100%;
+    }
+
+    .map:-webkit-full-screen {
+        height: 100%;
+    }
+
+    .map:-ms-fullscreen {
+        height: 100%;
+    }
+
+    .map:fullscreen {
+        height: 100%;
+    }
+
+    .ol-rotate {
+        top: 3em;
+    }
+    /*End Full screen*/
+</style>
+
+<!-- Portfolio Item Heading -->
+<!-- /.row -->
+<!-- Portfolio Item Row -->
+@*<div>
+        <button id="btn">Open Modal</button>
+        <div class="blue block">
+            <!-- Modal -->
+            <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Modal Header</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Some text in the modal.</p>
+                        </div>
+                    </div> <!-- End Modal content-->
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+
+<div class="row">
+    <div class="col-md-12" style="padding-top: 15px;">
+        <div style="width: 100%; height: 100%; background-color:white;" id="map" class="map">
+            <div class="modal ModalGeneral" style="position:absolute !important;" id="0" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog ModalDialog">
+                    <div class="modal-content ModalContent">
+                        <div class="modal-header ModalHead">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h5 class="modal-title leyendaTitle text-center" id="myModalLabel">Densidad de muestreo por Km2</h5>
+                        </div>
+                        <div class="modal-body">
+                            <img src="http://200.60.174.197:8082/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=DensidadArticulos">
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <div class="modal ModalGeneral" style="position:absolute !important;" id="1" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog ModalDialog">
+                    <div class="modal-content ModalContent">
+                        <div class="modal-header ModalHead">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h5 class="modal-title leyendaTitle text-center" id="myModalLabel">Muestreo por distrito</h5>
+                        </div>
+                        <div class="modal-body">
+                            <img src="http://200.60.174.197:8082/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=articulosdistritos">
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+
+
+    @*<div id="legende">
+            <h2>Legend:</h2>
+
+            <div class="udiv_legende" id="legende_1">
+                <img src="http://200.60.174.197:8082/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=articulosdistritos">
+                <br>
+                <br>
+            </div>
+        </div>*@
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3>Acerca del Visor de Servicio Web: Mapa Global de Publicaciones (Amazonía)</h3>
+        <p class="justificado">
+            El Visor de Servicio Web es una iniciativa ambiciosa que permite hacer consultas, búsquedas y el análisis de la información sobre las investigaciones y publicaciones realizadas en la Región Loreto ahora, y con perspectivas a cubrir el territorio de Amazonía peruana a futuro. Mediante este servicio el usuario puede generar búsquedas especializadas y georreferenciadas publicadas en la revista científica FOLIA Amazónica del Instituto de Investigaciones de la Amazonía peruana que datan desde 1989.
+            <a href="@Url.Action("Acerca", "Inicio")">Seguir leyendo</a>
+        </p>
+    </div>
+</div>
+
+<!-- /.row -->
+<!-- /.row -->
+
+<script type="text/javascript">
+
+    var zoom = 6;
+    var center = ol.proj.transform(
+                [-75, -4.4], 'EPSG:4326', 'EPSG:3857')
+    var rotation = 0;
+
+    if (window.location.hash !== '') {
+        var hash = window.location.hash.replace('#map=', '');
+        var parts = hash.split('/');
+        if (parts.length === 4) {
+            zoom = parseInt(parts[0], 10);
+            center = [
+              parseFloat(parts[1]),
+              parseFloat(parts[2])
+            ];
+            rotation = parseFloat(parts[3]);
+        }
+    }
+
+    var map = new ol.Map({
+        controls: ol.control.defaults().extend([
+				    new ol.control.ScaleLine(),
+				    new ol.control.ZoomSlider(),
+                    new ol.control.FullScreen()
+        ]),
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM({
+                    url: 'http://mt{0-3}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+                    attributions: [
+                        //new ol.Attribution({ html: '© Google' }),
+                        //new ol.Attribution({ html: '<a href="https://developers.google.com/maps/terms">Terms of Use.</a>' })
+                    ]
+                })
+            }),
+            new ol.layer.Group({
+                'title': 'Leyenda',
+                layers: [
+                    new ol.layer.Tile({
+                        title: 'Muestreo por distrito ',
+                        type: 'base',
+                        visible: true,
+                        dispatchEvent: function myfunction() {
+                            alert("dfasdf");
+                        }
+                    }),
+                    new ol.layer.Tile({
+                        title: 'Densidad de muestreo por Km2 ',
+                        type: 'base',
+                        visible: true,
+                    }),
+                      new ol.layer.Tile({
+                          title: 'Centros poblados ',
+                          type: 'base',
+                          visible: true,
+                      })
+                ]
+            }),
+            new ol.layer.Group({
+                'title': 'Capas',
+                layers: [
+                    new ol.layer.Tile({
+                        //type: 'base',
+                        visible: false,
+                        source: new ol.source.TileWMS({
+                            url: 'http://200.60.174.197:8082/geoserver/visor/wms',
+                            params: {
+                                LAYERS: 'visor:departamentos ',
+                                FORMAT: 'image/png',
+                            },
+                        }),
+                        opacity: 0.4
+                    }),
+                    new ol.layer.Tile({
+                        visible: false,
+                        title: 'Muestreo por distrito',
+                        source: new ol.source.TileWMS({
+                            url: 'http://200.60.174.197:8082/geoserver/visor/wms',
+                            params: {
+                                'LAYERS': 'visor:articulosdistritos ',
+                                FORMAT: 'image/png'
+                            },
+                            buffer: 200,
+                            visibility: true
+                        })
+                    }),
+                    new ol.layer.Tile({
+                        visible: false,
+                        title: 'Densidad de muestreo por Km2 ',
+                        source: new ol.source.TileWMS({
+                            url: 'http://200.60.174.197:8082/geoserver/visor/wms',
+                            params: {
+                                LAYERS: 'visor:DensidadArticulos ',
+                                FORMAT: 'image/png',
+                            },
+                        })
+                    }),
+	                new ol.layer.Tile({
+	                    visible: false,
+	                    title: 'Centros poblados',
+	                    source: new ol.source.TileWMS({
+	                        url: 'http://geoservicios.regionloreto.gob.pe/geoloreto/services/WMS/WMS_DF_Lugares_Poblados/MapServer/WMSServer',
+	                        params: {
+	                            'LAYERS': '1',
+	                            FORMAT: 'image/png'
+	                        },
+	                    })
+	                }),
+                    new ol.layer.Tile({
+                        visible: true,
+                        title: 'Publicaciones',
+                        source: new ol.source.TileWMS({
+                            url: 'http://200.60.174.197:8082/geoserver/visor/wms',
+                            params: {
+                                'LAYERS': 'visor:view_pointpublicacion ',
+                                FORMAT: 'image/png'
+                            },
+                            buffer: 200,
+                            visibility: true
+                        })
+                    })
+                ]
+            })
+        ],
+        target: 'map',
+        view: new ol.View({
+            center: center,
+            zoom: zoom,
+            rotation: rotation
+        }),
+        logo: {
+            href: "http://www.iiap.org.pe",
+            src: '@(Request.Url.AbsoluteUri + "Content/img/logo.png")'
+        }
+    });
+
+    /* permalink */
+    var shouldUpdate = true;
+    var view = map.getView();
+    var updatePermalink = function () {
+        if (!shouldUpdate) {
+            // do not update the URL when the view was changed in the 'popstate' handler
+            shouldUpdate = true;
+            return;
+        }
+
+        var center = view.getCenter();
+        var hash = '#map=' +
+            view.getZoom() + '/' +
+            Math.round(center[0] * 100) / 100 + '/' +
+            Math.round(center[1] * 100) / 100 + '/' +
+            view.getRotation();
+        var state = {
+            zoom: view.getZoom(),
+            center: view.getCenter(),
+            rotation: view.getRotation()
+        };
+        window.history.pushState(state, 'map', hash);
+    };
+
+    map.on('moveend', updatePermalink);
+
+    window.addEventListener('popstate', function (event) {
+        if (event.state === null) {
+            return;
+        }
+        map.getView().setCenter(event.state.center);
+        map.getView().setZoom(event.state.zoom);
+        map.getView().setRotation(event.state.rotation);
+        shouldUpdate = false;
+    });
+
+    /*end permalink*/
+
+    var wmsLayer2 = new ol.layer.Tile({
+        title: 'Puntos Publicaciones',
+        source: new ol.source.TileWMS({
+            url: 'http://200.60.174.197:8082/geoserver/visor/wms',
+            params: {
+                'LAYERS': 'visor:view_pointpublicacion ',
+                FORMAT: 'image/png'
+            },
+            buffer: 200,
+            visibility: true
+        }),
+    });
+
+    map.addControl(new ol.control.OverviewMap({
+        layers: [new ol.layer.Tile(wmsLayer2.getProperties())],
+    }));
+
+    var layerSwitcher = new ol.control.LayerSwitcher({
+        tipLabel: 'Leyenda',
+    });
+
+    map.addControl(layerSwitcher);
+
+
+    var popup = new ol.Overlay.Popup();
+    map.addOverlay(popup);
+
+
+    map.on('singleclick', function (evt) {
+        t = '';
+        var viewResolution = (map.getView().getResolution());
+
+        var url = wmsLayer2.getSource().getGetFeatureInfoUrl(
+            evt.coordinate, viewResolution, 'EPSG:3857',
+            { 'INFO_FORMAT': 'text/html' });
+        if (url) {
+            $.get(url).success(function (data) {
+                if ($(data).find('tbody').html()) {
+                    t = '<iframe class="iframePop" style="width: 350px;" seamless src="' + url + '"></iframe>';
+                    popup.show(evt.coordinate, t);
+                }
+            });
+        }
+    });
+</script>

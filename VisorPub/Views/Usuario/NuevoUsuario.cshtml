@@ -1,0 +1,235 @@
+﻿@{
+    ViewBag.Title = "Nuevo Usuariox";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+@using EPostgres;
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="~/Content/img/favicon.ico" type="image/x-icon">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/css.css")">
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/bootstrap.css")">
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/sb-admin-2.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/mainGestion.css")">
+    <link rel="stylesheet" href="@Url.Content("~/Content/font-awesome-4.7.0/css/font-awesome.css")" />
+    @*<link href="@Url.Content("~/Content/extend/datepicker/css/bootstrap-datepicker3.css")" rel="stylesheet" />*@
+    @*<link href="@Url.Content("~/Content/extend/datepickerTime/css/bootstrap-datetimepicker-4.15.35.css")" rel="stylesheet" />*@
+
+    <style type="text/css">
+        body {
+            background: url(../../Content/img/bg_body.png);
+        }
+    </style>
+</head>
+@{
+    Usuario oUsuario = new Usuario();
+    oUsuario = (Usuario)Session["Datos"];
+}
+<body>
+    <!--js archivos-->
+    <!-- jQuery -->
+    <script src="~/Content/js/jquery.js"></script>
+
+    <!--Personal Utils-->
+    <script src="~/Content/js/utils.min.js"></script>
+    <script src="~/Content/js/conexion-1.0.0.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="~/Content/js/bootstrap.min.js"></script>
+
+
+    <script type="text/javascript">
+        //pasamos el modelo a javascript
+        var Model = @Html.Raw(Json.Encode(@Model));
+    </script>
+
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+
+                <a class="navbar-brand" rel="home" href="#" title="Buy Sell Rent Everyting">
+                    <img style="max-width: 100px; height: 40px; margin-top: -7px;"
+                         src="~/Content/img/logo.png">
+                </a>
+
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="@Url.Action("Index", "Inicio")">Mapa Global de Publicaciones (Amazonía)</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="@Url.Action("Acerca", "Inicio")">Acerca del proyecto</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Contacto", "Inicio")">Contacto</a>
+                    </li>
+                </ul>
+
+
+                <ul class="nav navbar-nav navbar-right">
+
+
+                    @if (oUsuario == null)
+                    {
+                        <li class="">
+                            <a href="@Url.Action("Login", "Login")">Iniciar Sesión</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@oUsuario.cDni <span class="caret"></span></a>
+
+                            <ul class="dropdown-menu">
+                                <li role="separator" class="divider"></li>
+                                <li><a href="@Url.Action("Registrar", "Publicacion")">Registrar publicación</a></li>
+                                <li><a href="@Url.Action("Listar", "Publicacion")">Mantener publicaciones</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="@Url.Action("CerrarSession", "Login")">Salir</a></li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+
+
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    <!-- Page Content -->
+    <div class="container card">
+        <div class="row">
+            <div class="col-lg-5 col-md-7 col-lg-offset-4 col-md-offset-3">
+                <div id="target2" class="move active" style="left: 0px;">
+                    <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Datos Personales</h4>
+                        </div>
+                        <div class="panel-body">
+                            <form id="frmDatPer" class="form-horizontal ng-pristine ng-valid">
+
+
+                                <div class="form-group m-b-5">
+                                    <label class="col-md-4 control-label">Nombres</label>
+                                    <div class="col-md-7">
+                                        <input type="text" id="txtNombres" name="" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-group m-b-5">
+                                    <label class="col-md-4 control-label">Apellido Paterno</label>
+                                    <div class="col-md-6">
+                                        <input type="text" id="txtApePa" name="" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group m-b-5">
+                                    <label class="col-md-4 control-label">Apellido Materno</label>
+                                    <div class="col-md-6">
+                                        <input type="text" id="txtApeMa" name="" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group m-b-5">
+                                    <label class="col-md-4 control-label">Institución</label>
+                                    <div class="col-md-7">
+                                        <input type="text" id="txtInst" name="" class="form-control">
+                                    </div>
+                                </div><div class="form-group m-b-5">
+                                    <label class="col-md-4 control-label">País</label>
+                                    <div class="col-md-5">
+                                        <input type="text" id="txtPais" name="" class="form-control">
+                                    </div>
+                                </div><div class="form-group m-b-5">
+                                    <label class="col-md-4 control-label">Ciudad</label>
+                                    <div class="col-md-5">
+                                        <input type="text" id="txtCiudad" name="" class="form-control">
+                                    </div>
+                                </div><div class="form-group m-b-5">
+                                    <label class="col-md-4 control-label">Email</label>
+                                    <div class="col-md-7">
+                                        <input type="text" id="txtNatDir" name="" class="form-control">
+                                    </div>
+                                </div><div class="form-group m-b-5">
+                                    <label class="col-md-4 control-label">Fecha Nacimiento</label>
+                                    <div class="col-md-4">
+                                        <input type="text" id="txtNatDir" name="" class="form-control">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Datos de Usuario</h4>
+                        </div>
+                        <div class="panel-body" style="display: block;">
+                            <div id="msg"></div>
+                            <form role="form" data-toggle="validator" action="/Usuario/RegistrarUsuario" id="frmUsuario" autocomplete="off" method="post" class="form-horizontal ng-pristine ng-valid">
+                                <div class="form-group m-b-5">
+                                    <label class="col-md-4 control-label">DNI</label>
+                                    <div class="col-md-3">
+                                        <input id="hdnPersId" type="hidden" name="oUsu.oPersNat.oPers.nPersId">
+                                        <input type="text" id="txtUsu" name="oUsu.cUsuNombre" class="form-control upper" required="">
+                                    </div>
+                                </div>
+                                <div class="form-group m-b-5">
+                                    <label id="lblCont" class="col-md-4 control-label">Contraseña</label>
+                                    <div class="col-md-6">
+                                        <input type="password" id="txtCont1" name="oUsu.cUsuContrasena" class="form-control" required="">
+                                    </div>
+                                </div>
+                                <div class="form-group m-b-5">
+                                    <label class="col-md-4 control-label">Confirmar Contraseña</label>
+                                    <div class="col-md-6">
+                                        <input type="password" id="txtCont2" data-match="#txtCont1" data-match-error="Whoops, these don't match" class="form-control" required="">
+                                    </div>
+                                </div>
+
+                                <div class="row m-b-10 m-t-10">
+                                    <div class="text-center">
+                                        <input type="button" id="btnGrabarUsu" class="btn btn-sm btn-primary m-r-5" value="Crear Cuenta">
+                                        <input type="button" id="btnCanUsu" data-dismiss="modal" aria-hidden="true" class="btn btn-sm btn-default m-r-5" value="Cancelar">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container -->
+</body>
+</html>
+
+@*<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+
+      ga('create', 'UA-100298251-1', 'auto'); //Cuenta
+      ga('send', 'pageview');
+
+    </script>*@
+
+
+

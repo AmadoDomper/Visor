@@ -1,0 +1,645 @@
+﻿@{
+    Layout = null;
+}
+
+<script src="~/Content/js/utils.min.js"></script>
+<!-- OpenLayer CSS-->
+<link rel="stylesheet" href="~/Content/css/ol.css" type="text/css" />
+<link rel="stylesheet" href="~/Content/css/ol3-layerswitcher.css" type="text/css" />
+<link rel="stylesheet" href="~/Content/css/ol3-popup.css" type="text/css" />
+<link rel="stylesheet" href="~/Content/css/ol3gm.css" type="text/css" />
+<!--OpenLayer JS-->
+<script src="~/Content/js/ol.js"></script>
+<script src="~/Content/js/ol3-layerswitcher.min.js"></script>
+<script src="~/Content/js/ol3-popup.min.js"></script>
+
+<link type="text/css" rel="stylesheet" href="~/Content/css/jsgrid.css" />
+<link type="text/css" rel="stylesheet" href="~/Content/css/jsgrid-theme.css" />
+<script type="text/javascript" src="~/Content/js/jsgrid.js"></script>
+
+<script type="text/javascript">
+        var Model = @Html.Raw(Json.Encode(@Model));
+</script>
+
+
+<div class="col-lg-11 col-lg-offset-0-5">
+    <input id="hdnEstado" type="hidden" />
+    <input id="hdnNotaEst" type="hidden" />
+    <input id="hdnPag" type="hidden" />
+    @*<div class="row">*@
+    <div id="target1" class="panel move panel-inverse active m-t-5">
+        <div class="panel-heading"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Revisión de Solicitudes</div>
+        <div class="panel-body">
+            @*<div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <input href="#target2" id="btnNuevaNota" type="button" class="btn btn-sm btn-success target" value="Registre su publicación" />
+                    </div>
+                </div>*@
+            @*<div class="hr-line-dashed"></div>*@
+            <div class="row m-b-10">
+                <div class="col-sm-11">
+                    <div class="form-inline">
+                        <div class="form-group m-r-40">
+                            <label class="control-label m-r-5" for="status">Mostrar publicación estado:</label>
+                            <select name="status" id="cmbPubEstado" class="form-control">
+                                <option value="1" selected="">Solicitado</option>
+                                <option value="2">Aprobado</option>
+                                <option value="3">Rechazado</option>
+                                <option value="4">Observado</option>
+                                <option value="5">Anulado</option>
+                            </select>
+                        </div>
+                        <div class="form-group m-r-10">
+                            <label class="control-label m-r-5" for="product_name">Buscar por:</label>
+                            <select name="status" id="cmbTpoBsq" class="form-control">
+                                <option value="1" selected="">Código</option>
+                                <option value="2">Título</option>
+                                <option value="3">Investigador</option>
+                                <option value="4">Institución</option>
+                                @*<option value="4">Rango de Fecha</option>*@
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="txtValor" class="form-control">
+                            <div class="input-daterange input-group" id="dtRango" style="display: none;">
+                                <input id="txtFI" type="text" class="form-control" name="start">
+                                <span class="input-group-addon">al</span>
+                                <input id="txtFF" type="text" class="form-control" name="end">
+                            </div>
+                        </div>
+                        <input id="btnBuscarNota" type="button" value="Buscar" class="btn btn-sm btn-primary">
+                    </div>
+                </div>
+            </div>
+            <div class="row table-main">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div id="cntListaPublicaciones" class="table-responsive">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="target2" class="panel move panel-inverse m-t-5" data-sortable-id="form-stuff-1" style="display: none;">
+        <div class="panel-heading">
+            <h4 class="panel-title">Publicación</h4>
+        </div>
+        <div class="panel-body" style="display: block;">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form id="frm" data-smk-icon="glyphicon-asterisk">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Titulo</label>
+                                    <input type="text" class="form-control" placeholder="Titulo" id="txtTitulo" name="txtTitulo" required="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Tipo</label>
+                                            <select class="form-control" id="ddlTipo" name="ddlTipo" required></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Año de publicación</label>
+                                            <select class="form-control" id="txtAnoPublicacion" name="txtAnoPublicacion" required></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label>Área Temática</label><br />
+                                            @*<select class="form-control" id="ddlTema" name="ddlTema" multiple="multiple" required></select>*@
+                                            <select class="form-control" id="ddlTema" name="ddlTema" required></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Enlace (URL)</label>
+                                            <input type="url" class="form-control" placeholder="Enlace" id="txtEnlace" name="txtEnlace" required="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Referencia bibliográfica</label>
+                                            <textarea class="form-control" id="txtReferencia" name="txtReferencia" rows="5" placeholder="Ingrese aquí la referencia bibligráfica de acuerdo al formato." value="" minlength="1" required="" style="/* width: 500px; */margin: 0px;/* height: 112px; */background-color: white;"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3>Información georeferencial</h3>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <input type="button" class="btn btn-success btn-block btn-fill" value="Agregar punto" id="btAddPunto" name="btAddPunto">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div id="jsGrid"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h3>Vista Previa</h3>
+                                <div class="col-md-12">
+                                    <div style="width: 100%; height: 500px" id="map"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m-t-5">
+                            <div class="col-md-8"></div>
+                            <div class="col-md-2">
+                                <input type="button" class="btn btn-primary btn-block btn-fill" value="Enviar" id="btenviar" name="btenviar">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="button" class="btn btn-default btn-block btn-fill" value="Cancelar" id="btcancelar" name="btcancelar">
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @*</div>*@
+
+
+</div>
+
+
+<script type="text/javascript">
+
+    jQuery(function ($) {
+        $('input.target').click(function () {
+            vista($(this).attr('href'));
+        });
+
+
+        $('#ddlTipo').dropdowlist({
+            dataShow: 'cDesc',
+            dataValue: 'nTipoId',
+            dataselect: 'nTipoId',
+            datalist: Model.lsTipos
+        });
+
+        var myDate = new Date();
+        var year = myDate.getFullYear(); var values = '<option value="">Elige una opción</option>';
+        for (var i = 1900; i < year + 1; i++) {
+            values += '<option value="' + i + '">' + i + '</option>';
+        }
+        $("#txtAnoPublicacion").html(values);
+
+        $('#ddlTema').dropdowlist({
+            dataShow: 'cDesc',
+            dataValue: 'nTemaId',
+            dataselect: 'nTemaId',
+            datalist: Model.lsTemas
+        });
+
+        /*Grilla*/
+
+
+        CargarGrilla();
+        /*Fin de la grilla*/
+
+        /*multiselet tema*/
+
+        //function formatDatosTemas(lsTemas) {
+        //    var datos = new Array();
+        //    for (var i = 0; i < lsTemas.length; i++) {
+        //        var fila = { label: lsTemas[i].tem_descripcion, title: lsTemas[i].tem_descripcion, value: lsTemas[i].tem_idtema };
+        //        datos.push(fila);
+        //    }
+        //    return datos;
+        //}
+
+        //$('#ddlTema').multiselect({
+        //    nonSelectedText: 'Elige un tema',
+        //    buttonWidth: '250'
+        //});
+        //$('#ddlTema').multiselect('dataprovider', formatDatosTemas(Model.lsTemas));
+
+        /*fin multiselect tema*/
+
+
+
+        $('#btAddPunto').click(function () {
+            $().addPunto({
+                alAceptar: function (lat, lng) {
+                    indexFeature++;
+                    var info = lat + '|' + lng;
+                    var item = { "n": indexFeature, "Tipo": 1, "Info": info };
+                    $("#jsGrid").jsGrid("insertItem", item);
+
+                    lsFeatures.push(item);
+                    map_AgregarPunto([lat, lng]);
+                }
+            });
+        });
+
+        /* $('#btAddLinea').click(function () {
+             $().addLinea({
+                 alAceptar: function (lat1, lng1, lat2, lng2) {
+
+                 }
+             });
+         });*/
+
+        $('#btAddPoli').click(function () {
+            $().addPoligono({
+                alAceptar: function (lsLat, lsLng) {
+                    indexFeature++;
+                    var info = '';
+                    var puntos = [];
+                    for (var i = 0; i < lsLat.length; i++) {
+                        info += lsLat[i] + '|' + lsLng[i];
+                        if (i != lsLat.length - 1) {
+                            info += ',';
+                        }
+                        puntos.push([lsLat[i], lsLng[i]]);
+                    }
+                    //el poligono debe cerrarse con su punto inicial (como un lazo)
+                    if (lsLat.length > 0) {
+                        puntos.push([lsLat[0], lsLng[0]]);
+                    }
+                    var item = { "n": indexFeature, "Tipo": 3, "Info": info };
+                    $("#jsGrid").jsGrid("insertItem", item);
+                    lsFeatures.push(item);
+                    map_AgregarPoligono(puntos);
+                }
+            });
+        });
+
+        $('#btenviar').click(function () {
+
+            if ($('#frm').smkValidate()) {
+                $.fn.Conexion({
+                    direccion: '../Publicacion/RegistrarPublicacion',
+                    bloqueo: true,
+                    datos: {
+                        "pub_anopublicacion": $('#txtAnoPublicacion').val(),
+                        "pub_referenciabibliografica": $('#txtReferencia').val(),
+                        "pub_enlace": $('#txtEnlace').val(),
+                        "tip_idtipo": $('#ddlTipo').val(),
+                        "ls_tem_idtema": $('#ddlTema').val() /* $('#ddlTema').val().join(',')*/,
+                        "features": JSON.stringify(lsFeatures),
+                        "pub_titulo": $('#txtTitulo').val()
+                    },
+                    terminado: function (data) {
+                        data = JSON.parse(data);
+                        alert(data.mensaje);
+                    }
+                });
+            }
+
+
+        });
+
+
+
+    });
+
+    var vista = function ($target) {
+        var $target = $($target),
+            $other = $('.panel-inverse.active');
+
+        if (!$target.hasClass('active')) {
+            $other.each(function (index, self) {
+                var $this = $(this);
+                $this.removeClass('active').animate({
+                    left: $this.width()
+                }, 500).hide();
+            });
+
+            $target.addClass('active').show().css({
+                left: -($target.width())
+            }).animate({
+                left: 0
+            }, 500);
+        }
+    };
+
+
+
+    var lsFeatures = Array();
+    var lsVectorLayers = Array();
+    var indexFeature = 0;
+
+    function quitarElemento(index) {
+        for (var i = 0; i < lsFeatures.length; i++) {
+            if (lsFeatures[i].n == index) {
+                lsFeatures.splice(i, 1);
+                map.removeLayer(lsVectorLayers[i])
+                lsVectorLayers.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+
+
+    /*Control del mapa*/
+    var wmsSource = new ol.source.TileWMS({
+        url: 'http://10.10.10.14:8082/geoserver/visor/wms',
+        params: { 'LAYERS': 'visor:view_pointspublicacion' },
+        serverType: 'geoserver'
+    });
+
+    var vectorSource = new ol.source.Vector({});
+
+    var vista = new ol.View({
+        projection: "EPSG:4326",
+        //center: [-74, -4],
+        //zoom: 5,
+        center: [-75, -9],
+        zoom: 5,
+    });
+
+    var map = new ol.Map({
+        target: 'map',
+        view: vista,
+
+        controls: ol.control.defaults().extend([
+            new ol.control.ScaleLine(),
+            new ol.control.ZoomSlider(),
+        ])
+
+    });
+
+    var wmsLayer1 = new ol.layer.Tile({
+        type: 'base',
+        title: 'Mapa Base',
+        source: new ol.source.TileWMS({
+            url: 'http://10.10.10.14:8082/geoserver/visor/wms',
+            params: {
+                LAYERS: 'visor:departamentos',
+                FORMAT: 'image/png'
+            },
+        })
+    });
+    map.addLayer(wmsLayer1);
+
+    function map_AgregarPoligono(puntos) {
+
+        var ring = puntos;
+        var polygon = new ol.geom.Polygon([ring]);
+        var feature = new ol.Feature(polygon);
+        var vectorSource = new ol.source.Vector();
+        vectorSource.addFeature(feature);
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource
+        });
+        map.addLayer(vectorLayer);
+        lsVectorLayers.push(vectorLayer);
+    }
+
+    function map_AgregarPunto(punto) {
+
+        var point_feature = new ol.Feature({});
+        var point_geom = new ol.geom.Point(punto);
+        point_feature.setGeometry(point_geom);
+        var vectorLayer = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                features: [point_feature]
+            })
+        })
+        map.addLayer(vectorLayer);
+        lsVectorLayers.push(vectorLayer);
+    }
+
+
+    function CargarGrilla() {
+
+        $("#jsGrid").jsGrid({
+            width: "100%",
+            height: "400px",
+            sorting: true,
+            paging: true,
+            deleteConfirm: "¿Estás seguro de eliminar?",
+            noDataContent: "Sin datos",
+            //data: datos,
+
+            fields: [
+                {
+                    name: "Tipo", type: "text", width: 20, align: "center", itemTemplate: function (value) {
+                        if (value == 1) {
+                            return $("<div>").addClass("dv_icpunto");
+                        }
+                        else if (value == 2) {
+                            return $("<div>").addClass("dv_iclinea");
+                        }
+                        else if (value == 3) {
+                            return $("<div>").addClass("dv_icpoligono");
+                        }
+                        else {
+                            return $("<div>");
+                        }
+                    }
+                },
+                { name: "Info", type: "text", width: 200 },
+                { type: "control", editButton: false }
+            ],
+            onItemDeleted: function (args) {
+                quitarElemento(args.item.n);
+                console.log(lsFeatures);
+            }
+        });
+    }
+
+    ListarRevPub();
+
+    function ListarRevPub(nPage, nSize) {
+        var cPubTitulo, nPubId, cInst,cNom;
+        var nPubEst = $("#cmbPubEstado").val();
+        var tpoBsq = $("#cmbTpoBsq").val();
+        var valor = $("#txtValor").val();
+        valor = valor == "" ? null : valor;
+
+        switch (tpoBsq) {
+            case "1":
+                {
+                    nPubId = valor;
+                    break;
+                }
+            case "2":
+                {
+                    cPubTitulo = valor;
+                    break;
+                }
+            case "3":
+                {
+                    cNom = valor;
+                    break;
+                }
+            case "4":
+                {
+                    cInst = valor;
+                    break;
+                }
+        }
+
+        $.fn.Conexion({
+            direccion: '@Url.Action("ListarRevPublicaciones", "Publicacion")',
+            datos: { "nPubEst": nPubEst, "nPage": nPage, "nSize": nSize, "nPubId": nPubId, "cPubTitulo": cPubTitulo, "cInst": cInst, "cNom": cNom },
+            bloqueo: true,
+            terminado: function (data) {
+                var d = JSON.parse(data);
+
+                $("#cntListaPublicaciones").Tabla({
+                    tblId: "tblPublicaciones",
+                    cabecera: "Código,Título,Investigador,Intitución,Fecha Creación,Estado",
+                    campos: "Id,titulo,usuario.cNom, usuario.cInst, cFeReg,cEstado",
+                    scrollVertical: "Si",
+                    tipoCampo: ",,,,,",
+                    alinear: "C,L,C,C,C,C",
+                    cellLen: "50,200,100,100,80,80,50",
+                    cantRegVertical: 15,
+                    pag: true,
+                    pagDato: { "nPage": d.nPage, "nPageTot": d.nPageTot, "nPageSize": d.nPageSize, "nRows": d.nRows },
+                    pagEvent: ListarRevPub,
+                    edit: true,
+                    dblClick: true,
+                    editEvent: function (fila) {
+                        var nPubId = fila.find("td").eq(0).html();
+                        $("#hdnEstado").val("E");
+                        //$('input.target')[0].click();
+                        vista("#target2");
+
+                        $.fn.Conexion({
+                            direccion: '@Url.Action("CargaDatosPublicacion", "Publicacion")',
+                            datos: { "nPubId": nPubId },
+                            terminado: function (data, textStatus, jqXHR) {
+                                var oPub = JSON.parse(data);
+
+                                $('#txtTitulo').val(oPub.titulo);
+                                $('#ddlTipo').val(oPub.tipo.Id);
+                                $('#ddlTema').val(oPub.lsTemas[0].id);
+                                $('#txtAnoPublicacion').val(oPub.ano);
+                                $('#txtEnlace').val(oPub.enlace);
+                                $('#txtReferencia').val(oPub.refBi);
+                                for (var i = 0; i < oPub.lsFeatures.length; i++) {
+                                    var punto = oPub.lsFeatures[i].Info.split(' ');
+                                    map_AgregarPunto(punto);
+                                    indexFeature++;
+
+                                    var info = punto[0] + '|' + punto[1];
+                                    var item = { "n": indexFeature, "Tipo": 1, "Info": info };
+                                    $("#jsGrid").jsGrid("insertItem", item);
+
+                                    lsFeatures.push(item);
+                                    //map_AgregarPunto(punto);
+                                }
+
+
+
+                                /*$("#hdnPersId").val(oNota.oPers.id);
+                                $("#hdnNotaEst").val(oNota.oNotaEst.id);
+                                $("#txtNotaNombre").val(oNota.oPers.nom);
+                                $("#txtNotaDOI").val(oNota.oPers.doi);
+                                $("#txtNotaDirec").val(oNota.oPers.direc);
+                                $("#txtCodNota").val(oNota.nNotaEntId);
+                                $("#hdnNotaId").val(oNota.nNotaEntId);
+                                $("#txtCom").val(oNota.cNotaCom);
+                                $("#cmbUsuCaj").val(oNota.cNotaUsuAt);
+                                $("#txtDescuento").val(number_format(oNota.nNotaDes, 2));
+                                $("#txtAnticipo").val(number_format(oNota.nNotaAnt, 2));
+                                $('#txtFechaEnt').val(moment(oNota.dFecEnt).format("DD/MM/YYYY hh:mm A"));
+
+                                var lst = oNota.lstNotEntProd;
+                                lstProd = [];
+
+                                for (i in lst) {
+
+                                    var obj = {
+                                        nPrId: lst[i].oProd.nPrId,
+                                        cPrDesc: lst[i].oProd.cPrDesc,
+                                        bPrSerLav: lst[i].oProd.bPrSerLav,
+                                        bPrSerPla: lst[i].oProd.bPrSerPla,
+                                        bPrSerSec: lst[i].oProd.bPrSerSec,
+                                        bProdO: lst[i].oProd.bProdO,
+                                        oPrMed: { id: lst[i].oProd.oPrMed.id, nom: lst[i].oProd.oPrMed.nom },
+                                        nCant: lst[i].nDetCant,
+                                        nPrPrecU: lst[i].nPrPrecU,
+                                        nImp: lst[i].nDetImp
+                                    };
+                                    lstProd = lstProd.concat([obj]);
+                                }
+
+                                lstProd = lstProd;
+
+                                CrearTabla(lstProd);
+                                subTotal(lstProd);
+
+
+                                if (oNota.oNotaEst.id == 1) {
+                                    SetEstadoPendiente();
+                                } else if (oNota.oNotaEst.id == 2) {
+                                    SetEstadoPagado();
+                                } else if (oNota.oNotaEst.id == 3) {
+                                    SetEstadoEntregado();
+                                } else if (oNota.oNotaEst.id == 4) {
+                                    SetEstadoAnulado();
+                                }*/
+                            },
+                            bloqueo: false
+                        });
+                    },
+                    datos: d.oLista
+                });
+            }
+        });
+    }
+
+    $("#btcancelar").bind("click", function () {
+        Limpiar();
+        vista("#target1");
+    });
+
+    //$("#btnNuevaNota").bind("click", function () {
+    //    map.updateSize();
+    //});
+
+    $("#btnBuscarPub").bind("click", function () {
+        ListarRevPub();
+    });
+
+    $("#txtValor").keyup(function (e) {
+        if (e.which == 13) { ListarPub(); }
+    });
+
+    function Limpiar() {
+        $('#frm')[0].reset();
+
+        lsVectorLayers.forEach(function (entry) {
+            map.removeLayer(entry)
+        });
+
+        lsFeatures = Array();
+        $("#jsGrid").jsGrid('destroy');
+        CargarGrilla();
+        //lstProd = [];
+        //$("input[type=hidden],#txtCodNota").val("");
+        //$("#lblNom,#lblDOI,#lblTel,#tblRegProd tbody").html("");
+        //RestablecerElem();
+        //DeshabilitarBotones();
+    }
+
+
+
+</script>
