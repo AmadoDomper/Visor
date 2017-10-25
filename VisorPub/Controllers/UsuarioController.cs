@@ -55,11 +55,11 @@ namespace VisorPub.Controllers
         }
 
 
-        public string RegistrarModificarUsuario(Usuario oUsuario)
+        public string RegistrarModificarUsuario(Usuario oUsu)
         {
             UsuarioLN oUsuarioLN = new UsuarioLN();
             
-            var resultado = oUsuarioLN.RegistrarModificarUsuario(oUsuario);
+            var resultado = oUsuarioLN.RegistrarModificarUsuario(oUsu);
 
             return JsonConvert.SerializeObject(resultado, Formatting.None,
             new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });

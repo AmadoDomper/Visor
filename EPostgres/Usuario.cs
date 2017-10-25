@@ -19,7 +19,9 @@ namespace EPostgres
         private bool _bEsInterno;
         private string _cTipoUsuario;
         private int _nPaisId;
+        private string _cPais;
         private int _nCiudadId;
+        private string _cCiudad;
         private string _cEmail;
         private DateTime _dFechaNacimiento;
         private string _cFechaNacimiento;
@@ -97,7 +99,6 @@ namespace EPostgres
             set { _cTipoUsuario = value; }
         }
 
-
         [JsonProperty(PropertyName = "nPaisId")]
         public int nPaisId
         {
@@ -105,11 +106,25 @@ namespace EPostgres
             set { _nPaisId = value; }
         }
 
+        [JsonProperty(PropertyName = "cPais")]
+        public string cPais
+        {
+            get { return _cPais; }
+            set { _cPais = value; }
+        }
+
         [JsonProperty(PropertyName = "nCiudadId")]
         public int nCiudadId
         {
             get { return _nCiudadId; }
             set { _nCiudadId = value; }
+        }
+
+        [JsonProperty(PropertyName = "cCiudad")]
+        public string cCiudad
+        {
+            get { return _cCiudad; }
+            set { _cCiudad = value; }
         }
 
         [JsonProperty(PropertyName = "cEmail")]

@@ -10,9 +10,9 @@
             <div class="row">
                 <div class="col-lg-6 ">
                     @*@if (FrontUser.TienePermiso(RolesPermisos.Usu_Nuevo_Usuario))
-                    {*@
-                        <input href="#target2" id="btnNuevoUsuario" type="button" class="btn btn-sm btn-success target" value="Nuevo Usuario" />
-                        @*}*@
+                        {*@
+                    <input href="#target2" id="btnNuevoUsuario" type="button" class="btn btn-sm btn-success target" value="Nuevo Usuario" />
+                    @*}*@
                 </div>
             </div>
             <div class="hr-line-dashed"></div>
@@ -46,37 +46,28 @@
 
 <div class="col-lg-6 col-lg-offset-3">
     <div id="target2" class="move" style="display: none;">
-        <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
-            <div class="panel-heading">
-                <h4 class="panel-title">Datos Personales</h4>
-            </div>
-            <div class="panel-body">
-                <form id="frmDatPer" class="form-horizontal ng-pristine ng-valid" autocomplete="off">
-                    @*<div class="form-group m-b-5">
-                        <label class="col-md-4 control-label">Persona</label>
-                        <div class="col-md-8 form-inline">
-                            <input type="text" class="form-control " id="txtBuscarPers" placeholder="Buscar persona">
-                            <button id="btnBuscarPers" type="button" class="btn btn-sm btn-default" data-toggle="modal">
-                                <span class="glyphicon glyphicon-search"></span>
-                            </button>
-                        </div>
-                    </div>*@
+        <form role="form" data-toggle="validator" action="" id="frmUsuario" autocomplete="off" method="post" class="form-horizontal ng-pristine ng-valid">
+            <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Datos Personales</h4>
+                </div>
+                <div class="panel-body">
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">Nombres</label>
-                        <div class="col-md-7">
-                            <input type="text" id="txtNombres" name="" class="form-control">
+                        <div class="col-md-5">
+                            <input type="text" id="txtNombres" name="oUsu.cNombres" class="form-control">
                         </div>
                     </div>
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">Apellido Paterno</label>
-                        <div class="col-md-7">
-                            <input type="text" id="txtApePa" name="" class="form-control">
+                        <div class="col-md-5">
+                            <input type="text" id="txtApePa" name="oUsu.cApellidoPa" class="form-control">
                         </div>
                     </div>
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">Apellido Materno</label>
-                        <div class="col-md-7">
-                            <input type="text" id="txtApeMa" name="" class="form-control">
+                        <div class="col-md-5">
+                            <input type="text" id="txtApeMa" name="oUsu.cApellidoMa" class="form-control">
                         </div>
                     </div>
                     <div class="form-group m-b-5">
@@ -96,43 +87,42 @@
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">Institución</label>
                         <div class="col-md-7">
-                            <input type="text" id="txtInst" name="" class="form-control">
+                            <input type="text" id="txtInst" name="oUsu.cInstitucion" class="form-control">
                         </div>
                     </div>
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">País</label>
-                        <div class="col-md-7">
-                            <input type="text" id="txtPais" name="" class="form-control">
+                        <div class="col-md-5">
+                            <input type="text" id="txtPais" name="oUsu.cPais" class="form-control">
                         </div>
                     </div>
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">Ciudad</label>
-                        <div class="col-md-7">
-                            <input type="text" id="txtCiudad" name="" class="form-control">
+                        <div class="col-md-5">
+                            <input type="text" id="txtCiudad" name="oUsu.cCiudad" class="form-control">
                         </div>
                     </div>
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">Email</label>
                         <div class="col-md-7">
-                            <input type="text" id="txtEmail" name="" class="form-control">
+                            <input type="text" id="txtEmail" name="oUsu.cEmail" class="form-control">
                         </div>
                     </div>
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">Fecha Nacimiento</label>
-                        <div class="col-md-7">
-                            <input type="text" id="txtFechaNac" name="" class="form-control">
+                        <div class="col-md-4">
+                            <input type="text" id="txtFechaNac" name="oUsu.dFechaNacimiento" class="form-control">
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
-        <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
-            <div class="panel-heading">
-                <h4 class="panel-title">Datos de Usuario</h4>
-            </div>
-            <div class="panel-body" style="display: block;">
-                <div id="msg"></div>
-                <form role="form" data-toggle="validator" action="/Usuario/RegistrarUsuario" id="frmUsuario" autocomplete="off" method="post" class="form-horizontal ng-pristine ng-valid">
+            <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Datos de Usuario</h4>
+                </div>
+                <div class="panel-body" style="display: block;">
+                    <div id="msg"></div>
+                    @*<form role="form" data-toggle="validator" action="/Usuario/RegistrarUsuario" id="frmUsuario" autocomplete="off" method="post" class="form-horizontal ng-pristine ng-valid">*@
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">DNI</label>
                         <div class="col-md-4">
@@ -143,7 +133,7 @@
                     <div class="form-group m-b-5">
                         <label id="lblCont" class="col-md-4 control-label">Contraseña</label>
                         <div class="col-md-4">
-                            <input type="password" id="txtCont1" name="oUsu.cUsuContrasena" class="form-control" required>
+                            <input type="password" id="txtCont1" name="oUsu.cContrasena" class="form-control" required>
                         </div>
                     </div>
                     <div class="form-group m-b-5">
@@ -168,9 +158,9 @@
                             <input type="button" id="btnCanUsu" data-dismiss="modal" aria-hidden="true" class="btn btn-sm btn-default m-r-5" value="Cancelar" />
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 <script type="text/javascript">
@@ -257,7 +247,7 @@
 
                         $.fn.Conexion({
                             direccion: '@Url.Action("CargarDatosUsuario", "Usuario")',
-                            datos: { "nUsuId": nUsuId},
+                            datos: { "nUsuId": nUsuId },
                             terminado: function (data, textStatus, jqXHR) {
                                 var oUsu = JSON.parse(data);
 
@@ -404,30 +394,30 @@
 
     $("#btnGrabarUsu").bind("click", function () {
         var form = $("#frmUsuario");
-        form.validator();
+        //form.validator();
 
-        var validator = form.data("bs.validator");
-        validator.validate();
+        //var validator = form.data("bs.validator");
+        //validator.validate();
 
         if ($("#txtCont1").val() != $("#txtCont2").val()) {
             alerta("#msg", "Los valores de la contraseña deben de ser iguales.");
         } else if ($("#hdnPersRolId").val() == "") {
             alerta("#msg", "Es necesario indicar el Rol del usuario.");
         } else {
-            if (!validator.hasErrors()) {
-                valores = form.serializeArray();
+            //if (!validator.hasErrors()) {
+            valores = form.serializeArray();
 
-                $.fn.Conexion({
-                    direccion: form.attr("action"),
-                    datos: valores,
-                    terminado: function (data, textStatus, jqXHR) {
-                        Resultado(data);
-                    },
-                    bloqueo: true
-                });
-            } else {
-                alerta("#msg", "Es necesario completar los campos que están en rojo.");
-            }
+            $.fn.Conexion({
+                direccion: '@Url.Action("RegistrarModificarUsuario", "Usuario")',
+                datos: valores,
+                terminado: function (data, textStatus, jqXHR) {
+                    Resultado(data);
+                },
+                bloqueo: true
+            });
+            //} else {
+            //    alerta("#msg", "Es necesario completar los campos que están en rojo.");
+            //}
         }
     });
 
@@ -451,7 +441,7 @@
             } else {
                 $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Se registró datos del usuario correctamente", funcionAceptar: Limpiar });
             }
-            ListarUsuarios(1,10);
+            ListarUsuarios(1, 10);
         } else if (dato == -1) {
             alerta("#msg", "Ya existe un usuario asignado a esta persona");
             $("#txtBuscarPers").focus();

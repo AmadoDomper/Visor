@@ -71,10 +71,10 @@ namespace ADPostgres
                     {
                         cmd.Parameters.AddWithValue("_usu_nusuarioid", oUsu.nUsuarioId);
                         cmd.Parameters.AddWithValue("_usu_cdni", oUsu.cDni);
-                        cmd.Parameters.AddWithValue("_usu_contrasena", oUsu.cContrasena);
-                        cmd.Parameters.AddWithValue("_usu_cnombres", oUsu.cNombres);
-                        cmd.Parameters.AddWithValue("_usu_capellido_paterno", oUsu.cApellidoPa);
-                        cmd.Parameters.AddWithValue("_usu_capellido_materno", oUsu.cApellidoMa);
+                        cmd.Parameters.AddWithValue("_usu_ccontrasena", oUsu.cContrasena);
+                        cmd.Parameters.AddWithValue("_usu_cnombres", oUsu.cNombres.ToUpper());
+                        cmd.Parameters.AddWithValue("_usu_capellido_paterno", oUsu.cApellidoPa.ToUpper());
+                        cmd.Parameters.AddWithValue("_usu_capellido_materno", oUsu.cApellidoMa.ToUpper());
                         cmd.Parameters.AddWithValue("_usu_cinstitucion", oUsu.cInstitucion);
                         cmd.Parameters.AddWithValue("_usu_cemail", oUsu.cEmail);
                         cmd.Parameters.AddWithValue("_rol_nrolid", oUsu.nRolId);
@@ -83,7 +83,7 @@ namespace ADPostgres
 
                         while (reader.Read())
                         {
-                            resultado = (int)reader["id_val"];
+                            resultado = Int32.Parse(reader[0].ToString());
                         }
                     }
                 }
