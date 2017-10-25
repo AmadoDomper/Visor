@@ -10,7 +10,6 @@
 *.suo
 *.dll
 *.exe
-/VisorPub/Web.config
 
 # Include dlls if they�re in the NuGet packages directory
 !/packages/*/lib/*.dll
