@@ -44,7 +44,7 @@ namespace EPostgres
             set { _cDni = value; }
         }
 
-        [JsonProperty(PropertyName = "cContrasena")]
+        [JsonProperty(PropertyName = "cCnt")]
         public string cContrasena
         {
             get { return _cContrasena; }

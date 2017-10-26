@@ -76,6 +76,8 @@ namespace ADPostgres
                         cmd.Parameters.AddWithValue("_usu_capellido_paterno", oUsu.cApellidoPa.ToUpper());
                         cmd.Parameters.AddWithValue("_usu_capellido_materno", oUsu.cApellidoMa.ToUpper());
                         cmd.Parameters.AddWithValue("_usu_cinstitucion", oUsu.cInstitucion);
+                        cmd.Parameters.AddWithValue("_usu_cpais", oUsu.cPais);
+                        cmd.Parameters.AddWithValue("_usu_cciudad", oUsu.cCiudad);
                         cmd.Parameters.AddWithValue("_usu_cemail", oUsu.cEmail);
                         cmd.Parameters.AddWithValue("_usu_dfechanacimiento", String.Format(oUsu.cFechaNacimiento,"yyyy-mm-dd"));
                         cmd.Parameters.AddWithValue("_rol_nrolid", oUsu.nRolId);
@@ -120,6 +122,11 @@ namespace ADPostgres
                             oUsu.cEmail = (string)reader["usu_cemail"];
                             oUsu.cFechaNacimiento = (string)reader["usu_dfechanacimiento"];
                             oUsu.cDni = (string)reader["usu_cdni"];
+                            oUsu.cPais = (string)reader["usu_cpais"];
+                            oUsu.cCiudad = (string)reader["usu_cciudad"];
+                            oUsu.nRolId = (int)reader["rol_nrolId"];
+                            oUsu.cRolDesc = (string)reader["croldesc"];
+                            oUsu.cContrasena = (string)reader["usu_ccontrasena"];
                         }
                     }
                 }
