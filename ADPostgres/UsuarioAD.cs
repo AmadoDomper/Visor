@@ -77,6 +77,7 @@ namespace ADPostgres
                         cmd.Parameters.AddWithValue("_usu_capellido_materno", oUsu.cApellidoMa.ToUpper());
                         cmd.Parameters.AddWithValue("_usu_cinstitucion", oUsu.cInstitucion);
                         cmd.Parameters.AddWithValue("_usu_cemail", oUsu.cEmail);
+                        cmd.Parameters.AddWithValue("_usu_dfechanacimiento", String.Format(oUsu.cFechaNacimiento,"yyyy-mm-dd"));
                         cmd.Parameters.AddWithValue("_rol_nrolid", oUsu.nRolId);
                         cmd.Parameters.AddWithValue("_usu_es_interno", oUsu.bEsInterno);
                         var reader = cmd.ExecuteReader();

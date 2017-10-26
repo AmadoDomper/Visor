@@ -145,6 +145,10 @@
     <Content Include="Content\css\css.css" />
     <Content Include="Content\css\mainGestion.css" />
     <Content Include="Content\css\sb-admin-2.css" />
+    <Content Include="Content\extend\masked\jquery.maskedinput.js" />
+    <Content Include="Content\extend\masked\jquery.maskedinput.min.js" />
+    <Content Include="Content\extend\validator\validator.js" />
+    <Content Include="Content\extend\validator\validator.min.js" />
     <Content Include="Content\font-awesome-4.7.0\css\font-awesome.css" />
     <Content Include="Content\font-awesome-4.7.0\css\font-awesome.min.css" />
     <Content Include="Content\font-awesome-4.7.0\fonts\fontawesome-webfont.svg" />
@@ -215,7 +219,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\extend\" />
     <Folder Include="Content\font-awesome-4.1.0\" />
   </ItemGroup>
   <ItemGroup>

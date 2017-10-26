@@ -56,7 +56,7 @@ namespace VisorPub.Controllers
 
 
         public string RegistrarModificarUsuario(Usuario oUsu)
-        {
+        {   
             UsuarioLN oUsuarioLN = new UsuarioLN();
             
             var resultado = oUsuarioLN.RegistrarModificarUsuario(oUsu);

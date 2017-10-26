@@ -45,29 +45,30 @@
 </div>
 
 <div class="col-lg-6 col-lg-offset-3">
-    <div id="target2" class="move" style="display: none;">
+    <div id="target2" class="panel move panel-inverse m-t-5" data-sortable-id="form-stuff-1" style="display: none;">
         <form role="form" data-toggle="validator" action="" id="frmUsuario" autocomplete="off" method="post" class="form-horizontal ng-pristine ng-valid">
             <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
                 <div class="panel-heading">
                     <h4 class="panel-title">Datos Personales</h4>
                 </div>
                 <div class="panel-body">
+                    <div id="msg"></div>
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">Nombres</label>
-                        <div class="col-md-5">
-                            <input type="text" id="txtNombres" name="oUsu.cNombres" class="form-control">
+                        <div class="col-md-7">
+                            <input type="text" id="txtNombres" name="oUsu.cNombres" class="form-control" required>
                         </div>
                     </div>
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">Apellido Paterno</label>
                         <div class="col-md-5">
-                            <input type="text" id="txtApePa" name="oUsu.cApellidoPa" class="form-control">
+                            <input type="text" id="txtApePa" name="oUsu.cApellidoPa" class="form-control" required>
                         </div>
                     </div>
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">Apellido Materno</label>
                         <div class="col-md-5">
-                            <input type="text" id="txtApeMa" name="oUsu.cApellidoMa" class="form-control">
+                            <input type="text" id="txtApeMa" name="oUsu.cApellidoMa" class="form-control" required>
                         </div>
                     </div>
                     <div class="form-group m-b-5">
@@ -87,7 +88,7 @@
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">Institución</label>
                         <div class="col-md-7">
-                            <input type="text" id="txtInst" name="oUsu.cInstitucion" class="form-control">
+                            <input type="text" id="txtInst" name="oUsu.cInstitucion" class="form-control" required>
                         </div>
                     </div>
                     <div class="form-group m-b-5">
@@ -105,13 +106,13 @@
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">Email</label>
                         <div class="col-md-7">
-                            <input type="text" id="txtEmail" name="oUsu.cEmail" class="form-control">
+                            <input type="text" id="txtEmail" name="oUsu.cEmail" class="form-control" required>
                         </div>
                     </div>
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">Fecha Nacimiento</label>
                         <div class="col-md-4">
-                            <input type="text" id="txtFechaNac" name="oUsu.dFechaNacimiento" class="form-control">
+                            <input type="text" id="txtFechaNac" name="oUsu.cFechaNacimiento" class="form-control" required>
                         </div>
                     </div>
                 </div>
@@ -126,8 +127,8 @@
                     <div class="form-group m-b-5">
                         <label class="col-md-4 control-label">DNI</label>
                         <div class="col-md-4">
-                            <input id="hdnUsuId" type="hidden" name="oUsu.nUsuarioId" />
-                            <input type="text" id="txtDNI" name="oUsu.cDni" class="form-control">
+                            <input id="hdnUsuId" type="hidden" name="oUsu.nUsuarioId"/>
+                            <input type="text" id="txtDNI" name="oUsu.cDni" class="form-control" required>
                         </div>
                     </div>
                     <div class="form-group m-b-5">
@@ -160,6 +161,7 @@
                     </div>
                 </div>
             </div>
+            <div id="cntHidden"></div>
         </form>
     </div>
 </div>
@@ -167,6 +169,8 @@
 
 
     jQuery(function ($) {
+        $("#txtFechaNac").mask("99/99/9999", { placeholder: "dd/mm/yyyy" });
+
         $('input.target').click(function () {
             vista($(this).attr('href'));
         });
@@ -227,7 +231,7 @@
 
                 $("#cntListaUsuarios").Tabla({
                     tblId: "tblUsuarios",
-                    cabecera: "Código,Usuario,Nombre,Rol,Tipo Usuario,Email",
+                    cabecera: "#,Usuario,Nombre,Rol,Tipo Usuario,Email",
                     campos: "nUsuId,cDni,cNom,cRolDes,cTipUsu,cEmail",
                     scrollVertical: "Si",
                     alinear: "C,C,L,C,C,C,C",
@@ -332,7 +336,7 @@
             tamano: "sm"
         });
 
-        var html = '<div class="row"><div class="row"><div id="cntListaRol" class="table-responsive"></div></div><div class="hr-line-dashed"></div><div class="row"><div class="col-sm-8 col-md-offset-4 text-right"><button id="btnRolAceptar" type="submit" class="btn btn-sm btn-primary m-r-5">Aceptar</button><button id="btnRolCancelar" type="submit" data-dismiss="modal" aria-hidden="true" class="btn btn-sm btn-default">Cancelar</button></div></div></div>';
+        var html = '<div class="col-md-12"><div class="row"><div id="cntListaRol" class=""></div></div></div><div class="col-sm-12 hr-line-dashed"></div><div class="row"><div class="col-sm-8 col-md-offset-4 text-right"><button id="btnRolAceptar" type="submit" class="btn btn-sm btn-primary m-r-5">Aceptar</button><button id="btnRolCancelar" type="submit" data-dismiss="modal" aria-hidden="true" class="btn btn-sm btn-default">Cancelar</button></div></div>';
 
         $("#vntBuscaRol .panel-body").html(html);
         $('#vntBuscaRol').modal('show');
@@ -394,45 +398,46 @@
 
     $("#btnGrabarUsu").bind("click", function () {
         var form = $("#frmUsuario");
-        //form.validator();
+        form.validator();
 
-        //var validator = form.data("bs.validator");
-        //validator.validate();
+        var validator = form.data("bs.validator");
+        validator.validate();
 
         if ($("#txtCont1").val() != $("#txtCont2").val()) {
             alerta("#msg", "Los valores de la contraseña deben de ser iguales.");
         } else if ($("#hdnPersRolId").val() == "") {
             alerta("#msg", "Es necesario indicar el Rol del usuario.");
         } else {
-            //if (!validator.hasErrors()) {
-            valores = form.serializeArray();
+            if (!validator.hasErrors()) {
 
-            $.fn.Conexion({
-                direccion: '@Url.Action("RegistrarModificarUsuario", "Usuario")',
-                datos: valores,
-                terminado: function (data, textStatus, jqXHR) {
-                    Resultado(data);
-                },
-                bloqueo: true
-            });
-            //} else {
-            //    alerta("#msg", "Es necesario completar los campos que están en rojo.");
-            //}
+                var radio = $('input[name="inputWalls"]:checked').val();
+                CrearHidden("#cntHidden", "oUsu.bEsInterno", (radio == "1" ? true : false));
+                valores = form.serializeArray();
+
+                $.fn.Conexion({
+                    direccion: '@Url.Action("RegistrarModificarUsuario", "Usuario")',
+                    datos: valores,
+                    terminado: function (data, textStatus, jqXHR) {
+                        Resultado(data);
+                    },
+                    bloqueo: true
+                });
+            } else {
+                alerta("#msg", "Es necesario completar los campos que están en rojo.");
+            }
         }
     });
 
     $("#btnCanUsu").bind("click", function () {
         Limpiar();
+        vista("#target1");
     });
 
     function Limpiar() {
         $('#frmUsuario')[0].reset();
-        $('#frmDatPer')[0].reset();
         $("#hdnPersId,#hdnEstado,#hdnPersRolId").val("");
         $("#msg").html("");
-        vista("#target1");
     }
-
 
     function Resultado(dato) {
         if (dato > 0) {
