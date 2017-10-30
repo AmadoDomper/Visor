@@ -24,7 +24,7 @@
 
 <div class="col-lg-11 col-lg-offset-0-5">
     <input id="hdnEstado" type="hidden" />
-    <input id="hdnNotaEst" type="hidden" />
+    <input id="hdnPubEst" type="hidden" />
     <input id="hdnPag" type="hidden" />
     @*<div class="row">*@
     <div id="target1" class="panel move panel-inverse active m-t-5">
@@ -132,7 +132,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Referencia bibliográfica</label>
-                                            <textarea class="form-control" id="txtReferencia" name="txtReferencia" rows="5" placeholder="Ingrese aquí la referencia bibligráfica de acuerdo al formato." value="" minlength="1" required="" style="/* width: 500px; */margin: 0px;/* height: 112px; */background-color: white;"></textarea>
+                                            <textarea class="form-control" id="txtReferencia" name="txtReferencia" rows="5" placeholder="Ingrese aquí la referencia bibligráfica de acuerdo al formato." value="" minlength="1" required="" style="/* width: 500px; */margin: 0px;/* height: 112px; */"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -272,6 +272,7 @@
                             terminado: function (data, textStatus, jqXHR) {
                                 var oPub = JSON.parse(data);
 
+                                $("#hdnPubEst").val(oPub.nEstado);
                                 $('#txtTitulo').val(oPub.titulo);
                                 $('#ddlTipo').val(oPub.tipo.Id);
                                 $('#ddlTema').val(oPub.lsTemas[0].id);
@@ -292,7 +293,9 @@
 
                                 }
 
-
+                                if (oPub.nEstado == 1) {
+                                    SetEstadoSolicitado();
+                                }
 
 
 
@@ -358,6 +361,11 @@
         });
     }
 
+    function SetEstadoSolicitado() {
+        $("#target2 :input").prop("disabled", true);
+        $("#btcancelar").prop("disabled", false);
+    }
+
     $("#btcancelar").bind("click", function () {
         Limpiar();
         vista("#target1");
@@ -377,7 +385,7 @@
 
     function Limpiar() {
         $('#frm')[0].reset();
-
+        $("#target2 :input").prop("disabled", false);
         lsVectorLayers.forEach(function(entry) {
             map.removeLayer(entry)
         });

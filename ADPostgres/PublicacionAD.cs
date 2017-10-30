@@ -71,6 +71,7 @@ namespace ADPostgres
                             oPub.oTipo.nTipoId = Int32.Parse(reader[3].ToString());
                             oPub.nPubliAno = Int32.Parse(reader[4].ToString());
                             oPub.cRefBiblio = reader[5].ToString();
+                            oPub.nEstado = Int32.Parse(reader[6].ToString());
                         }
                     }
 
@@ -160,11 +161,12 @@ namespace ADPostgres
                 try
                 {
                     /* REGISTRA PUBLICACIÓN */
-                    string sql = "INSERT INTO publicacion(pub_anopublicacion, pub_fecharegistro, pub_referenciabibliografica, pub_enlace, tip_idtipo, pub_estado,pub_titulo)";
+                    string sql = "INSERT INTO publicacion(pub_anopublicacion, usu_nusuarioid, pub_fecharegistro, pub_referenciabibliografica, pub_enlace, tip_idtipo, pub_estado,pub_titulo)";
                     sql += String.Format
                         (
-                        "VALUES ({0},'{1}','{2}','{3}',{4}, {5},'{6}')",
+                        "VALUES ({0},{1},'{2}','{3}','{4}',{5}, {6},'{7}')",
                         item.nPubliAno,
+                        item.nUsuId,
                         item.dFechaRegistro.ToString("yyyyMMdd"),
                         item.cRefBiblio,
                         item.cEnlace,

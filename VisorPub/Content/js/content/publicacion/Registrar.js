@@ -239,7 +239,9 @@ $(document).ready(function () {
                 },
                 terminado: function (data) {
                     data = JSON.parse(data);
-                    alert(data.mensaje);
+                    $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación se realizó correctamente." });
+                    Limpiar();
+                    vista("#target1");
                 }
             });
         }
