@@ -10,6 +10,7 @@ using EPostgres;
 using LNPostgres;
 using VisorPub.Models;
 using Seguridad.filters;
+using VisorPub.Helper;
 
 namespace VisorPub.Controllers
 {
@@ -63,6 +64,20 @@ namespace VisorPub.Controllers
 
             return JsonConvert.SerializeObject(resultado, Formatting.None,
             new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
+        }
+
+        public string RegistraUsuarioExterno(Usuario oUsu)
+        {
+            UsuarioLN oUsuarioLN = new UsuarioLN();
+            oUsu.nUsuarioId = 0;
+            oUsu.nRolId = Constantes.Rol_default;
+            oUsu.bEsInterno = false;
+
+            var resultado = oUsuarioLN.RegistrarModificarUsuario(oUsu);
+
+            return JsonConvert.SerializeObject(resultado, Formatting.None,
+            new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
+
         }
 
 
