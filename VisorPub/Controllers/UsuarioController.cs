@@ -70,7 +70,7 @@ namespace VisorPub.Controllers
         {
             UsuarioLN oUsuarioLN = new UsuarioLN();
             oUsu.nUsuarioId = 0;
-            oUsu.nRolId = Constantes.Rol_default;
+            oUsu.nRolId = Constantes.Rol_Investigador;
             oUsu.bEsInterno = false;
 
             var resultado = oUsuarioLN.RegistrarModificarUsuario(oUsu);
