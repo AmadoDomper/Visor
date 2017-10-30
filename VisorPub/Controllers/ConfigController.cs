@@ -10,6 +10,7 @@ using EPostgres;
 using LNPostgres;
 using VisorPub.Models;
 using Seguridad.filters;
+using VisorPub.Helper;
 
 namespace VisorPub.Controllers
 {
@@ -43,8 +44,16 @@ namespace VisorPub.Controllers
             ConfiguracionLN ConfLN = new ConfiguracionLN();
 
             Rol lstRol = JsonConvert.DeserializeObject<Rol>(oJsonRol);
-            nReg = ConfLN.RegistrarActualizarRolPermisos(lstRol);
 
+            if (lstRol.nRolId != Constantes.Rol_Administrador)
+            {
+                nReg = ConfLN.RegistrarActualizarRolPermisos(lstRol);
+            }
+            else
+            {
+                nReg = -1;
+            }
+            
             return Json(nReg);
         }
 

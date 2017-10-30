@@ -325,6 +325,8 @@
                     $("#btnCancelar").click();
                     listaRoles[index].nRolId = data;
                     $("#tblRol .seleccionado").find("td").eq(0).html(data);
+                }else if( data == -1){
+                    $.fn.Mensaje({ titulo: "¡Advertencia!", mensaje: "No es posible cambiar los permisos del administrador." });
                 } else {
                     $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación no se realizó correctamente" });
                 }
