@@ -43,21 +43,22 @@
 
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
+                    <a class="dropdown-toggle" href="/">
+                        <i class="fa fa-map-o fa-fw"></i> Ver Mapa
+                    </a>
+                </li>
+                <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
                         <i class="fa fa-user fa-fw"></i> @oUsuario.cDni <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li>
+                        @*<li>
                             <a href="#"><i class="fa fa-address-card-o" aria-hidden="true"></i> Mis datos </a>
-                        </li>
-                        @*<li class="divider"></li>
-                        <li>
-                            <a href="/LogIn/CerrarSession"><i class="fa fa-sign-out fa-fw"></i>Cerrar Sessión</a>
                         </li>*@
+                        <li>
+                            <a href="@Url.Action("CerrarSession", "Login")"><i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar Sesión</a>
+                        </li>
                     </ul>
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" href="@Url.Action("CerrarSession", "Login")">Cerrar Sesión</a>
                 </li>
             </ul>
 
