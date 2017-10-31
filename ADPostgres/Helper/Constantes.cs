@@ -50,5 +50,10 @@ namespace ADPostgres.Helper
 
         /*END SEGURIDAD*/
 
+
+        /*MENU*/
+        public const string usp_SeleccionarMenuFull = "usp_SeleccionarMenuFull";
+        /*END MENU*/
+
     }
 }

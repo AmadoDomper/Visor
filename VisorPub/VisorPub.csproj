@@ -127,12 +127,14 @@
     <Compile Include="Controllers\GestionController.cs" />
     <Compile Include="Controllers\InicioController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\PublicacionController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helper\Constantes.cs" />
+    <Compile Include="Models\MenuViewModel.cs" />
     <Compile Include="Models\Publicacion\ListarViewModel.cs" />
     <Compile Include="Models\Publicacion\RegistrarViewModel.cs" />
     <Compile Include="Models\RespuestaViewModel.cs" />
@@ -291,6 +293,7 @@
     <Content Include="Views\publicacion\RevisionDeSolicitudes.cshtml" />
     <Content Include="Views\Config\Config.cshtml" />
     <Content Include="Views\Usuario\GestionarUsuarios.cshtml" />
+    <Content Include="Views\Menu\_Menu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ADPostgres\ADPostgres.csproj">

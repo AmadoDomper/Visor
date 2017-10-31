@@ -63,8 +63,8 @@
 
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
-                    @*@Html.Action("ObtenerMenu", "Menu")*@
-                    <ul class="nav" id="side-menu">
+                    @Html.Action("ObtenerMenu", "Menu")
+                    @*<ul class="nav" id="side-menu">
                         <li>
                             <a href="#Mis-Publicaciones" data-url="@Url.Action("MisPublicaciones", "Publicacion")"><i class="fa fa-map-marker m-l-3 m-r-3" aria-hidden="true"></i> Mis publicaciones</a>
                         </li>
@@ -79,7 +79,7 @@
                             <a href="#Configuración" data-url="@Url.Action("Config", "Config")"><i class="fa fa-cog fa-fw" aria-hidden="true"></i> Configuración</a>
                         </li>
                         <li><a href="@Url.Action("CerrarSession", "LogIn")">Cerrar Sesión</a></li>
-                    </ul>
+                    </ul>*@
                 </div>
                 <!-- /.sidebar-collapse -->
             </div>

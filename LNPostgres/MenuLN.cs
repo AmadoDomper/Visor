@@ -10,7 +10,7 @@ namespace LNPostgres
 {
     public class MenuLN
     {
-        /*MenuAD oMenuAD;
+        MenuAD oMenuAD;
 
         public MenuLN()
         {
@@ -29,28 +29,28 @@ namespace LNPostgres
             }
         }
 
-        public List<Menu> ObtenerMenusOperacion(string NombreUsuario, string Grupos, string MenuPadreId)
-        {
-            try
-            {
-                return oMenuAD.ObtenerMenuOperacion(NombreUsuario, Grupos, MenuPadreId);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
+        //public List<Menu> ObtenerMenusOperacion(string NombreUsuario, string Grupos, string MenuPadreId)
+        //{
+        //    try
+        //    {
+        //        return oMenuAD.ObtenerMenuOperacion(NombreUsuario, Grupos, MenuPadreId);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message);
+        //    }
+        //}
 
-        public List<Menu> ObtenerOperaciones(string Tipo)
-        {
-            try
-            {
-                return oMenuAD.ObtenerOperaciones(Tipo);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }*/
+        //public List<Menu> ObtenerOperaciones(string Tipo)
+        //{
+        //    try
+        //    {
+        //        return oMenuAD.ObtenerOperaciones(Tipo);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message);
+        //    }
+        //}
     }
 }
