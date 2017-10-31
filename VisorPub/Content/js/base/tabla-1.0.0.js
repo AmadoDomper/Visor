@@ -160,7 +160,7 @@
 
         html += '</tbody></table>';
 
-        if (m.pag) {
+        if (m.pag && m.datos.length > 0) {
 
             html += '<div class="text-right" id="cntPaginacion">';
             html += '<ul class="pagination m-t-10 m-b-10">';
