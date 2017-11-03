@@ -132,7 +132,7 @@
                             <h5 class="modal-title leyendaTitle text-center" id="myModalLabel">Densidad de muestreo por Km2</h5>
                         </div>
                         <div class="modal-body">
-                            <img src="http://200.60.174.197:8082/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=DensidadArticulos">
+                            <img src="http://200.60.174.203:8080/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=DensidadArticulos">
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
@@ -145,7 +145,7 @@
                             <h5 class="modal-title leyendaTitle text-center" id="myModalLabel">Muestreo por distrito</h5>
                         </div>
                         <div class="modal-body">
-                            <img src="http://200.60.174.197:8082/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=articulosdistritos">
+                            <img src="http://200.60.174.203:8080/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=articulosdistritos">
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
@@ -158,7 +158,7 @@
             <h2>Legend:</h2>
 
             <div class="udiv_legende" id="legende_1">
-                <img src="http://200.60.174.197:8082/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=articulosdistritos">
+                <img src="http://200.60.174.203:8080/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=articulosdistritos">
                 <br>
                 <br>
             </div>
@@ -179,9 +179,15 @@
 
 <script type="text/javascript">
 
-    var zoom = 6;
+    //var zoom = 6;
+    //var center = ol.proj.transform(
+    //            [-75, -4.4], 'EPSG:4326', 'EPSG:3857')
+    //var rotation = 0;
+
+
+    var zoom = 5;
     var center = ol.proj.transform(
-                [-75, -4.4], 'EPSG:4326', 'EPSG:3857')
+                [-75, -9], 'EPSG:4326', 'EPSG:4326')
     var rotation = 0;
 
     if (window.location.hash !== '') {
@@ -243,7 +249,7 @@
                         //type: 'base',
                         visible: false,
                         source: new ol.source.TileWMS({
-                            url: 'http://200.60.174.197:8082/geoserver/visor/wms',
+                            url: 'http://200.60.174.203:8080/geoserver/visor/wms',
                             params: {
                                 LAYERS: 'visor:departamentos ',
                                 FORMAT: 'image/png',
@@ -255,7 +261,7 @@
                         visible: false,
                         title: 'Muestreo por distrito',
                         source: new ol.source.TileWMS({
-                            url: 'http://200.60.174.197:8082/geoserver/visor/wms',
+                            url: 'http://200.60.174.203:8080/geoserver/visor/wms',
                             params: {
                                 'LAYERS': 'visor:articulosdistritos ',
                                 FORMAT: 'image/png'
@@ -268,7 +274,7 @@
                         visible: false,
                         title: 'Densidad de muestreo por Km2 ',
                         source: new ol.source.TileWMS({
-                            url: 'http://200.60.174.197:8082/geoserver/visor/wms',
+                            url: 'http://200.60.174.203:8080/geoserver/visor/wms',
                             params: {
                                 LAYERS: 'visor:DensidadArticulos ',
                                 FORMAT: 'image/png',
@@ -290,7 +296,7 @@
                         visible: true,
                         title: 'Publicaciones',
                         source: new ol.source.TileWMS({
-                            url: 'http://200.60.174.197:8082/geoserver/visor/wms',
+                            url: 'http://200.60.174.203:8080/geoserver/visor/wms',
                             params: {
                                 'LAYERS': 'visor:view_pointpublicacion ',
                                 FORMAT: 'image/png'
@@ -355,7 +361,7 @@
     var wmsLayer2 = new ol.layer.Tile({
         title: 'Puntos Publicaciones',
         source: new ol.source.TileWMS({
-            url: 'http://200.60.174.197:8082/geoserver/visor/wms',
+            url: 'http://200.60.174.203:8080/geoserver/visor/wms',
             params: {
                 'LAYERS': 'visor:view_pointpublicacion ',
                 FORMAT: 'image/png'
