@@ -4,18 +4,16 @@
 
 <script src="~/Content/js/utils.min.js"></script>
 <!-- OpenLayer CSS-->
-<link rel="stylesheet" href="~/Content/css/ol.css" type="text/css" />
-<link rel="stylesheet" href="~/Content/css/ol3-layerswitcher.css" type="text/css" />
-<link rel="stylesheet" href="~/Content/css/ol3-popup.css" type="text/css" />
-<link rel="stylesheet" href="~/Content/css/ol3gm.css" type="text/css" />
-<!--OpenLayer JS-->
-<script src="~/Content/js/ol.js"></script>
-<script src="~/Content/js/ol3-layerswitcher.min.js"></script>
-<script src="~/Content/js/ol3-popup.min.js"></script>
+@*<link rel="stylesheet" href="~/Content/css/ol.css" type="text/css" />*@
 
-<link type="text/css" rel="stylesheet" href="~/Content/css/jsgrid.css" />
-<link type="text/css" rel="stylesheet" href="~/Content/css/jsgrid-theme.css" />
-<script type="text/javascript" src="~/Content/js/jsgrid.js"></script>
+<!--OpenLayer JS-->
+@*<script src="~/Content/js/ol.js"></script>
+<script src="~/Content/js/ol3-layerswitcher.min.js"></script>
+<script src="~/Content/js/ol3-popup.min.js"></script>*@
+
+@*<link type="text/css" rel="stylesheet" href="~/Content/css/jsgrid.css" />
+<link type="text/css" rel="stylesheet" href="~/Content/css/jsgrid-theme.css" />*@
+@*<script type="text/javascript" src="~/Content/js/jsgrid.js"></script>*@
 
 <script type="text/javascript">
         var Model = @Html.Raw(Json.Encode(@Model));
@@ -215,7 +213,7 @@
         /*Grilla*/
 
 
-        CargarGrilla();
+        //CargarGrilla();
         /*Fin de la grilla*/
 
         /*multiselet tema*/
@@ -245,7 +243,7 @@
                     indexFeature++;
                     var info = lat + '|' + lng;
                     var item = { "n": indexFeature, "Tipo": 1, "Info": info };
-                    $("#jsGrid").jsGrid("insertItem", item);
+                    //$("#jsGrid").jsGrid("insertItem", item);
 
                     lsFeatures.push(item);
                     map_AgregarPunto([lat, lng]);
@@ -279,7 +277,7 @@
                         puntos.push([lsLat[0], lsLng[0]]);
                     }
                     var item = { "n": indexFeature, "Tipo": 3, "Info": info };
-                    $("#jsGrid").jsGrid("insertItem", item);
+                    //$("#jsGrid").jsGrid("insertItem", item);
                     lsFeatures.push(item);
                     map_AgregarPoligono(puntos);
                 }
@@ -355,112 +353,112 @@
 
 
     /*Control del mapa*/
-    var wmsSource = new ol.source.TileWMS({
-        url: 'http://10.10.10.14:8082/geoserver/visor/wms',
-        params: { 'LAYERS': 'visor:view_pointspublicacion' },
-        serverType: 'geoserver'
-    });
+    //var wmsSource = new ol.source.TileWMS({
+    //    url: 'http://10.10.10.14:8082/geoserver/visor/wms',
+    //    params: { 'LAYERS': 'visor:view_pointspublicacion' },
+    //    serverType: 'geoserver'
+    //});
 
-    var vectorSource = new ol.source.Vector({});
+    //var vectorSource = new ol.source.Vector({});
 
-    var vista = new ol.View({
-        projection: "EPSG:4326",
-        //center: [-74, -4],
-        //zoom: 5,
-        center: [-75, -9],
-        zoom: 5,
-    });
+    //var vista = new ol.View({
+    //    projection: "EPSG:4326",
+    //    //center: [-74, -4],
+    //    //zoom: 5,
+    //    center: [-75, -9],
+    //    zoom: 5,
+    //});
 
-    var map = new ol.Map({
-        target: 'map',
-        view: vista,
+    //var map = new ol.Map({
+    //    target: 'map',
+    //    view: vista,
 
-        controls: ol.control.defaults().extend([
-            new ol.control.ScaleLine(),
-            new ol.control.ZoomSlider(),
-        ])
+    //    controls: ol.control.defaults().extend([
+    //        new ol.control.ScaleLine(),
+    //        new ol.control.ZoomSlider(),
+    //    ])
 
-    });
+    //});
 
-    var wmsLayer1 = new ol.layer.Tile({
-        type: 'base',
-        title: 'Mapa Base',
-        source: new ol.source.TileWMS({
-            url: 'http://10.10.10.14:8082/geoserver/visor/wms',
-            params: {
-                LAYERS: 'visor:departamentos',
-                FORMAT: 'image/png'
-            },
-        })
-    });
-    map.addLayer(wmsLayer1);
+    //var wmsLayer1 = new ol.layer.Tile({
+    //    type: 'base',
+    //    title: 'Mapa Base',
+    //    source: new ol.source.TileWMS({
+    //        url: 'http://10.10.10.14:8082/geoserver/visor/wms',
+    //        params: {
+    //            LAYERS: 'visor:departamentos',
+    //            FORMAT: 'image/png'
+    //        },
+    //    })
+    //});
+    //map.addLayer(wmsLayer1);
 
-    function map_AgregarPoligono(puntos) {
+    //function map_AgregarPoligono(puntos) {
 
-        var ring = puntos;
-        var polygon = new ol.geom.Polygon([ring]);
-        var feature = new ol.Feature(polygon);
-        var vectorSource = new ol.source.Vector();
-        vectorSource.addFeature(feature);
-        var vectorLayer = new ol.layer.Vector({
-            source: vectorSource
-        });
-        map.addLayer(vectorLayer);
-        lsVectorLayers.push(vectorLayer);
-    }
+    //    var ring = puntos;
+    //    var polygon = new ol.geom.Polygon([ring]);
+    //    var feature = new ol.Feature(polygon);
+    //    var vectorSource = new ol.source.Vector();
+    //    vectorSource.addFeature(feature);
+    //    var vectorLayer = new ol.layer.Vector({
+    //        source: vectorSource
+    //    });
+    //    map.addLayer(vectorLayer);
+    //    lsVectorLayers.push(vectorLayer);
+    //}
 
-    function map_AgregarPunto(punto) {
+    //function map_AgregarPunto(punto) {
 
-        var point_feature = new ol.Feature({});
-        var point_geom = new ol.geom.Point(punto);
-        point_feature.setGeometry(point_geom);
-        var vectorLayer = new ol.layer.Vector({
-            source: new ol.source.Vector({
-                features: [point_feature]
-            })
-        })
-        map.addLayer(vectorLayer);
-        lsVectorLayers.push(vectorLayer);
-    }
+    //    var point_feature = new ol.Feature({});
+    //    var point_geom = new ol.geom.Point(punto);
+    //    point_feature.setGeometry(point_geom);
+    //    var vectorLayer = new ol.layer.Vector({
+    //        source: new ol.source.Vector({
+    //            features: [point_feature]
+    //        })
+    //    })
+    //    map.addLayer(vectorLayer);
+    //    lsVectorLayers.push(vectorLayer);
+    //}
 
 
-    function CargarGrilla() {
+    //function CargarGrilla() {
 
-        $("#jsGrid").jsGrid({
-            width: "100%",
-            height: "400px",
-            sorting: true,
-            paging: true,
-            deleteConfirm: "¿Estás seguro de eliminar?",
-            noDataContent: "Sin datos",
-            //data: datos,
+    //    $("#jsGrid").jsGrid({
+    //        width: "100%",
+    //        height: "400px",
+    //        sorting: true,
+    //        paging: true,
+    //        deleteConfirm: "¿Estás seguro de eliminar?",
+    //        noDataContent: "Sin datos",
+    //        //data: datos,
 
-            fields: [
-                {
-                    name: "Tipo", type: "text", width: 20, align: "center", itemTemplate: function (value) {
-                        if (value == 1) {
-                            return $("<div>").addClass("dv_icpunto");
-                        }
-                        else if (value == 2) {
-                            return $("<div>").addClass("dv_iclinea");
-                        }
-                        else if (value == 3) {
-                            return $("<div>").addClass("dv_icpoligono");
-                        }
-                        else {
-                            return $("<div>");
-                        }
-                    }
-                },
-                { name: "Info", type: "text", width: 200 },
-                { type: "control", editButton: false }
-            ],
-            onItemDeleted: function (args) {
-                quitarElemento(args.item.n);
-                console.log(lsFeatures);
-            }
-        });
-    }
+    //        fields: [
+    //            {
+    //                name: "Tipo", type: "text", width: 20, align: "center", itemTemplate: function (value) {
+    //                    if (value == 1) {
+    //                        return $("<div>").addClass("dv_icpunto");
+    //                    }
+    //                    else if (value == 2) {
+    //                        return $("<div>").addClass("dv_iclinea");
+    //                    }
+    //                    else if (value == 3) {
+    //                        return $("<div>").addClass("dv_icpoligono");
+    //                    }
+    //                    else {
+    //                        return $("<div>");
+    //                    }
+    //                }
+    //            },
+    //            { name: "Info", type: "text", width: 200 },
+    //            { type: "control", editButton: false }
+    //        ],
+    //        onItemDeleted: function (args) {
+    //            quitarElemento(args.item.n);
+    //            console.log(lsFeatures);
+    //        }
+    //    });
+    //}
 
     ListarRevPub();
 
@@ -540,7 +538,7 @@
 
                                     var info = punto[0] + '|' + punto[1];
                                     var item = { "n": indexFeature, "Tipo": 1, "Info": info };
-                                    $("#jsGrid").jsGrid("insertItem", item);
+                                    //$("#jsGrid").jsGrid("insertItem", item);
 
                                     lsFeatures.push(item);
                                     //map_AgregarPunto(punto);
@@ -631,8 +629,8 @@
         });
 
         lsFeatures = Array();
-        $("#jsGrid").jsGrid('destroy');
-        CargarGrilla();
+        //$("#jsGrid").jsGrid('destroy');
+        //CargarGrilla();
         //lstProd = [];
         //$("input[type=hidden],#txtCodNota").val("");
         //$("#lblNom,#lblDOI,#lblTel,#tblRegProd tbody").html("");
