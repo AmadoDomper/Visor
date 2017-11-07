@@ -8,8 +8,9 @@
     <link rel="shortcut icon" href="~/Content/img/favicon.ico" type="image/x-icon">
     <title>@ViewBag.Title | Mapa de Publicaciones IIAP</title>
     <!-- Bootstrap Core CSS -->
-    <link href="~/Content/css/bootstrap.css" rel="stylesheet">
-
+    @*<link href="~/Content/css/bootstrap.css" rel="stylesheet">*@
+    <link href="http://iiap.org.pe/visor/css/bootstrap.own.min.css" rel="stylesheet">
+    
     <!-- Custom CSS -->
     <link href="~/Content/css/main.css" rel="stylesheet">
     <link rel="stylesheet" href="~/Content/font-awesome-4.7.0/css/font-awesome.css" />
@@ -21,7 +22,7 @@
     <link rel="stylesheet" href="~/Content/css/ol3gm.css" type="text/css" />
 
     <!--SMOKE VALIDATION CSS-->
-    <link rel="stylesheet" href="~/Content/css/smoke.css" type="text/css" />
+    @*<link rel="stylesheet" href="~/Content/css/smoke.css" type="text/css" />*@
 </head>
 @{
     Usuario oUsuario = new Usuario();
@@ -30,8 +31,9 @@
 <body>
     <!--js archivos-->
     <!-- jQuery -->
-    <script src="~/Content/js/jquery.js"></script>
-
+    @*<script src="~/Content/js/jquery.js"></script>*@
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    
     <!--Personal Utils-->
     <script src="~/Content/js/utils.min.js"></script>
     <script src="~/Content/js/conexion-1.0.0.min.js"></script>
@@ -39,13 +41,13 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="~/Content/js/bootstrap.min.js"></script>
     <!--OpenLayer JS-->
-    <script src="~/Content/js/ol.js"></script>
+    @*<script src="~/Content/js/ol.js"></script>*@
+    <script src="https://openlayers.org/en/v3.7.0/build/ol.js"></script>
     <script src="~/Content/js/ol3-layerswitcher.min.js"></script>
     <script src="~/Content/js/ol3-popup.min.js"></script>
     
-
     <!--SMOKE VALIDATION JS-->
-    <script src="~/Content/js/smoke.min.js"></script>
+    @*<script src="~/Content/js/smoke.min.js"></script>*@
 
     <!--fin js archivos-->
 
