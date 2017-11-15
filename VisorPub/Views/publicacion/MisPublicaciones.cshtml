@@ -96,7 +96,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label>Año de publicación</label>
+                                            <label>Año Publicación</label>
                                             <select class="form-control" id="txtAnoPublicacion" name="txtAnoPublicacion" required></select>
                                         </div>
                                     </div>
@@ -359,6 +359,7 @@
     $("#btcancelar").bind("click", function () {
         Limpiar();
         vista("#target1");
+        map.updateSize();
     });
 
     $("#btnNuevaPublicacion").bind("click", function () {
@@ -370,7 +371,7 @@
     });
 
     $("#txtValor").keyup(function (e) {
-        if (e.which == 13) { ListarPub(); }
+        if (e.which == 13) { ListarMisPub(); }
     });
 
     function Limpiar() {
