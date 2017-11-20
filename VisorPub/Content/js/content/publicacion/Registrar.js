@@ -17,7 +17,7 @@ function quitarElemento(index) {
 
 /*Control del mapa*/
 var wmsSource = new ol.source.TileWMS({
-    url: 'http://200.60.174.197:8082/geoserver/visor/wms',
+    url: 'http://10.10.10.14:8082/geoserver/visor/wms',
     params: { 'LAYERS': 'visor:view_pointspublicacion' },
     serverType: 'geoserver'
 });
@@ -47,7 +47,7 @@ var wmsLayer1 = new ol.layer.Tile({
     type: 'base',
     title: 'Mapa Base',
     source: new ol.source.TileWMS({
-        url: 'http://200.60.174.197:8082/geoserver/visor/wms',
+        url: 'http://10.10.10.14:8082/geoserver/visor/wms',
         params: {
             LAYERS: 'visor:departamentos',
             FORMAT: 'image/png'
@@ -179,12 +179,12 @@ $(document).ready(function () {
         $().addPunto({
             alAceptar: function (lat, lng) {
                 indexFeature++;
-                var info = lat + '|' + lng;
+                var info = lng + '|' + lat;
                 var item = { "n": indexFeature, "Tipo": 1, "Info": info };
                 $("#jsGrid").jsGrid("insertItem", item);
                 
                 lsFeatures.push(item);
-                map_AgregarPunto([lat,lng]);
+                map_AgregarPunto([lng, lat]);
             }
         });
     });
