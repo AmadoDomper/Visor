@@ -14,7 +14,7 @@
 
 <div class="col-lg-11 col-lg-offset-0-5">
     <input id="hdnEstado" type="hidden" />
-    <input id="hdnNotaEst" type="hidden" />
+    <input id="hdnPubId" type="hidden" />
     <input id="hdnPag" type="hidden" />
     @*<div class="row">*@
     <div id="target1" class="panel move panel-inverse active m-t-5">
@@ -123,7 +123,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Referencia bibliográfica</label>
-                                            <textarea class="form-control" id="txtReferencia" name="txtReferencia" rows="5" placeholder="Ingrese aquí la referencia bibligráfica de acuerdo al formato." value="" minlength="1" required="" style="/* width: 500px; */margin: 0px;/* height: 112px; */background-color: white;"></textarea>
+                                            <textarea class="form-control" id="txtReferencia" name="txtReferencia" rows="5" placeholder="Ingrese aquí la referencia bibligráfica de acuerdo al formato." value="" minlength="1" required="" style="margin: 0px;"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -134,7 +134,7 @@
                                 <h3>Información georeferencial</h3>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <input type="button" class="btn btn-success btn-block btn-fill" value="Agregar punto" id="btAddPunto" name="btAddPunto">
+                                        <input type="button" class="btn btn-success btn-block btn-fill m-b-10 active" value="Agregar punto" id="btAddPunto" name="btAddPunto">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -153,7 +153,8 @@
                         <div class="row m-t-5">
                             <div class="col-md-8"></div>
                             <div class="col-md-2">
-                                <input type="button" class="btn btn-primary btn-block btn-fill" value="Enviar" id="btenviar" name="btenviar">
+                                <input type="button" class="btn btn-primary btn-block btn-fill" style="display:none;" value="Aceptar" id="btnAceptarMod" name="btnAceptarMod">
+                                <input type="button" class="btn btn-primary btn-block btn-fill" style="margin-top: 0px;" value="Modificar" id="btnModificar">
                             </div>
                             <div class="col-md-2">
                                 <input type="button" class="btn btn-default btn-block btn-fill" value="Cancelar" id="btcancelar" name="btcancelar">
@@ -202,90 +203,35 @@
         });
 
         /*Grilla*/
-
         CargarGrilla();
         /*Fin de la grilla*/
-
-        /*multiselet tema*/
-
-        //function formatDatosTemas(lsTemas) {
-        //    var datos = new Array();
-        //    for (var i = 0; i < lsTemas.length; i++) {
-        //        var fila = { label: lsTemas[i].tem_descripcion, title: lsTemas[i].tem_descripcion, value: lsTemas[i].tem_idtema };
-        //        datos.push(fila);
-        //    }
-        //    return datos;
-        //}
-
-        //$('#ddlTema').multiselect({
-        //    nonSelectedText: 'Elige un tema',
-        //    buttonWidth: '250'
-        //});
-        //$('#ddlTema').multiselect('dataprovider', formatDatosTemas(Model.lsTemas));
-
-        /*fin multiselect tema*/
-
-
 
         $('#btAddPunto').click(function () {
             $().addPunto({
                 alAceptar: function (lat, lng) {
                     indexFeature++;
-                    var info = lat + '|' + lng;
+                    var info = lng + '|' + lat;
                     var item = { "n": indexFeature, "Tipo": 1, "Info": info };
-                    //$("#jsGrid").jsGrid("insertItem", item);
+                    $("#jsGrid").jsGrid("insertItem", item);
 
                     lsFeatures.push(item);
-                    map_AgregarPunto([lat, lng]);
+                    map_AgregarPunto([lng, lat]);
                 }
             });
         });
 
-        /* $('#btAddLinea').click(function () {
-             $().addLinea({
-                 alAceptar: function (lat1, lng1, lat2, lng2) {
-
-                 }
-             });
-         });*/
-
-        $('#btAddPoli').click(function () {
-            $().addPoligono({
-                alAceptar: function (lsLat, lsLng) {
-                    indexFeature++;
-                    var info = '';
-                    var puntos = [];
-                    for (var i = 0; i < lsLat.length; i++) {
-                        info += lsLat[i] + '|' + lsLng[i];
-                        if (i != lsLat.length - 1) {
-                            info += ',';
-                        }
-                        puntos.push([lsLat[i], lsLng[i]]);
-                    }
-                    //el poligono debe cerrarse con su punto inicial (como un lazo)
-                    if (lsLat.length > 0) {
-                        puntos.push([lsLat[0], lsLng[0]]);
-                    }
-                    var item = { "n": indexFeature, "Tipo": 3, "Info": info };
-                    //$("#jsGrid").jsGrid("insertItem", item);
-                    lsFeatures.push(item);
-                    map_AgregarPoligono(puntos);
-                }
-            });
-        });
-
-        $('#btenviar').click(function () {
-
+        $('#btnAceptarMod').click(function () {
             if ($('#frm').smkValidate()) {
                 $.fn.Conexion({
-                    direccion: '../Publicacion/RegistrarPublicacion',
+                    direccion: '@Url.Action("EditarPublicacion", "Publicacion")',
                     bloqueo: true,
                     datos: {
+                        "pub_idpublicacion": $("#hdnPubId").val(),
                         "pub_anopublicacion": $('#txtAnoPublicacion').val(),
                         "pub_referenciabibliografica": $('#txtReferencia').val(),
                         "pub_enlace": $('#txtEnlace').val(),
                         "tip_idtipo": $('#ddlTipo').val(),
-                        "ls_tem_idtema": $('#ddlTema').val() /* $('#ddlTema').val().join(',')*/,
+                        "ls_tem_idtema": $('#ddlTema').val(),
                         "features": JSON.stringify(lsFeatures),
                         "pub_titulo": $('#txtTitulo').val()
                     },
@@ -295,13 +241,9 @@
                     }
                 });
             }
-
-
         });
-
-
-
     });
+
 
     var vista = function ($target) {
         var $target = $($target),
@@ -343,73 +285,57 @@
 
 
     /*Control del mapa*/
-    //var wmsSource = new ol.source.TileWMS({
-    //    url: 'http://10.10.10.14:8082/geoserver/visor/wms',
-    //    params: { 'LAYERS': 'visor:view_pointspublicacion' },
-    //    serverType: 'geoserver'
-    //});
+    var wmsSource = new ol.source.TileWMS({
+        url: 'http://10.10.10.14:8082/geoserver/visor/wms',
+        params: { 'LAYERS': 'visor:view_pointspublicacion' },
+        serverType: 'geoserver'
+    });
 
-    //var vectorSource = new ol.source.Vector({});
+    var vectorSource = new ol.source.Vector({});
 
-    //var vista = new ol.View({
-    //    projection: "EPSG:4326",
-    //    //center: [-74, -4],
-    //    //zoom: 5,
-    //    center: [-75, -9],
-    //    zoom: 5,
-    //});
+    var vistaMap = new ol.View({
+        projection: "EPSG:4326",
+        center: [-75, -9],
+        zoom: 5,
+    });
 
-    //var map = new ol.Map({
-    //    target: 'map',
-    //    view: vista,
+    var map = new ol.Map({
+        target: 'map',
+        view: vistaMap,
 
-    //    controls: ol.control.defaults().extend([
-    //        new ol.control.ScaleLine(),
-    //        new ol.control.ZoomSlider(),
-    //    ])
+        controls: ol.control.defaults().extend([
+            new ol.control.ScaleLine(),
+            new ol.control.ZoomSlider(),
+        ])
+    });
 
-    //});
+    var wmsLayer1 = new ol.layer.Tile({
+        type: 'base',
+        title: 'Mapa Base',
+        source: new ol.source.TileWMS({
+            url: 'http://10.10.10.14:8082/geoserver/visor/wms',
+            params: {
+                LAYERS: 'visor:departamentos',
+                FORMAT: 'image/png'
+            },
+        })
+    });
+    map.addLayer(wmsLayer1);
 
-    //var wmsLayer1 = new ol.layer.Tile({
-    //    type: 'base',
-    //    title: 'Mapa Base',
-    //    source: new ol.source.TileWMS({
-    //        url: 'http://10.10.10.14:8082/geoserver/visor/wms',
-    //        params: {
-    //            LAYERS: 'visor:departamentos',
-    //            FORMAT: 'image/png'
-    //        },
-    //    })
-    //});
-    //map.addLayer(wmsLayer1);
 
-    //function map_AgregarPoligono(puntos) {
+    function map_AgregarPunto(punto) {
 
-    //    var ring = puntos;
-    //    var polygon = new ol.geom.Polygon([ring]);
-    //    var feature = new ol.Feature(polygon);
-    //    var vectorSource = new ol.source.Vector();
-    //    vectorSource.addFeature(feature);
-    //    var vectorLayer = new ol.layer.Vector({
-    //        source: vectorSource
-    //    });
-    //    map.addLayer(vectorLayer);
-    //    lsVectorLayers.push(vectorLayer);
-    //}
-
-    //function map_AgregarPunto(punto) {
-
-    //    var point_feature = new ol.Feature({});
-    //    var point_geom = new ol.geom.Point(punto);
-    //    point_feature.setGeometry(point_geom);
-    //    var vectorLayer = new ol.layer.Vector({
-    //        source: new ol.source.Vector({
-    //            features: [point_feature]
-    //        })
-    //    })
-    //    map.addLayer(vectorLayer);
-    //    lsVectorLayers.push(vectorLayer);
-    //}
+        var point_feature = new ol.Feature({});
+        var point_geom = new ol.geom.Point(punto);
+        point_feature.setGeometry(point_geom);
+        var vectorLayer = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                features: [point_feature]
+            })
+        })
+        map.addLayer(vectorLayer);
+        lsVectorLayers.push(vectorLayer);
+    }
 
 
     function CargarGrilla() {
@@ -515,12 +441,18 @@
                             terminado: function (data, textStatus, jqXHR) {
                                 var oPub = JSON.parse(data);
 
+                                $('#hdnPubId').val(oPub.Id);
+                                $("#hdnPubEst").val(oPub.nEstado);
                                 $('#txtTitulo').val(oPub.titulo);
                                 $('#ddlTipo').val(oPub.tipo.Id);
                                 $('#ddlTema').val(oPub.lsTemas[0].id);
                                 $('#txtAnoPublicacion').val(oPub.ano);
                                 $('#txtEnlace').val(oPub.enlace);
                                 $('#txtReferencia').val(oPub.refBi);
+
+                                $("#jsGrid").jsGrid('destroy');
+                                CargarGrilla();
+
                                 for (var i = 0; i < oPub.lsFeatures.length; i++) {
                                     var punto = oPub.lsFeatures[i].Info.split(' ');
                                     map_AgregarPunto(punto);
@@ -528,13 +460,17 @@
 
                                     var info = punto[0] + '|' + punto[1];
                                     var item = { "n": indexFeature, "Tipo": 1, "Info": info };
-                                    //$("#jsGrid").jsGrid("insertItem", item);
+                                    $("#jsGrid").jsGrid("insertItem", item);
 
                                     lsFeatures.push(item);
                                     //map_AgregarPunto(punto);
                                 }
 
+                                map.updateSize();
 
+                                if (oPub.nEstado == 1) {
+                                    SetEstadoSolicitado();
+                                }
 
                                 /*$("#hdnPersId").val(oNota.oPers.id);
                                 $("#hdnNotaEst").val(oNota.oNotaEst.id);
@@ -594,14 +530,23 @@
         });
     }
 
+    function SetEstadoSolicitado() {
+        $("#target2 :input").prop("disabled", true);
+        $("#btcancelar").prop("disabled", false);
+        $("#btnModificar").prop("disabled", false).show();
+        $("#btnAceptarMod").hide();
+    }
+
+    $("#btnModificar").bind("click",function (){
+        $("#target2 :input").prop("disabled", false);
+        $("#btnModificar").hide();
+        $("#btnAceptarMod").prop("disabled", false).show();
+    });
+
     $("#btcancelar").bind("click", function () {
         Limpiar();
         vista("#target1");
     });
-
-    //$("#btnNuevaNota").bind("click", function () {
-    //    map.updateSize();
-    //});
 
     $("#btnBuscarPub").bind("click", function () {
         ListarRevPub();
