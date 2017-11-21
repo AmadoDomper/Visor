@@ -271,7 +271,6 @@
                                 $('#txtReferencia').val(oPub.refBi);
                                 for (var i = 0; i < oPub.lsFeatures.length; i++) {
                                     var punto = oPub.lsFeatures[i].Info.split(' ');
-                                        map_AgregarPunto(punto);
                                         indexFeature++;
 
                                     var info = punto[0] + '|' + punto[1];
@@ -279,7 +278,7 @@
                                     $("#jsGrid").jsGrid("insertItem", item);
 
                                     lsFeatures.push(item);
-                                    //map_AgregarPunto(punto);
+                                    map_AgregarPunto(punto,indexFeature);
 
                                 }
 

@@ -29,6 +29,7 @@ var map = new ol.Map({
     controls: ol.control.defaults().extend([
         new ol.control.ScaleLine(),
         new ol.control.ZoomSlider(),
+        new ol.control.FullScreen()
     ])
 
 });
@@ -56,15 +57,33 @@ var wmsLayer1 = new ol.layer.Tile({
             LAYERS: 'visor:departamentos',
             FORMAT: 'image/png'
         },
-    })
+    }),
+    opacity: 0
 });
 map.addLayer(wmsLayer1);
 
-function map_AgregarPunto(punto) {
+function map_AgregarPunto(punto,index) {
 
     var point_feature = new ol.Feature({});
-    var point_geom = new ol.geom.Point(ol.proj.transform([+punto[0],+punto[1]], 'EPSG:4326', 'EPSG:3857'));
+    var point_geom = new ol.geom.Point(ol.proj.transform([+punto[0], +punto[1]], 'EPSG:4326', 'EPSG:3857'));
     point_feature.setGeometry(point_geom);
+
+    var stroke = new ol.style.Stroke({ color: 'black', width: 0 });
+    var goldFill = new ol.style.Fill({ color: '#FF0000' });
+
+    var squareStyle = new ol.style.Style({
+        image: new ol.style.Circle({
+            fill: goldFill,
+            //stroke: stroke,
+            //points: 2,
+            radius: 3,
+            //angle: Math.PI / 4
+        })
+    });
+
+    point_feature.setId(index);
+    point_feature.setStyle(squareStyle);
+
     var vectorLayer = new ol.layer.Vector({
         source: new ol.source.Vector({
             features: [point_feature]
@@ -109,7 +128,10 @@ function CargarGrilla() {
         onItemDeleted: function (args) {
             quitarElemento(args.item.n);
             console.log(lsFeatures);
-        }
+        }/*,
+        rowClick: function myfunction(args) {
+            alert(args.item.n);
+        }*/
     });
 }
 
@@ -161,8 +183,8 @@ $(document).ready(function () {
     //});
     //$('#ddlTema').multiselect('dataprovider', formatDatosTemas(Model.lsTemas));
 
-    /*fin multiselect tema*/ 
-    
+    /*fin multiselect tema*/
+
 
 
     $('#btAddPunto').click(function () {
@@ -172,20 +194,20 @@ $(document).ready(function () {
                 var info = lng + '|' + lat;
                 var item = { "n": indexFeature, "Tipo": 1, "Info": info };
                 $("#jsGrid").jsGrid("insertItem", item);
-                
+
                 lsFeatures.push(item);
-                map_AgregarPunto([lng, lat]);
+                map_AgregarPunto([lng, lat], indexFeature);
             }
         });
     });
 
-   /* $('#btAddLinea').click(function () {
-        $().addLinea({
-            alAceptar: function (lat1, lng1, lat2, lng2) {
-
-            }
-        });
-    });*/
+    /* $('#btAddLinea').click(function () {
+         $().addLinea({
+             alAceptar: function (lat1, lng1, lat2, lng2) {
+ 
+             }
+         });
+     });*/
 
     $('#btAddPoli').click(function () {
         $().addPoligono({
@@ -236,7 +258,7 @@ $(document).ready(function () {
             });
         }
 
-        
+
     });
 
 });
