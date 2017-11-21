@@ -16,20 +16,10 @@ function quitarElemento(index) {
 
 
 /*Control del mapa*/
-var wmsSource = new ol.source.TileWMS({
-    url: 'http://10.10.10.14:8082/geoserver/visor/wms',
-    params: { 'LAYERS': 'visor:view_pointspublicacion' },
-    serverType: 'geoserver'
-});
-
-var vectorSource = new ol.source.Vector({});
 
 var vista = new ol.View({
-    projection: "EPSG:4326",
-    //center: [-74, -4],
-    //zoom: 5,
-    center: [-75, -9],
-    zoom: 5,
+    center: ol.proj.transform([-75, -9], 'EPSG:4326', 'EPSG:3857'),
+    zoom: 5
 });
 
 var map = new ol.Map({
@@ -42,6 +32,20 @@ var map = new ol.Map({
     ])
 
 });
+
+
+
+var wmsLayer2 = new ol.layer.Tile({
+    source: new ol.source.OSM({
+        projection: 'EPSG:3857',
+        url: 'http://mt{0-3}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+        attributions: [
+            //new ol.Attribution({ html: '© Google' }),
+            //new ol.Attribution({ html: '<a href="https://developers.google.com/maps/terms">Terms of Use.</a>' })
+        ]
+    })
+});
+map.addLayer(wmsLayer2);
 
 var wmsLayer1 = new ol.layer.Tile({
     type: 'base',
@@ -56,24 +60,10 @@ var wmsLayer1 = new ol.layer.Tile({
 });
 map.addLayer(wmsLayer1);
 
-function map_AgregarPoligono(puntos) {
-
-    var ring=puntos;
-    var polygon = new ol.geom.Polygon([ring]);
-    var feature = new ol.Feature(polygon);
-    var vectorSource = new ol.source.Vector();
-    vectorSource.addFeature(feature);
-    var vectorLayer = new ol.layer.Vector({
-        source: vectorSource
-    });
-    map.addLayer(vectorLayer);
-    lsVectorLayers.push(vectorLayer);
-}
-
 function map_AgregarPunto(punto) {
 
     var point_feature = new ol.Feature({});
-    var point_geom = new ol.geom.Point(punto);
+    var point_geom = new ol.geom.Point(ol.proj.transform([+punto[0],+punto[1]], 'EPSG:4326', 'EPSG:3857'));
     point_feature.setGeometry(point_geom);
     var vectorLayer = new ol.layer.Vector({
         source: new ol.source.Vector({
