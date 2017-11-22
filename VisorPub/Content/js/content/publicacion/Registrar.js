@@ -8,6 +8,7 @@ function quitarElemento(index) {
             lsFeatures.splice(i, 1);
             map.removeLayer(lsVectorLayers[i])
             lsVectorLayers.splice(i, 1);
+            indexFeature--;
             break;
         }
     }
@@ -41,26 +42,24 @@ var wmsLayer2 = new ol.layer.Tile({
         projection: 'EPSG:3857',
         url: 'http://mt{0-3}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
         attributions: [
-            //new ol.Attribution({ html: '© Google' }),
-            //new ol.Attribution({ html: '<a href="https://developers.google.com/maps/terms">Terms of Use.</a>' })
         ]
     })
 });
 map.addLayer(wmsLayer2);
 
-var wmsLayer1 = new ol.layer.Tile({
-    type: 'base',
-    title: 'Mapa Base',
-    source: new ol.source.TileWMS({
-        url: 'http://10.10.10.14:8082/geoserver/visor/wms',
-        params: {
-            LAYERS: 'visor:departamentos',
-            FORMAT: 'image/png'
-        },
-    }),
-    opacity: 0
-});
-map.addLayer(wmsLayer1);
+//var wmsLayer1 = new ol.layer.Tile({
+//    type: 'base',
+//    title: 'Mapa Base',
+//    source: new ol.source.TileWMS({
+//        url: 'http://10.10.10.14:8082/geoserver/visor/wms',
+//        params: {
+//            LAYERS: 'visor:departamentos',
+//            FORMAT: 'image/png'
+//        },
+//    }),
+//    opacity: 0
+//});
+//map.addLayer(wmsLayer1);
 
 function map_AgregarPunto(punto,index) {
 
@@ -71,7 +70,7 @@ function map_AgregarPunto(punto,index) {
     var stroke = new ol.style.Stroke({ color: 'black', width: 0 });
     var goldFill = new ol.style.Fill({ color: '#FF0000' });
 
-    var squareStyle = new ol.style.Style({
+    var circleStyle = new ol.style.Style({
         image: new ol.style.Circle({
             fill: goldFill,
             //stroke: stroke,
@@ -82,7 +81,7 @@ function map_AgregarPunto(punto,index) {
     });
 
     point_feature.setId(index);
-    point_feature.setStyle(squareStyle);
+    point_feature.setStyle(circleStyle);
 
     var vectorLayer = new ol.layer.Vector({
         source: new ol.source.Vector({

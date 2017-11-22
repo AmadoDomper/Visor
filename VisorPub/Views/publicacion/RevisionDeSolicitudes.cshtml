@@ -267,9 +267,15 @@
 
 
 
-    var lsFeatures = Array();
-    var lsVectorLayers = Array();
-    var indexFeature = 0;
+    var lsFeatures;
+    var lsVectorLayers;
+    var indexFeature;
+
+    function IniciaDatos(){
+         lsFeatures = Array();
+         lsVectorLayers = Array();
+         indexFeature = 0;
+    }
 
     function quitarElemento(index) {
         for (var i = 0; i < lsFeatures.length; i++) {
@@ -277,26 +283,21 @@
                 lsFeatures.splice(i, 1);
                 map.removeLayer(lsVectorLayers[i])
                 lsVectorLayers.splice(i, 1);
+                indexFeature--;
                 break;
             }
         }
     }
 
-
+    
 
     /*Control del mapa*/
-    var wmsSource = new ol.source.TileWMS({
-        url: 'http://10.10.10.14:8082/geoserver/visor/wms',
-        params: { 'LAYERS': 'visor:view_pointspublicacion' },
-        serverType: 'geoserver'
-    });
 
-    var vectorSource = new ol.source.Vector({});
+    //var vectorSource = new ol.source.Vector({});
 
     var vistaMap = new ol.View({
-        projection: "EPSG:4326",
-        center: [-75, -9],
-        zoom: 5,
+        center: ol.proj.transform([-75, -9], 'EPSG:4326', 'EPSG:3857'),
+        zoom: 5
     });
 
     var map = new ol.Map({
@@ -306,29 +307,57 @@
         controls: ol.control.defaults().extend([
             new ol.control.ScaleLine(),
             new ol.control.ZoomSlider(),
+            new ol.control.FullScreen()
         ])
     });
 
-    var wmsLayer1 = new ol.layer.Tile({
-        type: 'base',
-        title: 'Mapa Base',
-        source: new ol.source.TileWMS({
-            url: 'http://10.10.10.14:8082/geoserver/visor/wms',
-            params: {
-                LAYERS: 'visor:departamentos',
-                FORMAT: 'image/png'
-            },
+    var wmsLayer2 = new ol.layer.Tile({
+        source: new ol.source.OSM({
+            projection: 'EPSG:3857',
+            url: 'http://mt{0-3}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+            attributions: [
+            ]
         })
     });
-    map.addLayer(wmsLayer1);
+    map.addLayer(wmsLayer2);
 
+    //var wmsLayer1 = new ol.layer.Tile({
+    //    type: 'base',
+    //    title: 'Mapa Base',
+    //    source: new ol.source.TileWMS({
+    //        url: 'http://10.10.10.14:8082/geoserver/visor/wms',
+    //        params: {
+    //            LAYERS: 'visor:departamentos',
+    //            FORMAT: 'image/png'
+    //        },
+    //    }),
+    //    opacity: 0
+    //});
+    //map.addLayer(wmsLayer1);
 
-    function map_AgregarPunto(punto) {
+    function map_AgregarPunto(punto,index) {
 
         var point_feature = new ol.Feature({});
-        var point_geom = new ol.geom.Point(punto);
+        var point_geom = new ol.geom.Point(ol.proj.transform([+punto[0], +punto[1]], 'EPSG:4326', 'EPSG:3857'));
         point_feature.setGeometry(point_geom);
-        var vectorLayer = new ol.layer.Vector({
+
+        var stroke = new ol.style.Stroke({ color: 'black', width: 0 });
+        var goldFill = new ol.style.Fill({ color: '#FF0000' });
+
+        var circleStyle = new ol.style.Style({
+            image: new ol.style.Circle({
+                fill: goldFill,
+                //stroke: stroke,
+                //points: 2,
+                radius: 3,
+                //angle: Math.PI / 4
+            })
+        });
+
+        point_feature.setId(index);
+        point_feature.setStyle(circleStyle);
+
+        var vectorLayer = new ol.layer.Vector({ //Verificar las ventajas de poner en una sola capa
             source: new ol.source.Vector({
                 features: [point_feature]
             })
@@ -451,11 +480,11 @@
                                 $('#txtReferencia').val(oPub.refBi);
 
                                 $("#jsGrid").jsGrid('destroy');
+                                IniciaDatos();
                                 CargarGrilla();
 
                                 for (var i = 0; i < oPub.lsFeatures.length; i++) {
                                     var punto = oPub.lsFeatures[i].Info.split(' ');
-                                    map_AgregarPunto(punto);
                                     indexFeature++;
 
                                     var info = punto[0] + '|' + punto[1];
@@ -463,7 +492,7 @@
                                     $("#jsGrid").jsGrid("insertItem", item);
 
                                     lsFeatures.push(item);
-                                    //map_AgregarPunto(punto);
+                                    map_AgregarPunto(punto);
                                 }
 
                                 map.updateSize();
