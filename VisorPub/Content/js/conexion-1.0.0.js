@@ -42,6 +42,7 @@ function BloquearCarga() {
 
 function DesbloquearCarga() {
     $("#vntEspera").modal('hide');
+    //$('.modal.in').modal('hide')
     //$("div#vntEspera").remove();
     //$(".modal-backdrop").remove();
 }

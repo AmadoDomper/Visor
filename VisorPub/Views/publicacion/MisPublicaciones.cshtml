@@ -205,7 +205,7 @@
 
     ListarMisPub();
 
-    function ListarMisPub(nPage, nSize) {
+    function ListarMisPub(nPage, nSize, blo) {
         var cPubTitulo, nPubId,cInst;
         var nPubEst = $("#cmbPubEstado").val();
         var tpoBsq = $("#cmbTpoBsq").val();
@@ -233,7 +233,7 @@
         $.fn.Conexion({
             direccion: '@Url.Action("ListarMisPublicaciones", "Publicacion")',
             datos: { "nPubEst": nPubEst, "nPage": nPage, "nSize": nSize, "nPubId": nPubId, "cPubTitulo": cPubTitulo, "cInst":cInst },
-            bloqueo: true,
+            bloqueo: blo == false ? false : true ,
             terminado: function (data) {
                 var d = JSON.parse(data);
 
@@ -274,13 +274,15 @@
                                         indexFeature++;
 
                                     var info = punto[0] + '|' + punto[1];
-                                    var item = { "n": indexFeature, "Tipo": 1, "Info": info };
+                                    var item = { "n": indexFeature, "Tipo": 1, "Info": info,"Longitud": punto[0], "Latitud": punto[1]};
                                     $("#jsGrid").jsGrid("insertItem", item);
 
                                     lsFeatures.push(item);
                                     map_AgregarPunto(punto,indexFeature);
 
                                 }
+
+                                map.updateSize();
 
                                 if (oPub.nEstado == 1) {
                                     SetEstadoSolicitado();
@@ -376,12 +378,11 @@
     function Limpiar() {
         $('#frm')[0].reset();
         $("#target2 :input").prop("disabled", false);
-        lsVectorLayers.forEach(function(entry) {
-            map.removeLayer(entry)
-        });
+
+        map.getLayers().getArray()[1].getSource().clear();
 
         lsFeatures = Array();
-        lsVectorLayers = Array();
+        //lsVectorLayers = Array();
         indexFeature = 0;
 
         $("#jsGrid").jsGrid('destroy');
