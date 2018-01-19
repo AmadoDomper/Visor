@@ -45,7 +45,7 @@
 </div>
 
 <div class="col-lg-6 col-lg-offset-3">
-    <div id="target2" class="panel move panel-inverse m-t-5" data-sortable-id="form-stuff-1" style="display: none;">
+    <div id="target2" class="move panel-inverse m-t-5" data-sortable-id="form-stuff-1" style="display: none;">
         <form role="form" data-toggle="validator" action="" id="frmUsuario" autocomplete="off" method="post" class="form-horizontal ng-pristine ng-valid">
             <div class="panel panel-inverse" data-sortable-id="form-stuff-1">
                 <div class="panel-heading">
@@ -198,7 +198,7 @@
 
     ListarUsuarios();
 
-    function ListarUsuarios(nPage, nSize) {
+    function ListarUsuarios(nPage, nSize, blo) {
         var nUsuId, cUsuDesc, cUsuName, cUsuDOI;
         var tpoBsq = $("#cmbTpoBsq").val();
         var valor = $("#txtValor").val();
@@ -225,7 +225,7 @@
         $.fn.Conexion({
             direccion: '@Url.Action("ListaUsuariosPag", "Usuario")',
             datos: { "nPage": nPage, "nSize": nSize, "nUsuId": nUsuId, "cUsuDni": cUsuDesc, "cUsuName": cUsuName },
-            bloqueo: true,
+            bloqueo: blo == false ? false : true,
             terminado: function (data) {
                 var d = JSON.parse(data);
 
@@ -426,7 +426,7 @@
                     terminado: function (data, textStatus, jqXHR) {
                         Resultado(data);
                     },
-                    bloqueo: true
+                    bloqueo: false
                 });
             } else {
                 alerta("#msg", "Es necesario completar los campos que están en rojo.");
@@ -452,7 +452,7 @@
             } else {
                 $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Se registró datos del usuario correctamente", funcionAceptar: Limpiar });
             }
-            ListarUsuarios(1, 10);
+            ListarUsuarios(1, 10,false);
         } else if (dato == -1) {
             alerta("#msg", "Ya existe un usuario asignado a esta persona");
             $("#txtBuscarPers").focus();
