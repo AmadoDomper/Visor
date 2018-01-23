@@ -1,13 +1,26 @@
 ﻿var lsFeatures = Array();
-var lsVectorLayers = Array();
+//var lsVectorLayers = Array();
 var indexFeature = 0;
 
-function quitarElemento(index) {
+function quitarElemento(id) {
+
+    //map.getLayers().forEach(function (layer) {
+    //    if (layer instanceof ol.layer.Vector) {
+    //        if (layer.getSource().getFeatures()[0].getId() == id) {
+    //            map.removeLayer(layer);
+    //        }
+    //    }
+    //});
+
+    var layer = map.getLayers().getArray()[1].getSource();
+    layer.removeFeature(layer.getFeatureById(id));
+
     for (var i = 0; i < lsFeatures.length; i++) {
-        if (lsFeatures[i].n == index) {
+        if (lsFeatures[i].n == id) {
             lsFeatures.splice(i, 1);
-            map.removeLayer(lsVectorLayers[i])
-            lsVectorLayers.splice(i, 1);
+            //map.removeLayer(lsVectorLayers[i])
+            //lsVectorLayers.splice(i, 1);
+            //indexFeature--;
             break;
         }
     }
@@ -16,72 +29,131 @@ function quitarElemento(index) {
 
 
 /*Control del mapa*/
-var wmsSource = new ol.source.TileWMS({
-    url: 'http://200.60.174.197:8082/geoserver/visor/wms',
-    params: { 'LAYERS': 'visor:view_pointspublicacion' },
-    serverType: 'geoserver'
-});
 
-var vectorSource = new ol.source.Vector({});
-
-var vista = new ol.View({
-    projection: "EPSG:4326",
-    //center: [-74, -4],
-    //zoom: 5,
-    center: [-75, -9],
-    zoom: 5,
+var vistaMap = new ol.View({
+    center: ol.proj.transform([-75, -9], 'EPSG:4326', 'EPSG:3857'),
+    zoom: 5
 });
 
 var map = new ol.Map({
     target: 'map',
-    view: vista,
+    view: vistaMap,
 
     controls: ol.control.defaults().extend([
         new ol.control.ScaleLine(),
         new ol.control.ZoomSlider(),
+        new ol.control.FullScreen()
     ])
 
 });
 
-var wmsLayer1 = new ol.layer.Tile({
-    type: 'base',
-    title: 'Mapa Base',
-    source: new ol.source.TileWMS({
-        url: 'http://200.60.174.197:8082/geoserver/visor/wms',
-        params: {
-            LAYERS: 'visor:departamentos',
-            FORMAT: 'image/png'
-        },
+map.on('pointermove', function (evt) {
+    map.getTargetElement().style.cursor =
+        map.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
+});
+
+var wmsLayer2 = new ol.layer.Tile({
+    source: new ol.source.OSM({
+        projection: 'EPSG:3857',
+        url: 'http://mt{0-3}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+        attributions: [
+        ]
     })
 });
-map.addLayer(wmsLayer1);
+map.addLayer(wmsLayer2);
 
-function map_AgregarPoligono(puntos) {
+/*Features*/
 
-    var ring=puntos;
-    var polygon = new ol.geom.Polygon([ring]);
-    var feature = new ol.Feature(polygon);
-    var vectorSource = new ol.source.Vector();
-    vectorSource.addFeature(feature);
-    var vectorLayer = new ol.layer.Vector({
-        source: vectorSource
+var styleFunction = (function () {
+    /* jshint -W069 */
+    var styles = {};
+    var image = new ol.style.Circle({
+        radius: 3,
+        fill: new ol.style.Fill({ color: '#ff4444' }),
+        //stroke: new ol.style.Stroke({color: '#FF0000', width: 1})
     });
-    map.addLayer(vectorLayer);
-    lsVectorLayers.push(vectorLayer);
+    styles['Point'] = [new ol.style.Style({ image: image })];
+    styles['default'] = [new ol.style.Style({
+        stroke: new ol.style.Stroke({
+            color: 'green',
+            width: 10
+        }),
+        fill: new ol.style.Fill({
+            color: 'rgba(255, 5, 0, 0.1)'
+        }),
+        image: image
+    })];
+    return function (feature, resolution) {
+        return styles[feature.getGeometry().getType()] || styles['default'];
+    };
+    /* jshint +W069 */
+})();
+
+
+var vectorLayer = new ol.layer.Vector({
+    source: new ol.source.Vector({
+    }),
+    style: styleFunction
+})
+
+map.addLayer(vectorLayer);
+
+function map_AgregarPunto(punto,index) {
+    var point_feature = new ol.Feature({});
+    var point_geom = new ol.geom.Point(ol.proj.transform([+punto[0], +punto[1]], 'EPSG:4326', 'EPSG:3857'));
+    point_feature.setGeometry(point_geom);
+
+    map.getLayers().getArray()[1].getSource().addFeature(point_feature);
+
+    point_feature.setId(index);
+    console.log(index);
 }
 
-function map_AgregarPunto(punto) {
+var features = Array();
 
-    var point_feature = new ol.Feature({});
-    var point_geom = new ol.geom.Point(punto);
-    point_feature.setGeometry(point_geom);
-    var vectorLayer = new ol.layer.Vector({
-        source: new ol.source.Vector({
-            features: [point_feature]
-        })
-    })
-    map.addLayer(vectorLayer);
-    lsVectorLayers.push(vectorLayer);
+function ColorId(id, c) {
+    map.getLayers().forEach(function (layer) {
+        if (layer instanceof ol.layer.Vector) {
+            console.log(layer);
+            layer.getSource().forEachFeature(function (feature) {
+                console.log(feature.getId());
+                if (feature.getId() == id) {
+                    console.log(feature);
+                    features.push(feature);
+                    console.log(features);
+                    feature.setStyle(new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 5,
+                            fill: new ol.style.Fill({
+                                color: 'yellow'
+                            })/*,
+                            stroke: new ol.style.Stroke({
+                                color: [255, 255, 255, 0.75],
+                                width: 1.5
+                            })*/
+                        }),
+                        zIndex: 100000
+                    }));
+                    return true;
+                }
+            });
+        }
+    });
+}
+
+function LimpiarColor() {
+    if (features.length > 0) {
+        features[0].setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 3,
+                fill: new ol.style.Fill({
+                    color: '#ff4444'
+                })
+            })
+        }));
+
+        features = Array();
+    }
 }
 
 
@@ -91,34 +163,24 @@ function CargarGrilla() {
         width: "100%",
         height: "400px",
         sorting: true,
-        paging: true,
+        paging: false,
         deleteConfirm: "¿Estás seguro de eliminar?",
         noDataContent: "Sin datos",
         //data: datos,
 
         fields: [
-            {
-                name: "Tipo", type: "text", width: 20, align: "center", itemTemplate: function (value) {
-                    if (value == 1) {
-                        return $("<div>").addClass("dv_icpunto");
-                    }
-                    else if (value == 2) {
-                        return $("<div>").addClass("dv_iclinea");
-                    }
-                    else if (value == 3) {
-                        return $("<div>").addClass("dv_icpoligono");
-                    }
-                    else {
-                        return $("<div>");
-                    }
-                }
-            },
-            { name: "Info", type: "text", width: 200 },
+            { name: "Longitud", type: "text", align: "center", width: 100 },
+            { name: "Latitud", type: "text", align: "center", width: 100 },
             { type: "control", editButton: false }
         ],
         onItemDeleted: function (args) {
             quitarElemento(args.item.n);
             console.log(lsFeatures);
+        },
+        rowClick: function myfunction(args) {
+            //alert(args.item.n);
+            LimpiarColor();
+            ColorId(args.item.n);
         }
     });
 }
@@ -171,56 +233,31 @@ $(document).ready(function () {
     //});
     //$('#ddlTema').multiselect('dataprovider', formatDatosTemas(Model.lsTemas));
 
-    /*fin multiselect tema*/ 
-    
+    /*fin multiselect tema*/
+
 
 
     $('#btAddPunto').click(function () {
         $().addPunto({
             alAceptar: function (lat, lng) {
                 indexFeature++;
-                var info = lat + '|' + lng;
-                var item = { "n": indexFeature, "Tipo": 1, "Info": info };
+                var info = lng + '|' + lat;
+                var item = { "n": indexFeature, "Tipo": 1, "Info": info, "Longitud": lng, "Latitud": lat };
                 $("#jsGrid").jsGrid("insertItem", item);
-                
+
                 lsFeatures.push(item);
-                map_AgregarPunto([lat,lng]);
+                map_AgregarPunto([lng, lat], indexFeature);
             }
         });
     });
 
-   /* $('#btAddLinea').click(function () {
-        $().addLinea({
-            alAceptar: function (lat1, lng1, lat2, lng2) {
-
-            }
-        });
-    });*/
-
-    $('#btAddPoli').click(function () {
-        $().addPoligono({
-            alAceptar: function (lsLat, lsLng) {
-                indexFeature++;
-                var info = '';
-                var puntos = [];
-                for (var i = 0; i < lsLat.length; i++) {
-                    info += lsLat[i] + '|' + lsLng[i];
-                    if (i != lsLat.length - 1) {
-                        info += ',';
-                    }
-                    puntos.push([lsLat[i], lsLng[i]]);
-                }
-                //el poligono debe cerrarse con su punto inicial (como un lazo)
-                if (lsLat.length > 0) {
-                    puntos.push([lsLat[0], lsLng[0]]);
-                }
-                var item = { "n": indexFeature, "Tipo": 3, "Info": info };
-                $("#jsGrid").jsGrid("insertItem", item);
-                lsFeatures.push(item);
-                map_AgregarPoligono(puntos);
-            }
-        });
-    });
+    /* $('#btAddLinea').click(function () {
+         $().addLinea({
+             alAceptar: function (lat1, lng1, lat2, lng2) {
+ 
+             }
+         });
+     });*/
 
     $('#btenviar').click(function () {
 
@@ -241,12 +278,13 @@ $(document).ready(function () {
                     data = JSON.parse(data);
                     $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación se realizó correctamente." });
                     Limpiar();
+                    ListarMisPub(null,null,false);
                     vista("#target1");
                 }
             });
         }
 
-        
+
     });
 
 });
