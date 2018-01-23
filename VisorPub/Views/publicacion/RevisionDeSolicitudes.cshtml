@@ -211,11 +211,11 @@
                 alAceptar: function (lat, lng) {
                     indexFeature++;
                     var info = lng + '|' + lat;
-                    var item = { "n": indexFeature, "Tipo": 1, "Info": info };
+                    var item = { "n": indexFeature, "Tipo": 1, "Info": info,"Longitud": lng, "Latitud": lat};
                     $("#jsGrid").jsGrid("insertItem", item);
 
                     lsFeatures.push(item);
-                    map_AgregarPunto([lng, lat]);
+                    map_AgregarPunto([lng, lat],indexFeature);
                 }
             });
         });
@@ -277,13 +277,25 @@
          indexFeature = 0;
     }
 
-    function quitarElemento(index) {
+    function quitarElemento(id) {
+
+        //map.getLayers().forEach(function (layer) {
+        //    if (layer instanceof ol.layer.Vector){
+        //        if (layer.getSource().getFeatures()[0].getId() == id){
+        //            map.removeLayer(layer);
+        //        }
+        //    }
+        //});
+
+        var layer = map.getLayers().getArray()[1].getSource();
+        layer.removeFeature(layer.getFeatureById(id));
+
         for (var i = 0; i < lsFeatures.length; i++) {
-            if (lsFeatures[i].n == index) {
+            if (lsFeatures[i].n == id) {
                 lsFeatures.splice(i, 1);
-                map.removeLayer(lsVectorLayers[i])
-                lsVectorLayers.splice(i, 1);
-                indexFeature--;
+                //map.removeLayer(lsVectorLayers[i])
+                //lsVectorLayers.splice(i, 1);
+                //indexFeature--;
                 break;
             }
         }
@@ -311,6 +323,11 @@
         ])
     });
 
+    map.on('pointermove', function(evt) { 
+        map.getTargetElement().style.cursor =
+            map.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
+    });
+
     var wmsLayer2 = new ol.layer.Tile({
         source: new ol.source.OSM({
             projection: 'EPSG:3857',
@@ -321,19 +338,42 @@
     });
     map.addLayer(wmsLayer2);
 
-    //var wmsLayer1 = new ol.layer.Tile({
-    //    type: 'base',
-    //    title: 'Mapa Base',
-    //    source: new ol.source.TileWMS({
-    //        url: 'http://10.10.10.14:8082/geoserver/visor/wms',
-    //        params: {
-    //            LAYERS: 'visor:departamentos',
-    //            FORMAT: 'image/png'
-    //        },
-    //    }),
-    //    opacity: 0
-    //});
-    //map.addLayer(wmsLayer1);
+
+    /*Features*/
+
+    var styleFunction = (function() {
+        /* jshint -W069 */
+        var styles = {};
+        var image = new ol.style.Circle({
+            radius: 3,
+            fill: new ol.style.Fill({color: '#ff4444'}),
+            //stroke: new ol.style.Stroke({color: '#FF0000', width: 1})
+        });
+        styles['Point'] = [new ol.style.Style({image: image})];
+        styles['default'] = [new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: 'green',
+                width: 10
+            }),
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 5, 0, 0.1)'
+            }),
+            image: image
+        })];
+        return function(feature, resolution) {
+            return styles[feature.getGeometry().getType()] || styles['default'];
+        };
+        /* jshint +W069 */
+    })();
+
+
+    var vectorLayer = new ol.layer.Vector({ 
+        source: new ol.source.Vector({
+        }),
+        style: styleFunction
+    })
+
+    map.addLayer(vectorLayer);
 
     function map_AgregarPunto(punto,index) {
 
@@ -341,29 +381,53 @@
         var point_geom = new ol.geom.Point(ol.proj.transform([+punto[0], +punto[1]], 'EPSG:4326', 'EPSG:3857'));
         point_feature.setGeometry(point_geom);
 
-        var stroke = new ol.style.Stroke({ color: 'black', width: 0 });
-        var goldFill = new ol.style.Fill({ color: '#FF0000' });
-
-        var circleStyle = new ol.style.Style({
-            image: new ol.style.Circle({
-                fill: goldFill,
-                //stroke: stroke,
-                //points: 2,
-                radius: 3,
-                //angle: Math.PI / 4
-            })
-        });
+        map.getLayers().getArray()[1].getSource().addFeature(point_feature);
 
         point_feature.setId(index);
-        point_feature.setStyle(circleStyle);
+        console.log(index);
+    }
 
-        var vectorLayer = new ol.layer.Vector({ //Verificar las ventajas de poner en una sola capa
-            source: new ol.source.Vector({
-                features: [point_feature]
-            })
-        })
-        map.addLayer(vectorLayer);
-        lsVectorLayers.push(vectorLayer);
+    var features = Array();
+
+    function ColorId(id, c) {
+        map.getLayers().forEach(function (layer) {
+            if (layer instanceof ol.layer.Vector) {
+                console.log(layer);
+                layer.getSource().forEachFeature(function (feature) {
+                    console.log(feature.getId());
+                    if (feature.getId() == id) {
+                        console.log(feature);
+                        features.push(feature);
+                        console.log(features);
+                        feature.setStyle(new ol.style.Style({
+                            image: new ol.style.Circle({
+                                radius: 5,
+                                fill: new ol.style.Fill({
+                                    color: 'yellow'
+                                })
+                            }),
+                            zIndex: 100000
+                        }));
+                        return true;
+                    }
+                });
+            }
+        });
+    }
+
+    function LimpiarColor() {
+        if (features.length > 0) {
+            features[0].setStyle(new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 3,
+                    fill: new ol.style.Fill({
+                        color: '#ff4444'
+                    })
+                })
+            }));
+
+            features = Array();
+        }
     }
 
 
@@ -373,34 +437,24 @@
             width: "100%",
             height: "400px",
             sorting: true,
-            paging: true,
+            paging: false,
             deleteConfirm: "¿Estás seguro de eliminar?",
             noDataContent: "Sin datos",
             //data: datos,
 
             fields: [
-                {
-                    name: "Tipo", type: "text", width: 20, align: "center", itemTemplate: function (value) {
-                        if (value == 1) {
-                            return $("<div>").addClass("dv_icpunto");
-                        }
-                        else if (value == 2) {
-                            return $("<div>").addClass("dv_iclinea");
-                        }
-                        else if (value == 3) {
-                            return $("<div>").addClass("dv_icpoligono");
-                        }
-                        else {
-                            return $("<div>");
-                        }
-                    }
-                },
-                { name: "Info", type: "text", width: 200 },
+                { name: "Longitud", type: "text",align: "center", width: 100 },
+                { name: "Latitud", type: "text", align: "center", width: 100 },
                 { type: "control", editButton: false }
             ],
             onItemDeleted: function (args) {
                 quitarElemento(args.item.n);
                 console.log(lsFeatures);
+            },
+            rowClick: function myfunction(args) {
+                //alert(args.item.n);
+                LimpiarColor();
+                ColorId(args.item.n);
             }
         });
     }
@@ -488,11 +542,11 @@
                                     indexFeature++;
 
                                     var info = punto[0] + '|' + punto[1];
-                                    var item = { "n": indexFeature, "Tipo": 1, "Info": info };
+                                    var item = { "n": indexFeature, "Tipo": 1, "Info": info,"Longitud": punto[0], "Latitud": punto[1]};
                                     $("#jsGrid").jsGrid("insertItem", item);
 
                                     lsFeatures.push(item);
-                                    map_AgregarPunto(punto);
+                                    map_AgregarPunto(punto, indexFeature);
                                 }
 
                                 map.updateSize();
@@ -588,9 +642,12 @@
     function Limpiar() {
         $('#frm')[0].reset();
 
-        lsVectorLayers.forEach(function (entry) {
-            map.removeLayer(entry)
-        });
+        //lsVectorLayers.forEach(function (entry) {
+        //    map.removeLayer(entry)
+        //});
+
+        map.getLayers().getArray()[1].getSource().clear();
+
 
         lsFeatures = Array();
         //$("#jsGrid").jsGrid('destroy');

@@ -126,11 +126,7 @@ function ColorId(id, c) {
                             radius: 5,
                             fill: new ol.style.Fill({
                                 color: 'yellow'
-                            })/*,
-                            stroke: new ol.style.Stroke({
-                                color: [255, 255, 255, 0.75],
-                                width: 1.5
-                            })*/
+                            })
                         }),
                         zIndex: 100000
                     }));
