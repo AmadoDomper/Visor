@@ -120,72 +120,64 @@
     </div>*@
 
 
+@*<div style="width: 100%; height: 100%;" id="map" class="map">*@
+<div id="map" class="map">
+    <div class="modal ModalGeneral" style="position:absolute !important;" id="0" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog ModalDialog" style="width: 239px;">
+            <div class="modal-content ModalContent" style="width: 256px;">
+                <div class="modal-header ModalHead">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h5 class="modal-title leyendaTitle text-center" id="myModalLabel">Centros Poblados</h5>
+                </div>
+                <div class="modal-body">
+                    <img src="http://geoservicios.regionloreto.gob.pe/geoloreto/services/WMS/WMS_DF_Lugares_Poblados/MapServer/WmsServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=1">
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal ModalGeneral" style="position:absolute !important;" id="1" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog ModalDialog">
+            <div class="modal-content ModalContent">
+                <div class="modal-header ModalHead">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h5 class="modal-title leyendaTitle text-center" id="myModalLabel">Densidad de muestreo por Km2</h5>
+                </div>
+                <div class="modal-body">
+                    <img src="http://200.60.174.203:8080/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=DensidadArticulos">
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal ModalGeneral" style="position:absolute !important;" id="2" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog ModalDialog">
+            <div class="modal-content ModalContent">
+                <div class="modal-header ModalHead">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h5 class="modal-title leyendaTitle text-center" id="myModalLabel">Muestreo por distrito</h5>
+                </div>
+                <div class="modal-body">
+                    <img src="http://200.60.174.203:8080/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=articulosdistritos">
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
 
-<div class="row">
+@*<div class="row">
     <div class="col-md-12" style="padding-top: 15px;">
-        <div style="width: 100%; height: 100%; background-color:white;" id="map" class="map">
-            <div class="modal ModalGeneral" style="position:absolute !important;" id="0" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog ModalDialog" style="width: 239px;">
-                    <div class="modal-content ModalContent" style="width: 256px;">
-                        <div class="modal-header ModalHead">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h5 class="modal-title leyendaTitle text-center" id="myModalLabel">Centros Poblados</h5>
-                        </div>
-                        <div class="modal-body">
-                            <img src="http://geoservicios.regionloreto.gob.pe/geoloreto/services/WMS/WMS_DF_Lugares_Poblados/MapServer/WmsServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=1">
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
-            <div class="modal ModalGeneral" style="position:absolute !important;" id="1" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog ModalDialog">
-                    <div class="modal-content ModalContent">
-                        <div class="modal-header ModalHead">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h5 class="modal-title leyendaTitle text-center" id="myModalLabel">Densidad de muestreo por Km2</h5>
-                        </div>
-                        <div class="modal-body">
-                            <img src="http://200.60.174.203:8080/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=DensidadArticulos">
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
-            <div class="modal ModalGeneral" style="position:absolute !important;" id="2" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog ModalDialog">
-                    <div class="modal-content ModalContent">
-                        <div class="modal-header ModalHead">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h5 class="modal-title leyendaTitle text-center" id="myModalLabel">Muestreo por distrito</h5>
-                        </div>
-                        <div class="modal-body">
-                            <img src="http://200.60.174.203:8080/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=articulosdistritos">
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
+
+    </div>*@
+
+@*</div>*@
+@*<div class="row">
+        <div class="col-md-12">
+            <h3>Acerca del Visor de Servicio Web: Mapa Global de Publicaciones (Amazonía)</h3>
+            <p class="justificado">
+                El Visor de Servicio Web es una iniciativa ambiciosa que permite hacer consultas, búsquedas y el análisis de la información sobre las investigaciones y publicaciones realizadas en la Región Loreto ahora, y con perspectivas a cubrir el territorio de Amazonía peruana a futuro. Mediante este servicio el usuario puede generar búsquedas especializadas y georreferenciadas publicadas en la revista científica FOLIA Amazónica del Instituto de Investigaciones de la Amazonía peruana que datan desde 1989.
+                <a href="@Url.Action("Acerca", "Inicio")">Seguir leyendo</a>
+            </p>
         </div>
-    </div>
-
-
-    @*<div id="legende">
-            <h2>Legend:</h2>
-
-            <div class="udiv_legende" id="legende_1">
-                <img src="http://200.60.174.203:8080/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=articulosdistritos">
-                <br>
-                <br>
-            </div>
-        </div>*@
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <h3>Acerca del Visor de Servicio Web: Mapa Global de Publicaciones (Amazonía)</h3>
-        <p class="justificado">
-            El Visor de Servicio Web es una iniciativa ambiciosa que permite hacer consultas, búsquedas y el análisis de la información sobre las investigaciones y publicaciones realizadas en la Región Loreto ahora, y con perspectivas a cubrir el territorio de Amazonía peruana a futuro. Mediante este servicio el usuario puede generar búsquedas especializadas y georreferenciadas publicadas en la revista científica FOLIA Amazónica del Instituto de Investigaciones de la Amazonía peruana que datan desde 1989.
-            <a href="@Url.Action("Acerca", "Inicio")">Seguir leyendo</a>
-        </p>
-    </div>
-</div>
+    </div>*@
 
 <!-- /.row -->
 <!-- /.row -->

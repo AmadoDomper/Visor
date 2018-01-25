@@ -1,4 +1,4 @@
-body{padding-top:70px;background: url(http://iiap.org.pe/visor/img/bg_body.png);}
+body{padding-top:50px;background: url(http://iiap.org.pe/visor/img/bg_body.png);}
 .portfolio-item{margin-bottom:25px;}
 footer{margin:50px 0;}
 .justificado{text-align:justify;}
@@ -16,3 +16,8 @@ footer{margin:50px 0;}
 .lista-inst{list-style:none;font-size:13px;margin-left:0px;padding-left:30px;}
 .leyendaTitle{font-weight:bold;}
 html,button,input,select,textarea {color: #222;resize: none;}
+.map {
+  /*height: 719px;*/
+  width: 100%;
+  /*background: url(map-background.jpg) repeat;*/
+}
