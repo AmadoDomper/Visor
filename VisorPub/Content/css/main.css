@@ -21,3 +21,51 @@ html,button,input,select,textarea {color: #222;resize: none;}
   width: 100%;
   /*background: url(map-background.jpg) repeat;*/
 }
+
+.ol-scale-line {
+  background: #3c763d;
+  padding: 5px;
+}
+
+.ol-control {
+    position: absolute;
+    background-color: #eee;
+    background-color: rgba(255,255,255,.4);
+    /*border-radius: 10px;*/
+    padding: 0px;
+}
+
+.ol-control button {
+    margin: 0px;
+    color: #777;
+    font-size: 1.14em;
+    font-weight: 700;
+    height: 29px;
+    width: 29px;
+    background-color: #7bbc86;
+    background-color: rgba(255,255,255,1);
+    border-radius: 2px;
+    box-shadow: 0px 1px 4px rgba(0,0,0,0.3);
+}
+
+
+.ol-attribution img {
+    max-height: 7em;
+    max-width: inherit;
+}
+
+.ol-attribution.ol-logo-only {
+    background: 0 0;
+    bottom: 5px;
+    height: 3.5em;
+    line-height: 1em;
+}
+
+
+
+/*.ol-zoom {
+    right: .5em;
+    bottom: 2.5em;
+    top: 0;
+    left: 0;
+}*/

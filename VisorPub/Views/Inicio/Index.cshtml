@@ -205,7 +205,7 @@
     var map = new ol.Map({
         controls: ol.control.defaults().extend([
 				    new ol.control.ScaleLine(),
-				    new ol.control.ZoomSlider(),
+				    //new ol.control.ZoomSlider(),
                     new ol.control.FullScreen()
         ]),
         layers: [
@@ -370,9 +370,9 @@
         }),
     });
 
-    map.addControl(new ol.control.OverviewMap({
-        layers: [new ol.layer.Tile(wmsLayer2.getProperties())],
-    }));
+    //map.addControl(new ol.control.OverviewMap({
+    //    layers: [new ol.layer.Tile(wmsLayer2.getProperties())],
+    //}));
 
     var layerSwitcher = new ol.control.LayerSwitcher({
         tipLabel: 'Leyenda',

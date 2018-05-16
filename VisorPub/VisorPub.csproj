@@ -158,6 +158,7 @@
     <Content Include="Content\font-awesome-4.7.0\HELP-US-OUT.txt" />
     <Content Include="Content\img\favicon.ico" />
     <Content Include="Content\img\logoiiap.png" />
+    <Content Include="Content\img\uandina.png" />
     <Content Include="Content\js\base\buscarPersona-1.0.0.js" />
     <Content Include="Content\js\base\buscarProducto-1.0.0.js" />
     <Content Include="Content\js\base\tabla-1.0.0.js" />
