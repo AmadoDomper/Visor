@@ -177,7 +177,6 @@
 </head>
 <body>
     <section class="login-form-wrap">
-        @*<h1>¡Bienvenido!</h1>*@
         <img class="pull-right" src="http://iiap.org.pe/visor/img/logoiiap.png" alt="DSpace logo" style="width: 85px;">
 
         <form class="login-form" action="@Url.Action("Logear", "Login")" method="post">
@@ -188,8 +187,7 @@
                 <input type="password" id="txtpassword" name="txtpassword" required placeholder="Contraseña">
             </label>
             <input type="submit" value="Iniciar">
-        </form>
-        @*<div>¿No tiene una cuenta?   <a href="@Url.Action("NuevoUsuario", "Usuario")" id="signup" class="display-inline-block" aria-label="Crear una cuenta IIAP">Cree una.</a> </div>*@
+        </form>      
     </section>
 </body>
 </html>

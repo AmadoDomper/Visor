@@ -55,5 +55,10 @@ namespace ADPostgres.Helper
         public const string usp_SeleccionarMenuFull = "usp_SeleccionarMenuFull";
         /*END MENU*/
 
+        /*API*/
+
+        public const string usp_BuscarPublicacionesPaginado = "usp_BuscarPublicacionesPaginado";
+        public const string usp_BuscarPublicacionesCantPag = "usp_BuscarPublicacionesCantPag";
+
     }
 }

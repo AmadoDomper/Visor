@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuscadorApi.cs" />
     <Compile Include="ListaPaginada.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Modulo.cs" />

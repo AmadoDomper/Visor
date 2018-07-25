@@ -522,6 +522,145 @@ namespace ADPostgres
         }
         #endregion
 
+        /*Buscador API*/
+
+        #region Revisión de Publicaciones
+        public ListaPaginada BuscarPublicacionesPag(int nPage = 1, int nSize = 10, string cPubTexto = "", int nTipo = -1, string cAno = "", int nAreaTem = -1)
+        {
+            var conexion = new ConexionPosgreSQL();
+            ListaPaginada ListaPubPag = new ListaPaginada();
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_BuscarPublicacionesPaginado))
+                    {
+                        cmd.Parameters.AddWithValue("_pub_texto", cPubTexto);
+                        cmd.Parameters.AddWithValue("_pub_nTipo", nTipo);
+                        cmd.Parameters.AddWithValue("_pub_cAno", cAno);
+                        cmd.Parameters.AddWithValue("_pub_nAreaTem", nAreaTem);
+                        cmd.Parameters.AddWithValue("_nPage", nPage);
+                        cmd.Parameters.AddWithValue("_nSize", nSize);
+
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            Publicacion oPublicacion = new Publicacion();
+
+                            oPublicacion.nPubliId = Int32.Parse(reader[0].ToString());
+                            oPublicacion.cTitulo = reader[1].ToString();
+                            oPublicacion.cRefBiblio = reader[2].ToString();
+
+                            ListaPubPag.oLista.Add(oPublicacion);
+                        }
+                    }
+
+                    ListaPubPag.nPage = nPage;
+                    ListaPubPag.nPageSize = nSize;
+                    ObtenerPaginadoBuscarPublicaciones(ref ListaPubPag, nSize, cPubTexto, nTipo, cAno, nAreaTem);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return ListaPubPag;
+
+        }
+
+        public void ObtenerPaginadoBuscarPublicaciones(ref ListaPaginada oLista, int nSize = 10, string cPubTexto = "", int nTipo = -1, string cAno = "", int nAreaTem = -1)
+        {
+            var conexion = new ConexionPosgreSQL();
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_BuscarPublicacionesCantPag))
+                    {
+                        cmd.Parameters.AddWithValue("_pub_texto", cPubTexto);
+                        cmd.Parameters.AddWithValue("_pub_nTipo", nTipo);
+                        cmd.Parameters.AddWithValue("_pub_nAno", cAno);
+                        cmd.Parameters.AddWithValue("_pub_nAreaTem", nAreaTem);
+                        cmd.Parameters.AddWithValue("_nSize", nSize);
+
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            oLista.nRows = Int32.Parse(reader[0].ToString());
+                            oLista.nPageTotal = Int32.Parse(reader[1].ToString());
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+        #endregion
+
+        /*END buscador API*/
+
+
+
+
+        public List<Tema> ListarTemas()
+        {
+            var conexion = new ConexionPosgreSQL();
+            List<Tema> lista = new List<Tema>();
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    DataTable datos = ConexionPosgreSQL.ejecutarDT(Procedimiento.usp_ObtenerTema);
+
+                    lista = datos.AsEnumerable().Select(row =>
+                        new Tema
+                        {
+                            nTemaId = row.Field<int>("tem_idtema"),
+                            cDesc = row.Field<string>("tem_descripcion")
+                        }).ToList();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            return lista;
+        }
+
+        public List<Tipo> ListarTipos()
+        {
+            var conexion = new ConexionPosgreSQL();
+            List<Tipo> lsItems = new List<Tipo>();
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    DataSet datos = ConexionPosgreSQL.Seleccionar("tip_idtipo,tip_descripcion,tip_uri", "tipo", "tip_descripcion");
+
+                    foreach (DataRow row in datos.Tables[0].Rows)
+                    {
+                        Tipo item = new Tipo();
+                        item.nTipoId = Int32.Parse(row[0].ToString());
+                        item.cDesc = row[1].ToString();
+                        lsItems.Add(item);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return lsItems;
+        }
 
 
 

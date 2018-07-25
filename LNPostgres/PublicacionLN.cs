@@ -27,6 +27,12 @@ namespace LNPostgres
             return oPublicacionAD.ListarRevPublicacionesPag(nPubEst, nPage, nSize, nPubId, cPubTitulo, cDni, cInst, cNom);
         }
 
+        public ListaPaginada BuscarPublicacionesPag(int nPage = 1, int nSize = 10, string cPubTexto = "", int nTipo = -1, string cAno = "", int nAreaTem = -1)
+        {
+            return oPublicacionAD.BuscarPublicacionesPag(nPage, nSize, cPubTexto, nTipo, cAno, nAreaTem);
+        }
+        
+
         public Publicacion RegistrarPublicacion(Publicacion oPublicacion)
         {
             return oPublicacionAD.registrar(oPublicacion);
@@ -37,6 +43,15 @@ namespace LNPostgres
             return oPublicacionAD.CargaDatosPublicacion(nPubId);
         }
 
+        public List<Tema> ListarTemas()
+        {
+            return oPublicacionAD.ListarTemas();
+        }
+
+        public List<Tipo> ListarTipos()
+        {
+            return oPublicacionAD.ListarTipos();
+        }
 
 
     }
