@@ -62,7 +62,7 @@ namespace VisorPub.Controllers
             FormsService.SignOut();
             Roles.DeleteCookie();
             Session.RemoveAll();
-            return RedirectToAction("Index", "Inicio");
+            return Redirect("http://visores.iiap.gob.pe/publicaciones/");
         }
 
     }

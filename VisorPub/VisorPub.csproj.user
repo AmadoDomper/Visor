@@ -3,6 +3,14 @@
   <PropertyGroup>
     <NameOfLastUsedPublishProfile>Jaox</NameOfLastUsedPublishProfile>
     <ProjectView>ShowAllFiles</ProjectView>
+    <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
+    <Use64BitIISExpress>false</Use64BitIISExpress>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>

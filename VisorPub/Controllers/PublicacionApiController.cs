@@ -13,7 +13,7 @@ using System.Web.Http.Cors;
 
 namespace VisorPub.Controllers
 {
-    [EnableCors(origins: "http://visores.iiap.org.pe", headers: "*", methods: "*")]
+    [EnableCors(origins: "http://visores.iiap.gob.pe", headers: "*", methods: "*")]
     public class PublicacionApiController : ApiController
     {
         // GET api/<controller>
