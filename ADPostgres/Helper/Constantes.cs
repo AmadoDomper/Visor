@@ -60,5 +60,22 @@ namespace ADPostgres.Helper
         public const string usp_BuscarPublicacionesPaginado = "usp_BuscarPublicacionesPaginado";
         public const string usp_BuscarPublicacionesCantPag = "usp_BuscarPublicacionesCantPag";
 
+        /*INVENTARIO DE VEGETACIONES*/
+
+        public const string usp_registrar_inventario_vegetacion = "usp_registrar_inventario_vegetacion";
+        public const string usp_actualiza_inventario_vegetacion = "usp_actualiza_inventario_vegetacion";
+        public const string usp_elimina_inventario_vegetacion = "usp_elimina_inventario_vegetacion";
+        public const string usp_listar_inventario_vegetacion = "usp_listar_inventario_vegetacion";
+        public const string usp_cargar_datos_inventario_vegetacion = "usp_cargar_datos_inventario_vegetacion";
+
+
+        /*INVENTARIO DE VEGETACIONES - PARCELA*/
+
+        public const string usp_registrar_inventario_vegetacion_detalle = "usp_registrar_inventario_vegetacion_detalle";
+        public const string usp_actualiza_inventario_vegetacion_detalle = "usp_actualiza_inventario_vegetacion_detalle";
+        public const string usp_elimina_inventario_vegetacion_detalle = "usp_elimina_inventario_vegetacion_detalle";
+        public const string usp_lista_inventario_vegetacion_detalle = "usp_lista_inventario_vegetacion_detalle";
+        public const string usp_cargar_datos_inventario_vegetacion_detalle = "usp_cargar_datos_inventario_vegetacion_detalle";
+        
     }
 }
