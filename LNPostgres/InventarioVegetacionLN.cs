@@ -19,10 +19,29 @@ namespace LNPostgres
             return oInventarioVegetacionAD.RegistraInventarioVegetacion(oInvVeg);
         }
 
+        public int ActualizaInventarioVegetacion(InventarioVegetacion oInvVeg)
+        {
+            return oInventarioVegetacionAD.ActualizaInventarioVegetacion(oInvVeg);
+        }
+
+        public int EliminaInventarioVegetacion(InventarioVegetacion oInvVeg)
+        {
+            return oInventarioVegetacionAD.EliminaInventarioVegetacion(oInvVeg);
+        }
+
         public InventarioVegetacion CargaDatosInventarioVegetacion(int nVegId)
         {
             return oInventarioVegetacionAD.CargaDatosInventarioVegetacion(nVegId);
         }
+
+        public List<InventarioVegetacion> ListarInventarioVegetacion(InventarioVegetacion oInvVeg)
+        {
+            return oInventarioVegetacionAD.ListarInventarioVegetacion(oInvVeg);
+        }
+
+
+        
+
 
     }
 }

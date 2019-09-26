@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{B303410E-DCDB-4267-A965-90E656926F14}"
 EndProject
@@ -24,6 +24,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LogicaNegocio", "LogicaNegocio", "{14E0304A-A6A8-4419-9652-D317C198BA7C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LNPostgres", "LNPostgres\LNPostgres.csproj", "{E5737272-B4C8-4BD9-B738-1CD96164810B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{E0BCF5F4-3360-4C69-9613-F0291F10515B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{EF5495A0-A3CD-411D-9E39-42A7B8159101}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +55,10 @@ Global
 		{E5737272-B4C8-4BD9-B738-1CD96164810B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5737272-B4C8-4BD9-B738-1CD96164810B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5737272-B4C8-4BD9-B738-1CD96164810B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF5495A0-A3CD-411D-9E39-42A7B8159101}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF5495A0-A3CD-411D-9E39-42A7B8159101}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF5495A0-A3CD-411D-9E39-42A7B8159101}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF5495A0-A3CD-411D-9E39-42A7B8159101}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,5 +73,9 @@ Global
 		{78852E4C-4D1E-453D-AC9D-0086542D22D7} = {28556526-F7B1-44BE-86FA-E7EC7C07E3FF}
 		{14E0304A-A6A8-4419-9652-D317C198BA7C} = {28556526-F7B1-44BE-86FA-E7EC7C07E3FF}
 		{E5737272-B4C8-4BD9-B738-1CD96164810B} = {14E0304A-A6A8-4419-9652-D317C198BA7C}
+		{EF5495A0-A3CD-411D-9E39-42A7B8159101} = {E0BCF5F4-3360-4C69-9613-F0291F10515B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5997A5C5-AEDF-4B9F-8982-40A907B910DA}
 	EndGlobalSection
 EndGlobal
