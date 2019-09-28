@@ -145,21 +145,23 @@ namespace ADPostgres
             return oVeg;
         }
 
-        public List<InventarioVegetacion> ListarInventarioVegetacion(InventarioVegetacion oInvVeg)
+        public ListaPaginada ListarMisInventariosVegetacionPag(int nInvEst, int nPage = 1, int nSize = 10, string cNombreProy = "", string cAno = "")
         {
             var conexion = new ConexionPosgreSQL();
-            var oListInvVeg = new List<InventarioVegetacion>();
+            ListaPaginada ListaInvPag = new ListaPaginada();
 
 
             using (var db = conexion.AbreConexion())
             {
                 try
                 {
-                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_listar_inventario_vegetacion))
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_listar_mis_inventarios_vegetacion_paginado))
                     {
-                        cmd.Parameters.AddWithValue("_nombreproyecto", oInvVeg.cNombreProyecto);
-                        cmd.Parameters.AddWithValue("_anocolecta", oInvVeg.cAnoColecta);
-                        cmd.Parameters.AddWithValue("_estado", oInvVeg.nEstado);
+                        cmd.Parameters.AddWithValue("_nombreproyecto", cNombreProy);
+                        cmd.Parameters.AddWithValue("_anocolecta", cAno);
+                        cmd.Parameters.AddWithValue("_estado", nInvEst);
+                        cmd.Parameters.AddWithValue("_npage", nPage);
+                        cmd.Parameters.AddWithValue("_nsize", nSize);
 
                         var reader = cmd.ExecuteReader();
 
@@ -178,7 +180,43 @@ namespace ADPostgres
                             oInvVegetacion.oUsuario.cInstitucion = (string)reader["usuario_institucion"];
                             oInvVegetacion.nEstado = (int)reader["estado"];
 
-                            oListInvVeg.Add(oInvVegetacion);
+                            ListaInvPag.oLista.Add(oInvVegetacion);
+                        }
+                    }
+
+                    ListaInvPag.nPage = nPage;
+                    ListaInvPag.nPageSize = nSize;
+                    ObtenerPaginadoMisInventariosVegetacion(nInvEst, ref ListaInvPag, nSize, cNombreProy, cAno);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return ListaInvPag;
+        }
+
+        public void ObtenerPaginadoMisInventariosVegetacion(int nInvEst, ref ListaPaginada oLista, int nSize = 10, string cNombreProy = "", string cAno = "")
+        {
+            var conexion = new ConexionPosgreSQL();
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_obtener_mis_inventarios_vegetacion_cantpag))
+                    {
+                        cmd.Parameters.AddWithValue("_nombreproyecto", cNombreProy);
+                        cmd.Parameters.AddWithValue("_anocolecta", cAno);
+                        cmd.Parameters.AddWithValue("_estado", nInvEst);
+                        cmd.Parameters.AddWithValue("_nsize", nSize);
+
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            oLista.nRows = Int32.Parse(reader[0].ToString());
+                            oLista.nPageTotal = Int32.Parse(reader[1].ToString());
                         }
                     }
                 }
@@ -187,10 +225,7 @@ namespace ADPostgres
                     throw ex;
                 }
             }
-            return oListInvVeg;
         }
-
-
 
 
     }

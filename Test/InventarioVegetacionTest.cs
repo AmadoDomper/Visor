@@ -68,16 +68,16 @@ namespace Test
         }
 
         [TestMethod]
-        public void Test_ListarInventarioVegetacion()
+        public void Test_ListarMisInventariosVegetacion()
         {
             InventarioVegetacionLN oInvVegLN = new InventarioVegetacionLN();
             InventarioVegetacion oInvVeg = new InventarioVegetacion();
-            List<InventarioVegetacion> oListaVeg= new List<InventarioVegetacion>();
+            ListaPaginada oListaVeg= new ListaPaginada();
             oInvVeg.cNombreProyecto = "Pro";
             oInvVeg.cAnoColecta = "";
             oInvVeg.nEstado = 1;
 
-            oListaVeg = oInvVegLN.ListarInventarioVegetacion(oInvVeg);
+            oListaVeg = oInvVegLN.ListarMisInventariosVegetacion(1,1,5,"","");
 
             Assert.IsNotNull(oListaVeg);
         }

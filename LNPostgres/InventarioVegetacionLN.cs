@@ -34,9 +34,9 @@ namespace LNPostgres
             return oInventarioVegetacionAD.CargaDatosInventarioVegetacion(nVegId);
         }
 
-        public List<InventarioVegetacion> ListarInventarioVegetacion(InventarioVegetacion oInvVeg)
+        public ListaPaginada ListarMisInventariosVegetacion(int nInvEst, int nPage = 1, int nSize = 10, string cNombreProy = "", string cAno = "")
         {
-            return oInventarioVegetacionAD.ListarInventarioVegetacion(oInvVeg);
+            return oInventarioVegetacionAD.ListarMisInventariosVegetacionPag(nInvEst, nPage, nSize, cNombreProy, cAno);
         }
 
 

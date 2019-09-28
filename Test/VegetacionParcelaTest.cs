@@ -89,9 +89,9 @@ namespace Test
         {
             VegetacionParcelaLN oVegParLN = new VegetacionParcelaLN();
             List<VegetacionParcela> oListaVegPar = new List<VegetacionParcela>();
-            int nParId = 1;
+            int nVegId = 36;
 
-            oListaVegPar = oVegParLN.CargaListaInventarioVegetacionParcelas(nParId);
+            oListaVegPar = oVegParLN.CargaListaInventarioVegetacionParcelas(nVegId);
 
             Assert.IsNotNull(oListaVegPar);
         }

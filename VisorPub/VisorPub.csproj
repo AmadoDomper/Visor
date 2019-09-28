@@ -149,6 +149,7 @@
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\GestionController.cs" />
     <Compile Include="Controllers\InicioController.cs" />
+    <Compile Include="Controllers\InventarioController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\PublicacionApiController.cs" />
@@ -322,6 +323,7 @@
     <Content Include="Views\Config\Config.cshtml" />
     <Content Include="Views\Usuario\GestionarUsuarios.cshtml" />
     <Content Include="Views\Menu\_Menu.cshtml" />
+    <Content Include="Views\Inventario\MisInventarios.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ADPostgres\ADPostgres.csproj">
