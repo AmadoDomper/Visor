@@ -18,12 +18,7 @@ namespace VisorPub.Controllers
         // GET: Inventario
         public ActionResult MisInventarios()
         {
-            TipoAD handTipo = new TipoAD();
-            TemaAD handTema = new TemaAD();
-            RegistrarViewModel modelo = new RegistrarViewModel();
-            modelo.lsTipos = handTipo.obtener();
-            modelo.lsTemas = handTema.ObtenerTema();
-            return View(modelo);
+            return View();
         }
 
         public string ListarMisInventariosVegetacion(int nInvEst, int nPage = 1, int nSize = 10, string cNombreProy = "", string cAno = "")
@@ -49,5 +44,18 @@ namespace VisorPub.Controllers
             return JsonConvert.SerializeObject(oListaVegPar, Formatting.None,
                  new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
         }
+
+        public int ActualizaInventarioVegetacionParcelas(VegetacionParcela oVegPar)
+        {
+            int id;
+            VegetacionParcelaLN oVegParLN = new VegetacionParcelaLN();
+
+            id = oVegParLN.ActualizaInventarioVegetacionParcela(oVegPar);
+
+            return id;
+        }
+
+
+
     }
 }

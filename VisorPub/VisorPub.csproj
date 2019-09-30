@@ -189,6 +189,9 @@
     <Content Include="Content\js\base\buscarProducto-1.0.0.js" />
     <Content Include="Content\js\base\tabla-1.0.0.js" />
     <Content Include="Content\js\base\ventana-1.0.0.js" />
+    <Content Include="Content\css\dataTables\dataTables.bootstrap.min.css" />
+    <Content Include="Content\js\dataTables\dataTables.bootstrap.js" />
+    <Content Include="Content\js\dataTables\jquery.dataTables.min.js" />
     <Content Include="Content\js\main.js" />
     <Content Include="Content\js\vendor\metisMenu.js" />
     <Content Include="Content\js\vendor\modernizr-2.6.2.min.js" />
