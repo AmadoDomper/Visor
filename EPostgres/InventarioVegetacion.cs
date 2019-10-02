@@ -10,6 +10,7 @@ namespace EPostgres
         private string _cNombreProyecto;
         private string _cAnoColecta;
         private DateTime _dFechaRegistro;
+        private string _cFechaRegistro;
         private DateTime _dFechaActualizacion;
         private int _nUsuarioId;
         private Usuario _oUsuario;
@@ -42,6 +43,13 @@ namespace EPostgres
         {
             get { return _dFechaRegistro; }
             set { _dFechaRegistro = value; }
+        }
+
+        [JsonProperty(PropertyName = "cFechaRegistro")]
+        public string cFechaRegistro
+        {
+            get { return _cFechaRegistro; }
+            set { _cFechaRegistro = value; }
         }
 
         [JsonProperty(PropertyName = "dFechaActualizacion")]

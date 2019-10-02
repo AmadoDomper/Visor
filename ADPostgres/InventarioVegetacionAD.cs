@@ -145,7 +145,7 @@ namespace ADPostgres
             return oVeg;
         }
 
-        public ListaPaginada ListarMisInventariosVegetacionPag(int nInvEst, int nPage = 1, int nSize = 10, string cNombreProy = "", string cAno = "")
+        public ListaPaginada ListarMisInventariosVegetacionPag(int nInvEst, int nPage = 1, int nSize = 10, string cNombreProy = "", string cAno = "", int nUsuarioId = 0)
         {
             var conexion = new ConexionPosgreSQL();
             ListaPaginada ListaInvPag = new ListaPaginada();
@@ -159,6 +159,7 @@ namespace ADPostgres
                     {
                         cmd.Parameters.AddWithValue("_nombreproyecto", cNombreProy);
                         cmd.Parameters.AddWithValue("_anocolecta", cAno);
+                        cmd.Parameters.AddWithValue("_usuarioId", nUsuarioId);
                         cmd.Parameters.AddWithValue("_estado", nInvEst);
                         cmd.Parameters.AddWithValue("_npage", nPage);
                         cmd.Parameters.AddWithValue("_nsize", nSize);
@@ -173,6 +174,7 @@ namespace ADPostgres
                             oInvVegetacion.cNombreProyecto = (string)reader["nombreproyecto"];
                             oInvVegetacion.cAnoColecta = (string)reader["anocolecta"];
                             oInvVegetacion.dFechaRegistro = Convert.ToDateTime(reader["fecharegistro"].ToString());
+                            oInvVegetacion.cFechaRegistro = Convert.ToDateTime(reader["fecharegistro"].ToString()).ToString("dd/MM/yyyy");                         
                             oInvVegetacion.nUsuarioId = (int)reader["usuarioid"];
                             oInvVegetacion.oUsuario = new Usuario();
                             oInvVegetacion.oUsuario.nUsuarioId = (int)reader["usuarioid"];
@@ -186,7 +188,7 @@ namespace ADPostgres
 
                     ListaInvPag.nPage = nPage;
                     ListaInvPag.nPageSize = nSize;
-                    ObtenerPaginadoMisInventariosVegetacion(nInvEst, ref ListaInvPag, nSize, cNombreProy, cAno);
+                    ObtenerPaginadoMisInventariosVegetacion(nInvEst, ref ListaInvPag, nSize, cNombreProy, cAno, nUsuarioId);
                 }
                 catch (Exception ex)
                 {
@@ -196,7 +198,7 @@ namespace ADPostgres
             return ListaInvPag;
         }
 
-        public void ObtenerPaginadoMisInventariosVegetacion(int nInvEst, ref ListaPaginada oLista, int nSize = 10, string cNombreProy = "", string cAno = "")
+        public void ObtenerPaginadoMisInventariosVegetacion(int nInvEst, ref ListaPaginada oLista, int nSize = 10, string cNombreProy = "", string cAno = "", int nUsuarioId = 0)
         {
             var conexion = new ConexionPosgreSQL();
 
@@ -208,6 +210,7 @@ namespace ADPostgres
                     {
                         cmd.Parameters.AddWithValue("_nombreproyecto", cNombreProy);
                         cmd.Parameters.AddWithValue("_anocolecta", cAno);
+                        cmd.Parameters.AddWithValue("_usuarioId", nUsuarioId);
                         cmd.Parameters.AddWithValue("_estado", nInvEst);
                         cmd.Parameters.AddWithValue("_nsize", nSize);
 

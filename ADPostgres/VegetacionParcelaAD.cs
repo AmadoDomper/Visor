@@ -32,7 +32,7 @@ namespace ADPostgres
                         cmd.Parameters.AddWithValue("_Registrador", oVegPar.cRegistrador);
                         cmd.Parameters.AddWithValue("_Longitud", oVegPar.cLongitud);    
                         cmd.Parameters.AddWithValue("_Latitud", oVegPar.cLatitud);
-                        cmd.Parameters.AddWithValue("_Wkb", oVegPar.cWkb);
+                        cmd.Parameters.AddWithValue("_Wkb", oVegPar.cLongitud + " " + oVegPar.cLatitud);
                         cmd.Parameters.AddWithValue("_CodigoMuestra", oVegPar.cCodigoMuestra);
                         cmd.Parameters.AddWithValue("_Altitud", oVegPar.cAltitud);
                         cmd.Parameters.AddWithValue("_Precision", oVegPar.cPrecision);

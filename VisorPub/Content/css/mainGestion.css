@@ -405,6 +405,22 @@ button, input, optgroup, select, textarea {
     cursor: pointer;
 }
 
+td.edit {
+    color: #3C86C7;
+    font-size: 15px;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+td.delete {
+    color: #C73C3C;
+    font-size: 15px;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
 header {
     background-color: #E60000;
 }

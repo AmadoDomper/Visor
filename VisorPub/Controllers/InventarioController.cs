@@ -27,34 +27,82 @@ namespace VisorPub.Controllers
             Usuario oUsuario = new Usuario();
             oUsuario = (Usuario)Session["Datos"]; //Agregar verificacíon de sessión
 
-            ListaPaginada oListaPublicaciones = oInvVeg.ListarMisInventariosVegetacion(nInvEst, nPage, nSize, cNombreProy, cAno);
+            ListaPaginada oListaPublicaciones = oInvVeg.ListarMisInventariosVegetacion(nInvEst, nPage, nSize, cNombreProy, cAno, oUsuario.nUsuarioId);
 
             return JsonConvert.SerializeObject(oListaPublicaciones, Formatting.None,
             new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
         }
 
-        public string CargaDatosInventarioVegetacionParcelas(int nVegId)
+        public string CargaDatosInventarioVegetacion(int nVegId)
         {
-            VegetacionParcelaLN oVegParLN = new VegetacionParcelaLN();
-            List<VegetacionParcela> oListaVegPar = new List<VegetacionParcela>();
-            //int nVegId = 36;
+            InventarioVegetacionLN oInvVegLN = new InventarioVegetacionLN();
+            InventarioVegetacion oInvVeg = new InventarioVegetacion();
 
-            oListaVegPar = oVegParLN.CargaListaInventarioVegetacionParcelas(nVegId);
+            if(nVegId != 0)
+                oInvVeg = oInvVegLN.CargaDatosInventarioVegetacion(nVegId);
 
-            return JsonConvert.SerializeObject(oListaVegPar, Formatting.None,
+            return JsonConvert.SerializeObject(oInvVeg, Formatting.None,
                  new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
         }
 
-        public int ActualizaInventarioVegetacionParcelas(VegetacionParcela oVegPar)
+        public int InsertaActualizaInventarioVegetacionParcela(VegetacionParcela oVegPar)
         {
             int id;
             VegetacionParcelaLN oVegParLN = new VegetacionParcelaLN();
-
-            id = oVegParLN.ActualizaInventarioVegetacionParcela(oVegPar);
+                
+            if (oVegPar.nParcelaId == 0)
+            {
+                id = oVegParLN.RegistraInventarioVegetacionParcela(oVegPar);
+            }
+            else
+            {
+                id = oVegParLN.ActualizaInventarioVegetacionParcela(oVegPar);
+            }
 
             return id;
         }
 
+        public int EliminaInventarioVegetacionParcelas(VegetacionParcela oVegPar)
+        {
+            int id;
+            VegetacionParcelaLN oVegParLN = new VegetacionParcelaLN();
+
+            id = oVegParLN.EliminaInventarioVegetacionParcela(oVegPar);
+
+            return id;
+        }
+
+
+        public int GuardarInventarioVegetacion(InventarioVegetacion oVegPar)
+        {
+            int id;
+            InventarioVegetacionLN oInvVegLN = new InventarioVegetacionLN();
+            Usuario oUsuario = new Usuario();
+            oUsuario = (Usuario)Session["Datos"];
+
+            oVegPar.nUsuarioId = oUsuario.nUsuarioId;
+
+            if (oVegPar.nVegetacionId == 0)
+            {
+                id = oInvVegLN.RegistraInventarioVegetacion(oVegPar);
+            }
+            else
+            {
+                id = oInvVegLN.ActualizaInventarioVegetacion(oVegPar);
+            }
+
+            return id;
+        }
+
+        public int EliminaInventarioVegetacion(InventarioVegetacion oVegPar)
+        {
+            int id;
+            InventarioVegetacionLN oInvVegLN = new InventarioVegetacionLN();
+
+            id = oInvVegLN.EliminaInventarioVegetacion(oVegPar);
+
+            return id;
+        }
 
 
     }

@@ -71,13 +71,9 @@ namespace Test
         public void Test_ListarMisInventariosVegetacion()
         {
             InventarioVegetacionLN oInvVegLN = new InventarioVegetacionLN();
-            InventarioVegetacion oInvVeg = new InventarioVegetacion();
             ListaPaginada oListaVeg= new ListaPaginada();
-            oInvVeg.cNombreProyecto = "Pro";
-            oInvVeg.cAnoColecta = "";
-            oInvVeg.nEstado = 1;
 
-            oListaVeg = oInvVegLN.ListarMisInventariosVegetacion(1,1,5,"","");
+            oListaVeg = oInvVegLN.ListarMisInventariosVegetacion(1,1,5,"","",1);
 
             Assert.IsNotNull(oListaVeg);
         }

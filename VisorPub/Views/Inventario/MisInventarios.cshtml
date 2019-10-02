@@ -35,7 +35,7 @@
                                 <option value="2">Aprobado</option>
                                 <option value="3">Rechazado</option>
                                 <option value="4">Observado</option>
-                                <option value="5">Anulado</option>
+                                <option value="-1">Anulado</option>
                             </select>
                         </div>
                         <div class="form-group m-r-10">
@@ -74,11 +74,12 @@
         <div class="panel-body" style="display: block;">
             <div class="row">
                 <div class="col-lg-12">
-                    <form id="frm" class="form-horizontal" data-smk-icon="glyphicon-asterisk">
+                    <form id="frm" class="form-horizontal" data-smk-icon="glyphicon-asterisk" autocomplete="off">
                         <div class="form-group">
                             <label class="control-label col-xs-12 col-sm-2 col-md-3 col-lg-2" for="email">Código Proyecto</label>
                             <div class="col-xs-5 col-sm-2">
-                                <input type="text" class="form-control" id="txtCodProy">
+                                <input type="hidden" class="form-control" id="hdnVegId">
+                                <input type="text" class="form-control" id="txtCodProy" disabled>
                             </div>
                         </div>
                         <div class="form-group">
@@ -92,7 +93,16 @@
                             <div class="col-xs-5 col-sm-2 col-md-2">
                                 <input type="text" class="form-control" id="txtAno">
                             </div>
+                            <div class="col-xs-5 col-sm-3 col-md-3">
+                                <button id="btnGuardarInvVeg" class="btn btn-sm btn-success m-r-10">
+                                    <span class="fa fa-floppy-o" aria-hidden="true"></span> Guardar
+                                </button>
+                                <button id="btnEliminarInvVeg" class="btn btn-sm btn-danger" disabled>
+                                    <span class="fa fa-trash-o" aria-hidden="true"></span> Eliminar
+                                </button>
+                            </div>
                         </div>
+                        <div class="hr-line-dashed"></div>
                         <div id="cntListaInvParcelas" class="table-responsive">
                             <table id="tblParcelas" class="table table-striped table-bordered dataTable"> </table>
                         </div>
@@ -130,7 +140,6 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <input type="hidden" class="form-control" id="hdnVegId">
                                 <input type="hidden" class="form-control" id="hdnParId">
                                 <label class="control-label" for="txtDepartamento">Departamento</label>
                                 <input type="text" class="form-control" id="txtDepartamento" name="txtDepartamento">
@@ -206,8 +215,13 @@
 
 <script type="text/javascript">
     let datos = [];
+    let indexSeleccionado = -1;
 
+    let vegId = $('#txtCodProy');
     let vegetacionId = $('#hdnVegId');
+    let nombreProyecto = $('#txtNombProy');
+    let anoColecta = $('#txtAno');
+
     let parcelaId = $('#hdnParId');
     let modalParcela = $('#modalParcela');
     let departamento = $("#txtDepartamento");
@@ -226,7 +240,13 @@
     let altitudHidrico = $("#txtAltitudHidrico");
 
     //Asigna eventos a los elementos
+    $("#btnGuardarInvVeg").click(GuardaInventarioVeg);
+    $("#btnEliminarInvVeg").click(EliminaInventarioVeg);
     $("#btnGuardar").click(GuardaInventarioVegParcelas);
+    $("#btcancelar").click(RegresarListaPrincipal);
+    $("#btnNuevoInventarioVegetacion").click(NuevoInventarioVegetacion);
+    
+
 
     jQuery(function ($) {
         $('input.target').click(function () {
@@ -286,11 +306,11 @@
                 $("#cntListaInvVegetacion").Tabla({
                     tblId: "tblInvVegetacion",
                     cabecera: "#,Nombre del Proyecto,Año Colecta,F. Creación,Usuario, Estado",
-                    campos: "nVegId,cNombreProyecto,cAnoColecta, dFechaRegistro, oUsuario.cNom, nEstado",
+                    campos: "nVegId,cNombreProyecto,cAnoColecta, cFechaRegistro, oUsuario.cNom, nEstado",
                     scrollVertical: "Si",
                     tipoCampo: ",,,,,",
                     alinear: "C,L,C,C,C,C",
-                    cellLen: "50,200,100,100,80,80,50",
+                    cellLen: "50,200,100,100,80,80,50,50",
                     cantRegVertical: 15,
                     pag: true,
                     pagDato: { "nPage": d.nPage, "nPageTot": d.nPageTot, "nPageSize": d.nPageSize, "nRows": d.nRows },
@@ -301,9 +321,17 @@
                         let nVegId = fila.find("td").eq(0).html();
                         $("#hdnEstado").val("E");
                         $('input.target')[0].click();
+                        $("#btnEliminarInvVeg").prop("disabled", false);
                         console.log(nVegId);
                         ListarParcelas(nVegId)
 
+                    },
+                    elim: true,
+                    elimEvent: function (fila) {
+                        let nVegId = fila.find("td").eq(0).html();
+                        console.log(nVegId);
+                        console.log("Se elimino el inventario");
+                        ConfirmaEliminarInvVeg(nVegId)   
                     },
                     datos: d.oLista
                 });
@@ -311,18 +339,29 @@
         });
     }
 
+    function NuevoInventarioVegetacion() {
+        ListarParcelas(0);
+    }
+
     function ListarParcelas(nVegId) {
         $.fn.Conexion({
-                direccion: '@Url.Action("CargaDatosInventarioVegetacionParcelas", "Inventario")',
+                direccion: '@Url.Action("CargaDatosInventarioVegetacion", "Inventario")',
                 datos: { "nVegId": nVegId },
                 terminado: function (data, textStatus, jqXHR) {
                     let oInv = JSON.parse(data);
                     datos = oInv;
                     console.log(oInv);
-                    CrearTabla(oInv);
 
+                    vegetacionId.val(oInv.nVegId);
+                    vegId.val(oInv.nVegId);
+                    nombreProyecto.val(oInv.cNombreProyecto);
+                    anoColecta.val(oInv.cAnoColecta);
+
+                    CrearTabla(oInv.ListaParcelas);
+                    if (vegId.val() != "") {
+                        $("#btnAgregar").prop("disabled", false);
+                    }
                     //$("#hdnPubEst").val(oPub.nEstado);
-                    //$('#txtTitulo').val(oPub.titulo);
                     //$('#ddlTipo').val(oPub.tipo.Id);
                     //$('#ddlTema').val(oPub.lsTemas[0].id);
                     //$('#txtAnoPublicacion').val(oPub.ano);
@@ -408,7 +447,9 @@
         $('#tblParcelas').DataTable({
             "paging": false,
             "ordering": true,
+            "fixedColumns": true,
             "info": true,
+            "scrollX": true,
             "language": {
                 "info": "Total: _MAX_ | Encontrados: _END_ ",
                 "infoEmpty": "Total: _MAX_ | Encontrados: _END_ ",
@@ -420,12 +461,16 @@
             'columnDefs': [
                 {
                     "targets": 0, // your case first column
-                    "className": "text-center pointer",
+                    "className": "delete",
                     "width": "4%"
                 },
                 {
                     "targets": 1,
-                    "className": "text-center",
+                    "className": "edit",
+                },
+                {
+                    "targets": 3,
+                    "width": "65%"
                 },
                 {
                     "targets": 6,
@@ -438,17 +483,40 @@
         });
 
         AsignarEventoClick();
-
+        $('#tblParcelas_wrapper div.row > div.col-sm-6')[0].remove();
+        $('#tblParcelas_wrapper div.row div.col-sm-6:eq(0)')
+            .after(`<div class='col-xs-3 col-sm-3'>
+                                <button id='btnAgregar' class='btn btn-sm btn-success' disabled> Agregar Parcela </button>
+                            </div>
+                            <div class='col-sm-3'>
+                                <button id='btnCargar' title='Refrescar Lista' style='float: right;' type='button' class='btn btn-sm btn-success' data-toggle='tooltip'> 
+                                    <span class='fa fa-refresh' aria-hidden='true'></span>
+                                </button>
+                            </div>`);
+        $("#btnAgregar").bind("click", function () { MostrarFormularioRegistroParcelas() });
     }
 
     function AsignarEventoClick() {
+
+        $("#tblParcelas tr td:nth-child(1)").bind("click", function () {
+            let index = $(this).parent().attr('index');
+            indexSeleccionado = index;
+            console.log(index);
+
+            $.fn.Mensaje({ titulo: "Atención", tipo: "SiNo", mensaje: "¿Está seguro de que desea eliminar este registro?", funcionAceptar: EliminarParcela });
+
+            //MostrarFormularioRegistroParcelas();
+            //CargarDatosFormularioParcelas(datos[index]);
+        });
+
+
         $("#tblParcelas tr td:nth-child(2)") .bind("click", function () {
             let index = $(this).parent().attr('index');
             console.log(index);
 
-            console.log(datos[index]);
+            console.log(datos.ListaParcelas[index]);
             MostrarFormularioRegistroParcelas();
-            CargarDatosFormularioParcelas(datos[index]);
+            CargarDatosFormularioParcelas(datos.ListaParcelas[index]);
         });
 
         //$("#tblconfirmaciones tr td").not("td:first-child, td:nth-child(7), td:nth-child(8)").bind("dblclick", function () {
@@ -461,11 +529,11 @@
     }
 
     function MostrarFormularioRegistroParcelas() {
+        $("#frmRegistro")[0].reset();
         modalParcela.modal('show');
     }
 
     function CargarDatosFormularioParcelas(par) {
-        vegetacionId.val(par.nVegetacionId);
         parcelaId.val(par.nParcelaId);
         departamento.val(par.cDepartamento);
         registrador.val(par.cRegistrador);
@@ -506,13 +574,14 @@
 
 
         $.fn.Conexion({
-            direccion: '@Url.Action("ActualizaInventarioVegetacionParcelas", "Inventario")',
+            direccion: '@Url.Action("InsertaActualizaInventarioVegetacionParcela", "Inventario")',
             datos: parcela,
             terminado: function (data, textStatus, jqXHR) {
                 let id = JSON.parse(data);
                 console.log(data);
                 $('#modalParcela').modal('toggle');
-                ListarParcelas(parcela.nVegetacionId);  
+                ListarParcelas(parcela.nVegetacionId); 
+                parcelaId.val("");
             },
             bloqueo: true
         });
@@ -520,21 +589,118 @@
 
     }
 
+    function EliminarParcela() {
+        console.log(indexSeleccionado);
+        let par = datos[indexSeleccionado];
+        indexSeleccionado = -1;
+        console.log(par);
 
+        let parcela = {
+            'nVegetacionId': par.nVegetacionId,
+            'nParcelaId': par.nParcelaId
+        }
+
+        console.log(parcela);
+
+        $.fn.Conexion({
+            direccion: '@Url.Action("EliminaInventarioVegetacionParcelas", "Inventario")',
+            datos: parcela,
+            terminado: function (data, textStatus, jqXHR) {
+                let id = JSON.parse(data);
+                console.log(data);
+
+                if (id > 0) {
+                    $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación se realizó correctamente." });
+                    ListarParcelas(parcela.nVegetacionId);
+                } else {
+                    $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación no se realizó correctamente" });
+                }
+            },
+            bloqueo: true
+        });
+
+        
+    }
+
+    function GuardaInventarioVeg() {
+
+        let inventario = {
+            'nVegetacionId': vegetacionId.val(),
+            'cAnoColecta': anoColecta.val(),
+            'cNombreProyecto': nombreProyecto.val()
+        }
+
+        console.log(inventario);
+
+        $.fn.Conexion({
+            direccion: '@Url.Action("GuardarInventarioVegetacion", "Inventario")',
+            datos: inventario,
+            terminado: function (data, textStatus, jqXHR) {
+                let id = JSON.parse(data);
+                console.log(data);
+
+                if (id > 0) {
+                    $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación se realizó correctamente." });
+                    ListarParcelas(id);
+                    $("#btnEliminarInvVeg").prop("disabled", false);
+
+                } else {
+                    $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación no se realizó correctamente" });
+                }
+            },
+            bloqueo: true
+        });
+    }
+
+    function EliminaInventarioVeg() {
+        $.fn.Mensaje({
+            titulo: "Atención",
+            tipo: "SiNo",
+            mensaje: "¿Está seguro de que desea eliminar este inventario?",
+            funcionAceptar: function () {
+                console.log("Se elimino el inventario");
+                ConfirmaEliminarInvVeg(vegetacionId.val())
+                RegresarListaPrincipal();
+
+            }
+        });
+    }
+
+    function ConfirmaEliminarInvVeg(id) {
+                let inventario = {
+                    'nVegetacionId': id
+                }
+
+                $.fn.Conexion({
+                    direccion: '@Url.Action("EliminaInventarioVegetacion", "Inventario")',
+                    datos: inventario,
+                    terminado: function (data, textStatus, jqXHR) {
+                        let id = JSON.parse(data);
+                        console.log(id);
+
+                        if (id > 0) {
+                            $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación se realizó correctamente." });
+
+                            vegId.val("");
+                            vegetacionId.val("");
+                            ListarMisInvVeg();
+                        } else {
+                            $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación no se realizó correctamente" });
+                        }
+                    },
+                    bloqueo: true
+                });
+    }
 
     function SetEstadoSolicitado() {
         $("#target2 :input").prop("disabled", true);
         $("#btcancelar").prop("disabled", false);
     }
 
-    $("#btcancelar").bind("click", function () {
+    function RegresarListaPrincipal() {
         Limpiar();
         vista("#target1");
-    });
-
-    $("#btnNuevaPublicacion").bind("click", function () {
-        map.updateSize();
-    });
+    }
 
     $("#btnBuscarInv").bind("click", function () {
         ListarMisInvVeg();
@@ -546,7 +712,12 @@
 
     function Limpiar() {
         $('#frm')[0].reset();
-        $("#target2 :input").prop("disabled", false);
+        //$("#tblParcelas").dataTable().fnDestroy();
+        $('#tblParcelas').html("");
+        $("#btnEliminarInvVeg").prop("disabled", true);
+        vegetacionId.val("");
+        parcelaId.val("");
+        //$("#target2 :input").prop("disabled", false);
     }
 
 
