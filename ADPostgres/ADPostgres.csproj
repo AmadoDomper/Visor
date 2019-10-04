@@ -56,10 +56,12 @@
     <Compile Include="Common\RolesPermisos.cs" />
     <Compile Include="ConfiguracionAD.cs" />
     <Compile Include="Helper\Conexion.cs" />
+    <Compile Include="InventarioSuelosAD.cs" />
     <Compile Include="InventarioVegetacionAD.cs" />
     <Compile Include="MenuAD.cs" />
     <Compile Include="RolAD.cs" />
     <Compile Include="SeguridadAD.cs" />
+    <Compile Include="SuelosPerfilModalAD.cs" />
     <Compile Include="UsuarioAD.cs" />
     <Compile Include="ConexionPosgreSQL.cs" />
     <Compile Include="Helper\Constantes.cs" />

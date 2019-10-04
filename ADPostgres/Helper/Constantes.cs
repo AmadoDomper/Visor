@@ -77,6 +77,24 @@ namespace ADPostgres.Helper
         public const string usp_elimina_inventario_vegetacion_detalle = "usp_elimina_inventario_vegetacion_detalle";
         public const string usp_lista_inventario_vegetacion_detalle = "usp_lista_inventario_vegetacion_detalle";
         public const string usp_cargar_datos_inventario_vegetacion_detalle = "usp_cargar_datos_inventario_vegetacion_detalle";
-        
+
+        /*INVENTARIO DE SUELOS*/
+
+        public const string usp_registrar_inventario_suelos = "usp_registrar_inventario_suelos";
+        public const string usp_actualiza_inventario_suelos = "usp_actualiza_inventario_suelos";
+        public const string usp_elimina_inventario_suelos = "usp_elimina_inventario_suelos";
+        public const string usp_listar_mis_inventarios_suelos_paginado = "usp_listar_mis_inventarios_suelos_paginado";
+        public const string usp_obtener_mis_inventarios_suelos_cantpag = "usp_obtener_mis_inventarios_suelos_cantpag";
+        public const string usp_cargar_datos_inventario_suelos = "usp_cargar_datos_inventario_suelos";
+
+
+        /*INVENTARIO DE SUELOS - PERFIL MODAL*/
+
+        public const string usp_registrar_inventario_suelos_detalle = "usp_registrar_inventario_suelos_detalle";
+        public const string usp_actualiza_inventario_suelos_detalle = "usp_actualiza_inventario_suelos_detalle";
+        public const string usp_elimina_inventario_suelos_detalle = "usp_elimina_inventario_suelos_detalle";
+        public const string usp_lista_inventario_suelos_detalle = "usp_lista_inventario_suelos_detalle";
+        public const string usp_cargar_datos_inventario_suelos_detalle = "usp_cargar_datos_inventario_suelos_detalle";
+
     }
 }

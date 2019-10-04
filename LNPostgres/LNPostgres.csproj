@@ -41,11 +41,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfiguracionLN.cs" />
+    <Compile Include="InventarioSuelosLN.cs" />
     <Compile Include="InventarioVegetacionLN.cs" />
     <Compile Include="MenuLN.cs" />
     <Compile Include="PublicacionLN.cs" />
     <Compile Include="RolLN.cs" />
     <Compile Include="SeguridadLN.cs" />
+    <Compile Include="SuelosPerfilModalLN.cs" />
     <Compile Include="UsuarioLN.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VegetacionParcelaLN.cs" />

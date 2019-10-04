@@ -49,8 +49,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InventarioSuelosTest.cs" />
     <Compile Include="InventarioVegetacionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SuelosPerfilModalTest.cs" />
     <Compile Include="VegetacionParcelaTest.cs" />
   </ItemGroup>
   <ItemGroup>

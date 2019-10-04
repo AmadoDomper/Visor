@@ -109,7 +109,7 @@ namespace ADPostgres
         /// <summary>
         /// Devuelve los datos de un registro de la cabecera de Inventarios de Vegetación
         /// </summary>
-        /// <param name="nInvId"></param>
+        /// <param name="nVegId"></param>
         /// <returns></returns>
         public InventarioVegetacion CargaDatosInventarioVegetacion(int nVegId)
         {

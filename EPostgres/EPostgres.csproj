@@ -46,12 +46,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuscadorApi.cs" />
+    <Compile Include="InventarioSuelos.cs" />
     <Compile Include="InventarioVegetacion.cs" />
     <Compile Include="ListaPaginada.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Modulo.cs" />
     <Compile Include="Permiso.cs" />
     <Compile Include="Rol.cs" />
+    <Compile Include="SuelosPerfilModal.cs" />
     <Compile Include="Usuario.cs" />
     <Compile Include="Feature.cs" />
     <Compile Include="Publicacion.cs" />
