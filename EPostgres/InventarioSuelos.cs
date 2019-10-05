@@ -81,7 +81,7 @@ namespace EPostgres
             set { _oUsuario = value; }
         }
 
-        [JsonProperty(PropertyName = "ListaParcelas")]
+        [JsonProperty(PropertyName = "ListaPerfilModal")]
         public List<SuelosPerfilModal> ListaPerfilModal
         {
             get { return _ListaPerfilModal; }

@@ -75,7 +75,7 @@ namespace Test
             InventarioSuelosLN oInvSueLN = new InventarioSuelosLN();
             ListaPaginada oListaVeg = new ListaPaginada();
 
-            oListaVeg = oInvSueLN.ListarMisInventariosVegetacion(1, 1, 5, "", "", "",1);
+            oListaVeg = oInvSueLN.ListarMisInventariosSuelos(1, 1, 5, "", "", "",1);
 
             Assert.IsNotNull(oListaVeg);
         }

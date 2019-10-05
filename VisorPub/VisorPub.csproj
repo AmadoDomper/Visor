@@ -327,6 +327,7 @@
     <Content Include="Views\Usuario\GestionarUsuarios.cshtml" />
     <Content Include="Views\Menu\_Menu.cshtml" />
     <Content Include="Views\Inventario\MisInventarios.cshtml" />
+    <Content Include="Views\Inventario\MisInventariosSuelos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ADPostgres\ADPostgres.csproj">

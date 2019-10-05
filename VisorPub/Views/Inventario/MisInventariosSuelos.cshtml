@@ -1,0 +1,770 @@
+﻿
+@{
+    Layout = null;
+}
+
+<link href="~/Content/css/dataTables/dataTables.bootstrap.min.css" rel="stylesheet" />
+<script src="~/Content/js/utils.min.js"></script>
+<script src="~/Content/js/dataTables/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/dataTables/dataTables.bootstrap.js"></script>
+
+<script type="text/javascript">
+        var Model = @Html.Raw(Json.Encode(@Model));
+</script>
+
+<div class="col-lg-11 col-lg-offset-0-5">
+    <input id="hdnEstado" type="hidden" />
+    <input id="hdnPubEst" type="hidden" />
+    <input id="hdnPag" type="hidden" />
+    @*<div class="row">*@
+    <div id="target1" class="panel move panel-inverse active m-t-5">
+        <div class="panel-heading"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Mis Inventarios de Suelos</div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <input href="#target2" id="btnNuevoInventarioSuelos" type="button" class="btn btn-sm btn-success target" value="Registre su inventario" />
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="row m-b-10 m-t-10">
+                <div class="col-sm-11">
+                    <div class="form-inline">
+                        <div class="form-group m-r-40">
+                            <label class="control-label m-r-5" for="status">Mostrar inventario estado:</label>
+                            <select name="status" id="cmbInvEstado" class="form-control">
+                                <option value="1" selected="">Solicitado</option>
+                                <option value="2">Aprobado</option>
+                                <option value="3">Rechazado</option>
+                                <option value="4">Observado</option>
+                                <option value="-1">Anulado</option>
+                            </select>
+                        </div>
+                        <div class="form-group m-r-10">
+                            <label class="control-label m-r-5" for="product_name">Buscar por:</label>
+                            <select name="status" id="cmbTpoBsq" class="form-control">
+                                <option value="1" selected="">Título del Proyecto</option>
+                                <option value="2">Año</option>
+                                <option value="3">Colector</option>
+                                @*<option value="4">Rango de Fecha</option>*@
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="txtValor" class="form-control">
+                            <div class="input-daterange input-group" id="dtRango" style="display: none;">
+                                <input id="txtFI" type="text" class="form-control" name="start">
+                                <span class="input-group-addon">al</span>
+                                <input id="txtFF" type="text" class="form-control" name="end">
+                            </div>
+                        </div>
+                        <input id="btnBuscarInv" type="button" value="Buscar" class="btn btn-sm btn-primary">
+                    </div>
+                </div>
+            </div>
+            <div class="row table-main">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div id="cntListaInvSuelos" class="table-responsive">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="target2" class="panel move panel-inverse m-t-5" data-sortable-id="form-stuff-1" style="display: none;">
+        <div class="panel-heading">
+            <h4 class="panel-title">Inventario de Suelos</h4>
+        </div>
+        <div class="panel-body" style="display: block;">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form id="frm" class="form-horizontal" data-smk-icon="glyphicon-asterisk" autocomplete="off">
+                        <div class="form-group">
+                            <label class="control-label col-xs-12 col-sm-2 col-md-3 col-lg-2" for="email">Código Proyecto</label>
+                            <div class="col-xs-5 col-sm-2">
+                                <input type="hidden" class="form-control" id="hdnSueId">
+                                <input type="text" class="form-control" id="txtCodProy" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2 col-md-3 col-lg-2" for="pwd">Nombre del Proyecto:</label>
+                            <div class="col-sm-10 col-md-8">
+                                <input type="text" class="form-control" id="txtNombProy">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-12 col-sm-2 col-md-3 col-lg-2" for="pwd">Año Colecta:</label>
+                            <div class="col-xs-5 col-sm-2 col-md-2">
+                                <input type="text" class="form-control" id="txtAno">
+                            </div>
+                            <div class="col-xs-5 col-sm-3 col-md-3">
+                                <button id="btnGuardarInvSue" class="btn btn-sm btn-success m-r-10">
+                                    <span class="fa fa-floppy-o" aria-hidden="true"></span> Guardar
+                                </button>
+                                <button id="btnEliminarInvSue" class="btn btn-sm btn-danger" disabled>
+                                    <span class="fa fa-trash-o" aria-hidden="true"></span> Eliminar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div id="cntListaInvPerfilModal" class="table-responsive">
+                            <table id="tblPerfilModal" class="table table-striped table-bordered dataTable"> </table>
+                        </div>
+
+                        <div class="row m-t-5">
+                            <div class="col-md-8"></div>
+                            <div class="col-md-2">
+                                <input type="button" class="btn btn-primary btn-block btn-fill" value="Enviar" id="btenviar" name="btenviar">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="button" class="btn btn-default btn-block btn-fill" value="Cancelar" id="btcancelar" name="btcancelar">
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div id="modalPerfilModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form id="frmRegistro" class="form-vertical" action="" autocomplete="off">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Registrar Perfil Modal</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" id="hdnPerModId">
+                                <label class="control-label" for="txtDepartamento">Departamento</label>
+                                <input type="text" class="form-control" id="txtDepartamento" name="txtDepartamento">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtLongitud">Longitud</label>
+                                <input type="text" class="form-control" id="txtLongitud" name="txtLongitud">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtLatitud">Latitud</label>
+                                <input type="text" class="form-control" id="txtLatitud" name="txtLatitud">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtPerfilModal">Perfil Modal</label>
+                                <input type="text" class="form-control" id="txtPerfilModal" name="txtPerfilModal">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtNroCalicata">Nro Calicata</label>
+                                <input type="text" class="form-control" id="txtNroCalicata" name="txtNroCalicata">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtMsnm">Msnm</label>
+                                <input type="text" class="form-control" id="txtMsnm" name="txtMsnm">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtZonaMuestreo">Zona de Muestreo</label>
+                                <input type="text" class="form-control" id="txtZonaMuestreo" name="txtZonaMuestreo">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtClasNatural">Clasificacion Natural</label>
+                                <input type="text" class="form-control" id="txtClasNatural" name="txtClasNatural">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtFisiografia">Fisiografia</label>
+                                <input type="text" class="form-control" id="txtFisiografia" name="txtFisiografia">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtPendiente">Pendiente</label>
+                                <input type="text" class="form-control" id="txtPendiente" name="txtPendiente">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label" for="txtRelieve">Relieve</label>
+                                <input type="text" class="form-control" id="txtRelieve" name="txtRelieve">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtClima">Clima</label>
+                                <input type="text" class="form-control" id="txtClima" name="txtClima">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtZonaVida">Zona de Vida</label>
+                                <input type="text" class="form-control" id="txtZonaVida" name="txtZonaVida">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtMaterialParental">Material Parental</label>
+                                <input type="text" class="form-control" id="txtMaterialParental" name="txtMaterialParental">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtVegetacion">Vegetacion</label>
+                                <input type="text" class="form-control" id="txtVegetacion" name="txtVegetacion">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtModoColecta">Modo de Colecta</label>
+                                <input type="text" class="form-control" id="txtModoColecta" name="txtModoColecta">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtDrenaje">Drenaje</label>
+                                <input type="text" class="form-control" id="txtDrenaje" name="txtDrenaje">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtProfundidadEfectiva">Profundidad Efectiva</label>
+                                <input type="text" class="form-control" id="txtProfundidadEfectiva" name="txtProfundidadEfectiva">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtFactorLimitante">Factor Limitante</label>
+                                <input type="text" class="form-control" id="txtFactorLimitante" name="txtFactorLimitante">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button id="btnGuardar" type="button" class="btn btn-primary"> <span class="fa fa-save" aria-hidden="true"></span>  Guardar</button>
+                    <button id="btnCancelar" type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    let datos = [];
+    let indexSeleccionado = -1;
+
+    let sueId = $('#txtCodProy');
+    let suelosId = $('#hdnSueId');
+    let nombreProyecto = $('#txtNombProy');
+    let anoColecta = $('#txtAno');
+
+    let perfilModalId = $('#hdnPerModId');
+    let modalPerfilModal = $('#modalPerfilModal');
+    let departamento = $("#txtDepartamento");
+    let longitud = $("#txtLongitud");
+    let latitud = $("#txtLatitud");
+    let perfilModal = $("#txtPerfilModal");
+    let nroCalicata = $("#txtNroCalicata");
+    let msnm = $("#txtMsnm");
+    let zonaMuestreo = $("#txtZonaMuestreo");
+    let clasNatural = $("#txtClasNatural");
+    let fisiografia = $("#txtFisiografia");
+    let pendiente = $("#txtPendiente");
+    let relieve = $("#txtRelieve");
+    let clima = $("#txtClima");
+    let zonaVida = $("#txtZonaVida");
+    let materialParental = $("#txtMaterialParental");
+    let vegetacion = $("#txtVegetacion");
+    let modoColecta = $("#txtModoColecta");
+    let drenaje = $("#txtDrenaje");
+    let profundidadEfectiva = $("#txtProfundidadEfectiva");
+    let factorLimitante = $("#txtFactorLimitante");
+
+    //Asigna eventos a los elementos
+    $("#btnGuardarInvSue").click(GuardaInventarioSue);
+    $("#btnEliminarInvSue").click(EliminaInventarioSue);
+    $("#btnGuardar").click(GuardaInventarioSuePerfilModal);
+    $("#btcancelar").click(RegresarListaPrincipal);
+    $("#btnNuevoInventarioSuelos").click(NuevoInventarioSuelos);
+
+
+    jQuery(function ($) {
+        $('input.target').click(function () {
+            vista($(this).attr('href'));
+        });
+    });
+
+    let vista = function ($target) {
+        var $target = $($target),
+            $other = $('.panel-inverse.active');
+
+        if (!$target.hasClass('active')) {
+            $other.each(function (index, self) {
+                let $this = $(this);
+                $this.removeClass('active').animate({
+                    left: $this.width()
+                }, 500).hide();
+            });
+
+            $target.addClass('active').show().css({
+                left: -($target.width())
+            }).animate({
+                left: 0
+            }, 500);
+        }
+    };
+
+    ListarMisInvSue();
+
+    function ListarMisInvSue(nPage, nSize, blo) {
+        let cNombreProy, cAno;
+        let nPubEst = $("#cmbInvEstado").val();
+        let tpoBsq = $("#cmbTpoBsq").val();
+        let valor = $("#txtValor").val();
+        valor = valor == "" ? null : valor;
+
+        switch (tpoBsq) {
+            case "1":
+                {
+                    cNombreProy = valor;
+                    break;
+                }
+            case "2":
+                {
+                    cAno = valor;
+                    break;
+                }
+        }
+
+        $.fn.Conexion({
+            direccion: '@Url.Action("ListarMisInventariosSuelos", "Inventario")',
+            datos: { "nInvEst": nPubEst, "nPage": nPage, "nSize": nSize, "cNombreProy": cNombreProy, "cAno": cAno },
+            bloqueo: blo == false ? false : true ,
+            terminado: function (data) {
+                let d = JSON.parse(data);
+
+                $("#cntListaInvSuelos").Tabla({
+                    tblId: "tblInvSuelos",
+                    cabecera: "#,Nombre del Proyecto,Año Colecta,F. Creación,Usuario, Estado",
+                    campos: "nSuelosId,cNombreProyecto,cAnoColecta, cFechaRegistro, oUsuario.cNom, nEstado",
+                    scrollVertical: "Si",
+                    tipoCampo: ",,,,,",
+                    alinear: "C,L,C,C,C,C",
+                    cellLen: "50,200,100,100,80,80,50,50",
+                    cantRegVertical: 15,
+                    pag: true,
+                    pagDato: { "nPage": d.nPage, "nPageTot": d.nPageTot, "nPageSize": d.nPageSize, "nRows": d.nRows },
+                    pagEvent: ListarMisInvSue,
+                    edit: true,
+                    dblClick: true,
+                    editEvent: function (fila) {
+                        let nSueId = fila.find("td").eq(0).html();
+                        $("#hdnEstado").val("E");
+                        $('input.target')[0].click();
+                        $("#btnEliminarInvSue").prop("disabled", false);
+                        console.log(nSueId);
+                        ListarPerfilModal(nSueId)
+
+                    },
+                    elim: true,
+                    elimEvent: function (fila) {
+                        let nSueId = fila.find("td").eq(0).html();
+                        console.log(nSueId);
+                        console.log("Se elimino el inventario");
+                        ConfirmaEliminarInvSue(nSueId)
+                    },
+                    datos: d.oLista
+                });
+            }
+        });
+    }
+
+    function NuevoInventarioSuelos() {
+        ListarPerfilModal(0);
+    }
+
+    function ListarPerfilModal(nSueId) {
+        $.fn.Conexion({
+                direccion: '@Url.Action("CargaDatosInventarioSuelos", "Inventario")',
+                datos: { "nSueId": nSueId },
+                terminado: function (data, textStatus, jqXHR) {
+                    let oInv = JSON.parse(data);
+                    datos = oInv;
+                    console.log(oInv);
+
+                    suelosId.val(oInv.nSuelosId);
+                    sueId.val(oInv.nSuelosId);
+                    nombreProyecto.val(oInv.cNombreProyecto);
+                    anoColecta.val(oInv.cAnoColecta);
+
+                    CrearTabla(oInv.ListaPerfilModal);
+                    if (sueId.val() != "") {
+                        $("#btnAgregar").prop("disabled", false);
+                    }
+                    //$("#hdnPubEst").val(oPub.nEstado);
+                    //$('#ddlTipo').val(oPub.tipo.Id);
+                    //$('#ddlTema').val(oPub.lsTemas[0].id);
+                    //$('#txtAnoPublicacion').val(oPub.ano);
+                    //$('#txtEnlace').val(oPub.enlace);
+                    //$('#txtReferencia').val(oPub.refBi);
+                    //for (var i = 0; i < oPub.lsFeatures.length; i++) {
+                    //    var punto = oPub.lsFeatures[i].Info.split(' ');
+                    //        indexFeature++;
+
+                    //    var info = punto[0] + '|' + punto[1];
+                    //    var item = { "n": indexFeature, "Tipo": 1, "Info": info,"Longitud": punto[0], "Latitud": punto[1]};
+                    //    $("#jsGrid").jsGrid("insertItem", item);
+
+                    //    lsFeatures.push(item);
+                    //    map_AgregarPunto(punto,indexFeature);
+
+                    //}
+
+                    //map.updateSize();
+
+                    //if (oPub.nEstado == 1) {
+                    //    SetEstadoSolicitado();
+                    //}
+                },
+                bloqueo: true
+        });
+    }
+
+    function CrearTabla(rows) {
+        let table = `
+                                <thead>
+                                    <th> Eliminar </th>
+                                    <th> Editar </th>
+                                    <th> Departamento </th>
+                                    <th> Id Suelos </th>
+                                    <th> Longitud </th>
+                                    <th> Latitud </th>
+                                    <th> Perfil Modal </th>
+                                    <th> Nro Calicata </th>
+                                    <th> Msnm </th>
+                                    <th> Zona de Muestreo </th>
+                                    <th> ClasificacionNatural </th>
+                                    <th> Fisiografia </th>
+                                    <th> Pendiente </th>
+                                    <th> Relieve </th>
+                                    <th> Clima </th>
+                                    <th> Zona de Vida </th>
+                                    <th> Material Parental </th>
+                                    <th> Vegetacion </th>
+                                    <th> Modo de Colecta </th>
+                                    <th> Drenaje </th>
+                                    <th> Profundidad Efectiva </th>
+                                    <th> Factor Limitante </th>
+                                </thead>
+                                <tbody>
+                                `;
+
+        if (rows != undefined) {
+            for (let i = 0; i < rows.length; i++) {
+                table += `
+                                    <tr index='${i}'>
+                                        <td><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></td>
+                                        <td><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></td>
+                                        <td>${rows[i].cDepartamento}</td>
+                                        <td>${rows[i].nSuelosId}</td>
+                                        <td>${rows[i].cLongitud}</td>
+                                        <td>${rows[i].cLatitud}</td>
+                                        <td>${rows[i].cPerfilModal}</td>
+                                        <td>${rows[i].cNroCalicata}</td>
+                                        <td>${rows[i].cMsnm}</td>
+                                        <td>${rows[i].cZonaMuestreo}</td>
+                                        <td>${rows[i].cClasificacionNatural}</td>
+                                        <td>${rows[i].cFisiografia}</td>
+                                        <td>${rows[i].cPendiente}</td>
+                                        <td>${rows[i].cRelieve}</td>
+                                        <td>${rows[i].cClima}</td>
+                                        <td>${rows[i].cZonaVida}</td>
+                                        <td>${rows[i].cMaterialParental}</td>
+                                        <td>${rows[i].cVegetacion}</td>
+                                        <td>${rows[i].cModoColecta}</td>
+                                        <td>${rows[i].cDrenaje}</td>
+                                        <td>${rows[i].cProfundidadEfectiva}</td>
+                                        <td>${rows[i].cFactorLimitante}</td>
+                                    </tr>`;
+            }
+        }
+
+        table += `
+                    </tbody>`;
+
+        $('#tblPerfilModal').html(table);
+
+        $("#tblPerfilModal").dataTable().fnDestroy();
+
+        $('#tblPerfilModal').DataTable({
+            "paging": false,
+            "ordering": true,
+            "fixedColumns": true,
+            "info": true,
+            "scrollX": true,
+            "language": {
+                "info": "Total: _MAX_ | Encontrados: _END_ ",
+                "infoEmpty": "Total: _MAX_ | Encontrados: _END_ ",
+                "infoFiltered": "",
+            },
+            "scrollY": "250px",
+            "scrollCollapse": false,
+            "bFilter": true,
+            'columnDefs': [
+                {
+                    "targets": 0, // your case first column
+                    "className": "delete",
+                    "width": "4%"
+                },
+                {
+                    "targets": 1,
+                    "className": "edit",
+                },
+                {
+                    "targets": 3,
+                    "width": "65%"
+                },
+                {
+                    "targets": 6,
+                    "className": "text-center",
+                },
+                {
+                    "targets": 7,
+                    "className": "text-center",
+                }],
+        });
+
+        AsignarEventoClick();
+        $('#tblPerfilModal_wrapper div.row > div.col-sm-6')[0].remove();
+        $('#tblPerfilModal_wrapper div.row div.col-sm-6:eq(0)')
+            .after(`<div class='col-xs-3 col-sm-3'>
+                                <button id='btnAgregar' class='btn btn-sm btn-success' disabled> Agregar Perfil Modal </button>
+                            </div>
+                            <div class='col-sm-3'>
+                                <button id='btnCargar' title='Refrescar Lista' style='float: right;' type='button' class='btn btn-sm btn-success' data-toggle='tooltip'>
+                                    <span class='fa fa-refresh' aria-hidden='true'></span>
+                                </button>
+                            </div>`);
+        $("#btnAgregar").bind("click", function () { MostrarFormularioRegistroPerfilModal() });
+    }
+
+    function AsignarEventoClick() {
+
+        $("#tblPerfilModal tr td:nth-child(1)").bind("click", function () {
+            let index = $(this).parent().attr('index');
+            indexSeleccionado = index;
+            console.log(index);
+
+            $.fn.Mensaje({ titulo: "Atención", tipo: "SiNo", mensaje: "¿Está seguro de que desea eliminar este registro?", funcionAceptar: EliminarPerfilModal });
+
+            //MostrarFormularioRegistroPerfilModal();
+            //CargarDatosFormularioPerfilModal(datos[index]);
+        });
+
+
+        $("#tblPerfilModal tr td:nth-child(2)") .bind("click", function () {
+            let index = $(this).parent().attr('index');
+            console.log(index);
+
+            console.log(datos.ListaPerfilModal[index]);
+            MostrarFormularioRegistroPerfilModal();
+            CargarDatosFormularioPerfilModal(datos.ListaPerfilModal[index]);
+        });
+
+        //$("#tblconfirmaciones tr td").not("td:first-child, td:nth-child(7), td:nth-child(8)").bind("dblclick", function () {
+        //    let index = $(this).parent().attr('index');
+        //    console.log(index);
+        //    MostrarFormularioRegistro();
+        //    CargarDatosFormularioRegistro(datos[index]);
+        //});
+
+    }
+
+    function MostrarFormularioRegistroPerfilModal() {
+        $("#frmRegistro")[0].reset();
+        modalPerfilModal.modal('show');
+    }
+
+    function CargarDatosFormularioPerfilModal(perMod) {
+        perfilModalId.val(perMod.nPerfilId);
+        departamento.val(perMod.cDepartamento);
+        longitud.val(perMod.cLongitud);
+        latitud.val(perMod.cLatitud);
+        perfilModal.val(perMod.cPerfilModal);
+        nroCalicata.val(perMod.cNroCalicata);
+        msnm.val(perMod.cMsnm);
+        zonaMuestreo.val(perMod.cZonaMuestreo);
+        clasNatural.val(perMod.cClasificacionNatural);
+        fisiografia.val(perMod.cFisiografia);
+        pendiente.val(perMod.cPendiente);
+        relieve.val(perMod.cRelieve);
+        clima.val(perMod.cClima);
+        zonaVida.val(perMod.cZonaVida);
+        materialParental.val(perMod.cMaterialParental);
+        vegetacion.val(perMod.cVegetacion);
+        modoColecta.val(perMod.cModoColecta);
+        drenaje.val(perMod.cDrenaje);
+        profundidadEfectiva.val(perMod.cProfundidadEfectiva);
+        factorLimitante.val(perMod.cFactorLimitante);
+    }
+
+    function GuardaInventarioSuePerfilModal() {
+
+        let oPerfilModal = {
+            'nSuelosId': suelosId.val(),
+            'nPerfilId':perfilModalId.val(),
+            'cDepartamento':departamento.val(),
+            'cLongitud':longitud.val(),
+            'cLatitud':latitud.val(),
+            'cPerfilModal':perfilModal.val(),
+            'cNroCalicata':nroCalicata.val(),
+            'cMsnm':msnm.val(),
+            'cZonaMuestreo':zonaMuestreo.val(),
+            'cClasificacionNatural':clasNatural.val(),
+            'cFisiografia':fisiografia.val(),
+            'cPendiente':pendiente.val(),
+            'cRelieve':relieve.val(),
+            'cClima':clima.val(),
+            'cZonaVida':zonaVida.val(),
+            'cMaterialParental':materialParental.val(),
+            'cVegetacion':vegetacion.val(),
+            'cModoColecta':modoColecta.val(),
+            'cDrenaje':drenaje.val(),
+            'cProfundidadEfectiva':profundidadEfectiva.val(),
+            'cFactorLimitante':factorLimitante.val()
+        }
+
+        $.fn.Conexion({
+            direccion: '@Url.Action("InsertaActualizaInventarioSuelosPerfilModal", "Inventario")',
+            datos: oPerfilModal,
+            terminado: function (data, textStatus, jqXHR) {
+                let id = JSON.parse(data);
+                console.log(data);
+                $('#modalPerfilModal').modal('toggle');
+                ListarPerfilModal(perfilModal.nSuelosId);
+                perfilModalId.val("");
+            },
+            bloqueo: true
+        });
+
+
+    }
+
+    function EliminarPerfilModal() {
+        console.log(indexSeleccionado);
+        let perMod = datos[indexSeleccionado];
+        indexSeleccionado = -1;
+        console.log(perMod);
+
+        let perfilModal = {
+            'nSuelosId': perMod.nSuelosId,
+            'nPerfilModalId': perMod.nPerfilModalId
+        }
+
+        console.log(perfilModal);
+
+        $.fn.Conexion({
+            direccion: '@Url.Action("EliminaInventarioSuelosPerfilModal", "Inventario")',
+            datos: perfilModal,
+            terminado: function (data, textStatus, jqXHR) {
+                let id = JSON.parse(data);
+                console.log(data);
+
+                if (id > 0) {
+                    $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación se realizó correctamente." });
+                    ListarPerfilModal(perfilModal.nSuelosId);
+                } else {
+                    $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación no se realizó correctamente" });
+                }
+            },
+            bloqueo: true
+        });
+
+
+    }
+
+    function GuardaInventarioSue() {
+
+        let inventario = {
+            'nSuelosId': suelosId.val(),
+            'cAnoColecta': anoColecta.val(),
+            'cNombreProyecto': nombreProyecto.val()
+        }
+
+        console.log(inventario);
+
+        $.fn.Conexion({
+            direccion: '@Url.Action("GuardarInventarioSuelos", "Inventario")',
+            datos: inventario,
+            terminado: function (data, textStatus, jqXHR) {
+                let id = JSON.parse(data);
+                console.log(data);
+
+                if (id > 0) {
+                    $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación se realizó correctamente." });
+                    ListarPerfilModal(id);
+                    $("#btnEliminarInvSue").prop("disabled", false);
+
+                } else {
+                    $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación no se realizó correctamente" });
+                }
+            },
+            bloqueo: true
+        });
+    }
+
+    function EliminaInventarioSue() {
+        $.fn.Mensaje({
+            titulo: "Atención",
+            tipo: "SiNo",
+            mensaje: "¿Está seguro de que desea eliminar este inventario?",
+            funcionAceptar: function () {
+                console.log("Se elimino el inventario");
+                ConfirmaEliminarInvSue(suelosId.val())
+                RegresarListaPrincipal();
+
+            }
+        });
+    }
+
+    function ConfirmaEliminarInvSue(id) {
+                let inventario = {
+                    'nSuelosId': id
+                }
+
+                $.fn.Conexion({
+                    direccion: '@Url.Action("EliminaInventarioSuelos", "Inventario")',
+                    datos: inventario,
+                    terminado: function (data, textStatus, jqXHR) {
+                        let id = JSON.parse(data);
+                        console.log(id);
+
+                        if (id > 0) {
+                            $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación se realizó correctamente." });
+
+                            sueId.val("");
+                            suelosId.val("");
+                            ListarMisInvSue();
+                        } else {
+                            $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación no se realizó correctamente" });
+                        }
+                    },
+                    bloqueo: true
+                });
+    }
+
+    function SetEstadoSolicitado() {
+        $("#target2 :input").prop("disabled", true);
+        $("#btcancelar").prop("disabled", false);
+    }
+
+    function RegresarListaPrincipal() {
+        Limpiar();
+        vista("#target1");
+    }
+
+    $("#btnBuscarInv").bind("click", function () {
+        ListarMisInvSue();
+    });
+
+    $("#txtValor").keyup(function (e) {
+        if (e.which == 13) { ListarMisInvSue(); }
+    });
+
+    function Limpiar() {
+        $('#frm')[0].reset();
+        //$("#tblPerfilModal").dataTable().fnDestroy();
+        $('#tblPerfilModal').html("");
+        $("#btnEliminarInvSue").prop("disabled", true);
+        suelosId.val("");
+        perfilModalId.val("");
+        //$("#target2 :input").prop("disabled", false);
+    }
+
+
+
+</script>
