@@ -10,6 +10,10 @@ using EPostgres;
 using LNPostgres;
 using VisorPub.Models;
 using Seguridad.filters;
+using System.Data;
+using System.IO;
+using ExcelDataReader;
+using VisorPub.Models.Inventario;
 
 namespace VisorPub.Controllers
 {
@@ -192,6 +196,116 @@ namespace VisorPub.Controllers
             id = oInvSueLN.EliminaInventarioSuelos(oInvSue);
 
             return id;
+        }
+
+        public int CargarExcelVegetacion(ExcelViewModel model)
+        {
+            
+            string filename = Guid.NewGuid() + Path.GetExtension(model.File.FileName);
+            string filepath = "/ExcelInventarios/" + filename;
+
+            model.File.SaveAs(Path.Combine(Server.MapPath("/ExcelInventarios"), filename));
+            InsertExcelDataVegetacion(filepath, filename, model.Id);
+
+            return 1;
+        }
+
+        private void InsertExcelDataVegetacion(string fileepath, string filename, int nVegetacionId)
+        {
+            VegetacionParcelaLN oVegParLN = new VegetacionParcelaLN();
+            string fullpath = Server.MapPath("/ExcelInventarios/") + filename;
+
+            using (var stream = System.IO.File.Open(fullpath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet();
+                    var dataTable = result.Tables[0];
+
+                    for (var i = 1; i < dataTable.Rows.Count; i++)
+                    {
+                        var data = dataTable.Rows[i][0];
+
+                        VegetacionParcela oVegPar = new VegetacionParcela();
+
+                        oVegPar.nVegetacionId = nVegetacionId;
+                        oVegPar.cDepartamento = dataTable.Rows[i][0].ToString();
+                        oVegPar.cRegistrador = dataTable.Rows[i][1].ToString();
+                        oVegPar.cLongitud = dataTable.Rows[i][2].ToString();
+                        oVegPar.cLatitud = dataTable.Rows[i][3].ToString();
+                        oVegPar.cCodigoMuestra = dataTable.Rows[i][4].ToString(); ;
+                        oVegPar.cAltitud = dataTable.Rows[i][5].ToString(); ;
+                        oVegPar.cPrecision = dataTable.Rows[i][6].ToString();
+                        oVegPar.cTipoVegetacion = dataTable.Rows[i][7].ToString();
+                        oVegPar.cClaseFisonomica = dataTable.Rows[i][8].ToString();
+                        oVegPar.cCobertura = dataTable.Rows[i][9].ToString();
+                        oVegPar.cConfianzaClasificacion = dataTable.Rows[i][10].ToString();
+                        oVegPar.cClaseHidrologica = dataTable.Rows[i][11].ToString();
+                        oVegPar.cFisiografia = dataTable.Rows[i][12].ToString();
+                        oVegPar.cAltitudSistemaHidrico = dataTable.Rows[i][13].ToString();
+
+                        oVegParLN.RegistraInventarioVegetacionParcela(oVegPar);
+                    }
+                }
+            }
+        }
+
+
+        public int CargarExcelSuelos(ExcelViewModel model)
+        {
+
+            string filename = Guid.NewGuid() + Path.GetExtension(model.File.FileName);
+            string filepath = "/ExcelInventarios/" + filename;
+
+            model.File.SaveAs(Path.Combine(Server.MapPath("/ExcelInventarios"), filename));
+            InsertExcelDataSuelos(filepath, filename, model.Id);
+
+            return 1;
+        }
+
+        private void InsertExcelDataSuelos(string fileepath, string filename, int nSuelosId)
+        {
+            SuelosPerfilModalLN oSuePerModLN = new SuelosPerfilModalLN();
+            string fullpath = Server.MapPath("/ExcelInventarios/") + filename;
+
+            using (var stream = System.IO.File.Open(fullpath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet();
+                    var dataTable = result.Tables[0];
+
+                    for (var i = 1; i < dataTable.Rows.Count; i++)
+                    {
+                        var data = dataTable.Rows[i][0];
+
+                        SuelosPerfilModal oSuePerMod = new SuelosPerfilModal();
+
+                        oSuePerMod.nSuelosId = nSuelosId;
+                        oSuePerMod.cDepartamento = dataTable.Rows[i][0].ToString();
+                        oSuePerMod.cLongitud = dataTable.Rows[i][1].ToString();
+                        oSuePerMod.cLatitud = dataTable.Rows[i][2].ToString();                                                     
+                        oSuePerMod.cPerfilModal = dataTable.Rows[i][3].ToString();                        
+                        oSuePerMod.cNroCalicata = dataTable.Rows[i][4].ToString();                        
+                        oSuePerMod.cMsnm = dataTable.Rows[i][5].ToString();                               
+                        oSuePerMod.cZonaMuestreo = dataTable.Rows[i][6].ToString();                       
+                        oSuePerMod.cClasificacionNatural = dataTable.Rows[i][7].ToString();               
+                        oSuePerMod.cFisiografia = dataTable.Rows[i][8].ToString();                        
+                        oSuePerMod.cPendiente = dataTable.Rows[i][9].ToString();                          
+                        oSuePerMod.cRelieve = dataTable.Rows[i][10].ToString();                            
+                        oSuePerMod.cClima = dataTable.Rows[i][11].ToString();                              
+                        oSuePerMod.cZonaVida = dataTable.Rows[i][12].ToString();                           
+                        oSuePerMod.cMaterialParental = dataTable.Rows[i][13].ToString();                   
+                        oSuePerMod.cVegetacion = dataTable.Rows[i][14].ToString();                         
+                        oSuePerMod.cModoColecta = dataTable.Rows[i][15].ToString();                        
+                        oSuePerMod.cDrenaje = dataTable.Rows[i][16].ToString();                            
+                        oSuePerMod.cProfundidadEfectiva = dataTable.Rows[i][17].ToString();                
+                        oSuePerMod.cFactorLimitante = dataTable.Rows[i][18].ToString();           
+
+                        oSuePerModLN.RegistraInventarioSuelosPerfilModal(oSuePerMod);
+                    }
+                }
+            }
         }
 
 

@@ -57,6 +57,8 @@ namespace ADPostgres.Helper
 
         /*API*/
 
+        public const string usp_getAllPublicationPoints = "usp_getAllPublicationPoints";
+
         public const string usp_BuscarPublicacionesPaginado = "usp_BuscarPublicacionesPaginado";
         public const string usp_BuscarPublicacionesCantPag = "usp_BuscarPublicacionesCantPag";
 
