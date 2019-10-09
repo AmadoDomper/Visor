@@ -53,6 +53,11 @@ namespace LNPostgres
             return oPublicacionAD.ListarTipos();
         }
 
+        public string GetAllPublicationPoints()
+        {
+            return oPublicacionAD.GetAllPublicationPoints();
+        }
 
+        
     }
 }

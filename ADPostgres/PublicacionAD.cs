@@ -662,6 +662,28 @@ namespace ADPostgres
             return lsItems;
         }
 
+        public string GetAllPublicationPoints()
+        {
+            var conexion = new ConexionPosgreSQL();
+            string json = "";
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_getAllPublicationPoints))
+                    {
+                        json = (string)cmd.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return json;
+        }
+
 
 
     }

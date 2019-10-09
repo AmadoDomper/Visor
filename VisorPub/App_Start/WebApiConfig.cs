@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Extensions.Compression.Core.Compressors;
 using System.Web.Http;
+using Microsoft.AspNet.WebApi.Extensions.Compression;
+using Microsoft.AspNet.WebApi.Extensions.Compression.Server;
 
 namespace VisorPub
 {
@@ -30,6 +33,12 @@ namespace VisorPub
                 routeTemplate: "api/{controller}/{action}",
                 defaults: new { action = "Get" }
             );
+
+            GlobalConfiguration.Configuration.MessageHandlers
+                .Insert(0, 
+                new ServerCompressionHandler(
+                    new GZipCompressor(), 
+                    new DeflateCompressor()));
         }
     }
 }
