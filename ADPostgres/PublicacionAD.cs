@@ -6,6 +6,7 @@ using System.Data;
 using ADPostgres.Helper;
 using EPostgres;
 using Npgsql;
+using Newtonsoft.Json;
 
 namespace ADPostgres
 {
@@ -662,10 +663,10 @@ namespace ADPostgres
             return lsItems;
         }
 
-        public string GetAllPublicationPoints()
+        public Object GetAllPublicationPoints()
         {
             var conexion = new ConexionPosgreSQL();
-            string json = "";
+            Object json;
 
             using (var db = conexion.AbreConexion())
             {
@@ -673,7 +674,7 @@ namespace ADPostgres
                 {
                     using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_getAllPublicationPoints))
                     {
-                        json = (string)cmd.ExecuteScalar();
+                        json = JsonConvert.DeserializeObject(cmd.ExecuteScalar().ToString());
                     }
                 }
                 catch (Exception ex)

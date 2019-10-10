@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EPostgres;
 using ADPostgres;
+using Newtonsoft.Json;
 
 namespace LNPostgres
 {
@@ -53,7 +54,7 @@ namespace LNPostgres
             return oPublicacionAD.ListarTipos();
         }
 
-        public string GetAllPublicationPoints()
+        public Object GetAllPublicationPoints()
         {
             return oPublicacionAD.GetAllPublicationPoints();
         }

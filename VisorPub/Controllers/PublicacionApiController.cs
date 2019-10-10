@@ -45,16 +45,15 @@ namespace VisorPub.Controllers
             new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
         }
 
-        public string  getAllPublicationPoints()
+        
+        public IHttpActionResult getAllPublicationPoints()
         {
             PublicacionLN oPubli = new PublicacionLN();
-            string json;
+            Object json;
 
             json = oPubli.GetAllPublicationPoints();
 
-            return json;
-            //return JsonConvert.SerializeObject(json, Formatting.None,
-            //new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
+            return Json(json);
         }
 
         //POST api/<controller>

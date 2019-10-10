@@ -13,15 +13,12 @@ namespace Test
     {
 
         [TestMethod]
-        public void Test_RegistraInventarioSuelos()
+        public void Test_Registrainventariosuelos()
         {
             PublicacionLN oPubli = new PublicacionLN();
-            string json;
+            object json;
 
             json = oPubli.GetAllPublicationPoints();
-
-            JsonConvert.SerializeObject(json, Formatting.None,
-            new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
 
             Assert.IsNotNull(json);
         }
