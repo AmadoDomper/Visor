@@ -23,7 +23,7 @@ namespace VisorPub.Controllers
         }
 
         //GET api/<controller>/5
-        public string GetCombos()
+        public IHttpActionResult GetCombos()
         {
             PublicacionLN oPublica = new PublicacionLN();
             ComboViewModel oCombo = new ComboViewModel();
@@ -31,8 +31,7 @@ namespace VisorPub.Controllers
             oCombo.lsTemas = oPublica.ListarTemas();
             oCombo.lsTipos = oPublica.ListarTipos();
 
-            return JsonConvert.SerializeObject(oCombo, Formatting.None,
-            new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
+            return Json(oCombo, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
         }
 
         public string GetDatosPublicacion(int id)

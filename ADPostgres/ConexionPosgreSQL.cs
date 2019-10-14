@@ -27,7 +27,7 @@ namespace ADPostgres
                     Conex = new NpgsqlConnection(cadenaDeConexion);
                     Conex.Open();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     Conex.Close();
                 }

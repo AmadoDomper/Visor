@@ -191,6 +191,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="Content\css\css.css" />
     <Content Include="Content\css\mainGestion.css" />
+    <Content Include="Content\css\ol\v4.6.5\ol.css" />
+    <Content Include="Content\css\ol\v6.0.1\ol.css" />
     <Content Include="Content\css\sb-admin-2.css" />
     <Content Include="Content\extend\masked\jquery.maskedinput.js" />
     <Content Include="Content\extend\masked\jquery.maskedinput.min.js" />
@@ -210,9 +212,12 @@
     <Content Include="Content\js\dataTables\dataTables.bootstrap.js" />
     <Content Include="Content\js\dataTables\jquery.dataTables.min.js" />
     <Content Include="Content\js\main.js" />
+    <Content Include="Content\js\ol\v4.6.5\ol.js" />
+    <Content Include="Content\js\ol\v6.0.1\ol.js" />
     <Content Include="Content\js\vendor\metisMenu.js" />
     <Content Include="Content\js\vendor\modernizr-2.6.2.min.js" />
     <Content Include="Content\js\vendor\sb-admin-2.js" />
+    <Content Include="Content\js\visor\data.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\css\bootstrap-multiselect.css" />
     <Content Include="Content\css\bootstrap.css" />
@@ -330,6 +335,8 @@
     <Content Include="Content\font-awesome-4.7.0\scss\_screen-reader.scss" />
     <Content Include="Content\font-awesome-4.7.0\scss\_stacked.scss" />
     <Content Include="Content\font-awesome-4.7.0\scss\_variables.scss" />
+    <Content Include="Content\css\ol\v6.0.1\ol.css.map" />
+    <Content Include="Content\js\ol\v6.0.1\ol.js.map" />
     <None Include="Properties\PublishProfiles\Jaox.pubxml" />
     <Content Include="Views\publicacion\Registrar.cshtml" />
     <Content Include="Views\publicacion\Listar.cshtml" />
@@ -346,6 +353,7 @@
     <Content Include="Views\Menu\_Menu.cshtml" />
     <Content Include="Views\Inventario\MisInventarios.cshtml" />
     <Content Include="Views\Inventario\MisInventariosSuelos.cshtml" />
+    <Content Include="Views\Inicio\IndexAnt.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ADPostgres\ADPostgres.csproj">

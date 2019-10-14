@@ -1,412 +1,390 @@
 ﻿@{
-    ViewBag.Title = "Inicio";
+    Layout = null;
 }
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visor de mapas de Publicaciones</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="~/Content/css/ol/v4.6.5/ol.css" rel="stylesheet" type="text/css"  />
+</head>
+<body>
+    <div id="map"></div>
+    <div id="info"></div>
+    <div id="info-det"></div>
+    <button type="button" id="btnSelec">Selección</button> <button type="button" id="btnDeselec">Deselección</button>
+    <script src="~/Content/js/visor/data.js" async></script>
+    <script src="~/Content/js/ol/v4.6.5/ol.js"></script>
+    <script type="text/javascript">
+        var map;
+        var zoom = 6;
+        var center = ol.proj.transform(
+            [-75, -4.4], 'EPSG:4326', 'EPSG:3857')
+        var rotation = 0;
 
-<style>
-    .iframePop {
-        min-height: 200px;
-        border-width: 0px;
-        border-style: inset;
-        border-color: initial;
-        border-image: initial;
-    }
-
-    .ol-popup-content {
-        min-height: 210px;
-        min-width: 140px;
-        overflow-x: auto;
-    }
-
-    .ol-popup {
-        position: absolute;
-        background-color: white;
-        -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
-        filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
-        padding: 15px;
-        border-radius: 10px;
-        border: 1px solid #cccccc;
-        bottom: 12px;
-        left: -50px;
-        min-width: 200px;
-        display: table;
-    }
-
-        .ol-popup:after, .ol-popup:before {
-            top: 100%;
-            border: solid transparent;
-            content: " ";
-            height: 0;
-            width: 0;
-            position: absolute;
-            pointer-events: none;
+        /* Fast location url */
+        if (window.location.hash !== '') {
+            var hash = window.location.hash.replace('#map=', '');
+            var parts = hash.split('/');
+            if (parts.length === 4) {
+                zoom = parseInt(parts[0], 10);
+                center = [
+                    parseFloat(parts[1]),
+                    parseFloat(parts[2])
+                ];
+                rotation = parseFloat(parts[3]);
+            }
         }
 
-        .ol-popup:after {
-            border-top-color: white;
-            border-width: 10px;
-            left: 48px;
-            margin-left: -10px;
-        }
-
-        .ol-popup:before {
-            border-top-color: #cccccc;
-            border-width: 11px;
-            left: 48px;
-            margin-left: -11px;
-        }
-
-    .ol-popup-closer {
-        text-decoration: none;
-        position: absolute;
-        top: 2px;
-        right: 8px;
-        font-size: 150%;
-        padding: 0 4px;
-        color: #337ab7;
-    }
-
-        .ol-popup-closer:after {
-            content: "✖";
-        }
-
-
-    /*Full screen*/
-
-    .map:-moz-full-screen {
-        height: 100%;
-    }
-
-    .map:-webkit-full-screen {
-        height: 100%;
-    }
-
-    .map:-ms-fullscreen {
-        height: 100%;
-    }
-
-    .map:fullscreen {
-        height: 100%;
-    }
-
-    .ol-rotate {
-        top: 3em;
-    }
-    /*End Full screen*/
-</style>
-
-<!-- Portfolio Item Heading -->
-<!-- /.row -->
-<!-- Portfolio Item Row -->
-@*<div>
-        <button id="btn">Open Modal</button>
-        <div class="blue block">
-            <!-- Modal -->
-            <div id="myModal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Modal Header</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p>Some text in the modal.</p>
-                        </div>
-                    </div> <!-- End Modal content-->
-                </div>
-            </div>
-        </div>
-    </div>*@
-
-
-
-<div class="row">
-    <div class="col-md-12" style="padding-top: 15px;">
-        <div style="width: 100%; height: 100%; background-color:white;" id="map" class="map">
-            <div class="modal ModalGeneral" style="position:absolute !important;" id="0" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog ModalDialog" style="width: 239px;">
-                    <div class="modal-content ModalContent" style="width: 256px;">
-                        <div class="modal-header ModalHead">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h5 class="modal-title leyendaTitle text-center" id="myModalLabel">Centros Poblados</h5>
-                        </div>
-                        <div class="modal-body">
-                            <img src="http://geoservicios.regionloreto.gob.pe/geoloreto/services/WMS/WMS_DF_Lugares_Poblados/MapServer/WmsServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=1">
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
-            <div class="modal ModalGeneral" style="position:absolute !important;" id="1" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog ModalDialog">
-                    <div class="modal-content ModalContent">
-                        <div class="modal-header ModalHead">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h5 class="modal-title leyendaTitle text-center" id="myModalLabel">Densidad de muestreo por Km2</h5>
-                        </div>
-                        <div class="modal-body">
-                            <img src="http://200.60.174.203:8080/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=DensidadArticulos">
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
-            <div class="modal ModalGeneral" style="position:absolute !important;" id="2" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog ModalDialog">
-                    <div class="modal-content ModalContent">
-                        <div class="modal-header ModalHead">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h5 class="modal-title leyendaTitle text-center" id="myModalLabel">Muestreo por distrito</h5>
-                        </div>
-                        <div class="modal-body">
-                            <img src="http://200.60.174.203:8080/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=articulosdistritos">
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
-        </div>
-    </div>
-
-
-    @*<div id="legende">
-            <h2>Legend:</h2>
-
-            <div class="udiv_legende" id="legende_1">
-                <img src="http://200.60.174.203:8080/geoserver/visor/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=articulosdistritos">
-                <br>
-                <br>
-            </div>
-        </div>*@
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <h3>Acerca del Visor de Servicio Web: Mapa Global de Publicaciones (Amazonía)</h3>
-        <p class="justificado">
-            El Visor de Servicio Web es una iniciativa ambiciosa que permite hacer consultas, búsquedas y el análisis de la información sobre las investigaciones y publicaciones realizadas en la Región Loreto ahora, y con perspectivas a cubrir el territorio de Amazonía peruana a futuro. Mediante este servicio el usuario puede generar búsquedas especializadas y georreferenciadas publicadas en la revista científica FOLIA Amazónica del Instituto de Investigaciones de la Amazonía peruana que datan desde 1989.
-            <a href="@Url.Action("Acerca", "Inicio")">Seguir leyendo...</a>
-        </p>
-    </div>
-</div>
-
-<!-- /.row -->
-<!-- /.row -->
-
-<script type="text/javascript">
-
-    var zoom = 6;
-    var center = ol.proj.transform(
-                [-75, -4.4], 'EPSG:4326', 'EPSG:3857')
-    var rotation = 0;
-
-    if (window.location.hash !== '') {
-        var hash = window.location.hash.replace('#map=', '');
-        var parts = hash.split('/');
-        if (parts.length === 4) {
-            zoom = parseInt(parts[0], 10);
-            center = [
-              parseFloat(parts[1]),
-              parseFloat(parts[2])
-            ];
-            rotation = parseFloat(parts[3]);
-        }
-    }
-
-    var map = new ol.Map({
-        controls: ol.control.defaults().extend([
-				    new ol.control.ScaleLine(),
-				    new ol.control.ZoomSlider(),
-                    new ol.control.FullScreen()
-        ]),
-        layers: [
-            new ol.layer.Tile({
-                source: new ol.source.OSM({
-                    url: 'http://mt{0-3}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
-                    attributions: [
-                        //new ol.Attribution({ html: '© Google' }),
-                        //new ol.Attribution({ html: '<a href="https://developers.google.com/maps/terms">Terms of Use.</a>' })
-                    ]
-                })
-            }),
-            new ol.layer.Group({
-                'title': 'Leyenda',
-                layers: [
-                    new ol.layer.Tile({
-                        title: 'Muestreo por distrito ',
-                        type: 'base',
-                        visible: true,
-                        dispatchEvent: function myfunction() {
-                            alert("dfasdf");
-                        }
-                    }),
-                    new ol.layer.Tile({
-                        title: 'Densidad de muestreo por Km2 ',
-                        type: 'base',
-                        visible: true,
-                    }),
-                      new ol.layer.Tile({
-                          title: 'Centros poblados ',
-                          type: 'base',
-                          visible: true,
-                      })
-                ]
-            }),
-            new ol.layer.Group({
-                'title': 'Capas',
-                layers: [
-                    new ol.layer.Tile({
-                        //type: 'base',
-                        visible: false,
-                        source: new ol.source.TileWMS({
-                            url: 'http://200.60.174.203:8080/geoserver/visor/wms',
-                            params: {
-                                LAYERS: 'visor:departamentos ',
-                                FORMAT: 'image/png',
-                            },
-                        }),
-                        opacity: 0.4
-                    }),
-                    new ol.layer.Tile({
-                        visible: false,
-                        title: 'Muestreo por distrito',
-                        source: new ol.source.TileWMS({
-                            url: 'http://200.60.174.203:8080/geoserver/visor/wms',
-                            params: {
-                                'LAYERS': 'visor:articulosdistritos ',
-                                FORMAT: 'image/png'
-                            },
-                            buffer: 200,
-                            visibility: true
-                        })
-                    }),
-                    new ol.layer.Tile({
-                        visible: false,
-                        title: 'Densidad de muestreo por Km2 ',
-                        source: new ol.source.TileWMS({
-                            url: 'http://200.60.174.203:8080/geoserver/visor/wms',
-                            params: {
-                                LAYERS: 'visor:DensidadArticulos ',
-                                FORMAT: 'image/png',
-                            },
-                        })
-                    }),
-	                new ol.layer.Tile({
-	                    visible: false,
-	                    title: 'Centros poblados',
-	                    source: new ol.source.TileWMS({
-	                        url: 'http://geoservicios.regionloreto.gob.pe/geoloreto/services/WMS/WMS_DF_Lugares_Poblados/MapServer/WMSServer',
-	                        params: {
-	                            'LAYERS': '1',
-	                            FORMAT: 'image/png'
-	                        },
-	                    })
-	                }),
-                    new ol.layer.Tile({
-                        visible: true,
-                        title: 'Publicaciones',
-                        source: new ol.source.TileWMS({
-                            url: 'http://200.60.174.203:8080/geoserver/visor/wms',
-                            params: {
-                                'LAYERS': 'visor:view_pointpublicacion ',
-                                FORMAT: 'image/png'
-                            },
-                            buffer: 200,
-                            visibility: true
-                        })
-                    })
+        /* Add map layer */
+        var baseLayer = new ol.layer.Tile({
+            source: new ol.source.OSM({
+                projection: 'EPSG:3857',
+                url: 'http://mt{0-3}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+                attributions: [
                 ]
             })
-        ],
-        target: 'map',
-        view: new ol.View({
+        });
+
+        /* Add view */
+        var view = new ol.View({
             center: center,
             zoom: zoom,
             rotation: rotation
-        }),
-        logo: {
-            href: "http://www.iiap.org.pe",
-            src: '@(Request.Url.AbsoluteUri + "Content/img/logo.png")'
-        }
-    });
+        });
 
-    /* permalink */
-    var shouldUpdate = true;
-    var view = map.getView();
-    var updatePermalink = function () {
-        if (!shouldUpdate) {
-            // do not update the URL when the view was changed in the 'popstate' handler
-            shouldUpdate = true;
-            return;
-        }
-
-        var center = view.getCenter();
-        var hash = '#map=' +
-            view.getZoom() + '/' +
-            Math.round(center[0] * 100) / 100 + '/' +
-            Math.round(center[1] * 100) / 100 + '/' +
-            view.getRotation();
-        var state = {
-            zoom: view.getZoom(),
-            center: view.getCenter(),
-            rotation: view.getRotation()
-        };
-        window.history.pushState(state, 'map', hash);
-    };
-
-    map.on('moveend', updatePermalink);
-
-    window.addEventListener('popstate', function (event) {
-        if (event.state === null) {
-            return;
-        }
-        map.getView().setCenter(event.state.center);
-        map.getView().setZoom(event.state.zoom);
-        map.getView().setRotation(event.state.rotation);
-        shouldUpdate = false;
-    });
-
-    /*end permalink*/
-
-    var wmsLayer2 = new ol.layer.Tile({
-        title: 'Puntos Publicaciones',
-        source: new ol.source.TileWMS({
-            url: 'http://200.60.174.203:8080/geoserver/visor/wms',
-            params: {
-                'LAYERS': 'visor:view_pointpublicacion ',
-                FORMAT: 'image/png'
-            },
-            buffer: 200,
-            visibility: true
-        }),
-    });
-
-    map.addControl(new ol.control.OverviewMap({
-        layers: [new ol.layer.Tile(wmsLayer2.getProperties())],
-    }));
-
-    var layerSwitcher = new ol.control.LayerSwitcher({
-        tipLabel: 'Leyenda',
-    });
-
-    map.addControl(layerSwitcher);
-
-
-    var popup = new ol.Overlay.Popup();
-    map.addOverlay(popup);
-
-
-    map.on('singleclick', function (evt) {
-        t = '';
-        var viewResolution = (map.getView().getResolution());
-
-        var url = wmsLayer2.getSource().getGetFeatureInfoUrl(
-            evt.coordinate, viewResolution, 'EPSG:3857',
-            { 'INFO_FORMAT': 'text/html' });
-        if (url) {
-            $.get(url).success(function (data) {
-                if ($(data).find('tbody').html()) {
-                    t = '<iframe class="iframePop" style="width: 350px;" seamless src="' + url + '"></iframe>';
-                    popup.show(evt.coordinate, t);
-                }
+        /* Style point */
+        var styleFunction = (function (feature) {
+            console.log(feature);
+            /* jshint -W069 */
+            var styles = {};
+            var image = new ol.style.Circle({
+                radius: 10, /* 5 */
+                fill: new ol.style.Fill({ color: '#ff4444' }),
+                stroke: new ol.style.Stroke({ color: '#FFF', width: 1 })
             });
+            styles['Point'] = [new ol.style.Style({
+                image: image,
+                text: new ol.style.Text({
+                    font: '12px Calibri,sans-serif',
+                    fill: new ol.style.Fill({
+                        color: '#000'
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: '#fff',
+                        width: 3
+                    })
+                })
+            })];
+            styles['default'] = [new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                    color: 'yellow',
+                    width: 11
+                }),
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 5, 0, 0.1)'
+                }),
+                image: image
+            })];
+            return function (feature, resolution) {
+                //styles['Point'][0].getText().setText(feature.get('idpublicacion').toString())
+                return styles[feature.getGeometry().getType()] || styles['default'];
+            };
+            /* jshint +W069 */
+        })();
+
+        /* Add layer of point features */
+        var pointsLayer = new ol.layer.Vector({
+            title: 'random points',
+            source: new ol.source.Vector({
+                url: '@(Request.Url.AbsoluteUri + "api/PublicacionApi/getAllPublicationPoints")',
+                format: new ol.format.GeoJSON()
+            }),
+            style: styleFunction
+        });
+
+        /* Initialise map */
+        function init() {
+            map = new ol.Map({
+                target: 'map',
+                //the type of rendered we want to use.
+                renderer: 'canvas',
+                view: view,
+                controls: ol.control.defaults().extend([
+                    new ol.control.ScaleLine(),
+                    new ol.control.ZoomSlider(),
+                    new ol.control.FullScreen()
+                ])
+            });
+            map.addLayer(baseLayer);
+            map.addLayer(pointsLayer);
         }
-    });
-</script>
+
+        init();
+
+        /* //////////// ADD SELECTION */
+
+        /* add ol.collection to hold all selected features */
+        //var select = new ol.interaction.Select();
+        //map.addInteraction(select);
+        //var selectedFeatures = select.getFeatures();
+
+        /* //////////// ADD DRAWING */
+
+        /* The current drawing */
+        var sketch;
+
+        /* Add drawing vector source */
+        var drawingSource = new ol.source.Vector({
+            useSpatialIndex: false
+        });
+
+        /* Add drawing layer */
+        var drawingLayer = new ol.layer.Vector({
+            source: drawingSource
+        });
+        map.addLayer(drawingLayer);
+
+        /* Declare interactions and listener globally so we
+            can attach listeners to them later. */
+        var draw;
+        var modify;
+        var listener;
+
+        //// Drawing interaction
+        draw = new ol.interaction.Draw({
+            source: drawingSource,
+            type: 'Polygon',
+            //only draw when Ctrl is pressed.
+            //condition: ol.events.condition.platformModifierKeyOnly
+        });
+        //map.addInteraction(draw);
+
+        ///* Deactivate select and delete any existing polygons.
+        //    Only one polygon drawn at a time. */
+        //draw.on('drawstart', function (event) {
+        //    drawingSource.clear();
+        //    //selectedFeatures.clear();
+        //    select.setActive(false);
+
+        //    sketch = event.feature;
+
+        //    listener = sketch.getGeometry().on('change', function (event) {
+        //        selectedFeatures.clear();
+        //        var polygon = event.target;
+        //        var features = pointsLayer.getSource().getFeatures();
+
+        //        for (var i = 0; i < features.length; i++) {
+        //            if (polygon.intersectsExtent(features[i].getGeometry().getExtent())) {
+        //                selectedFeatures.push(features[i]);
+        //            }
+        //        }
+        //    });
+        //}, this);
+
+
+        ///* Reactivate select after 300ms (to avoid single click trigger)
+        //    and create final set of selected features. */
+        //draw.on('drawend', function (event) {
+        //    sketch = null;
+        //    delaySelectActivate();
+        //    selectedFeatures.clear();
+
+        //    var polygon = event.feature.getGeometry();
+        //    var features = pointsLayer.getSource().getFeatures();
+
+        //    for (var i = 0; i < features.length; i++) {
+        //        if (polygon.intersectsExtent(features[i].getGeometry().getExtent())) {
+        //            selectedFeatures.push(features[i]);
+        //        }
+        //    }
+
+
+        //});
+
+
+        ///* Modify polygons interaction */
+
+        //var modify = new ol.interaction.Modify({
+        //    //only allow modification of drawn polygons
+        //    features: drawingSource.getFeaturesCollection()
+        //});
+        //map.addInteraction(modify);
+
+        ///* Point features select/deselect as you move polygon.
+        //    Deactivate select interaction. */
+        //modify.on('modifystart', function (event) {
+        //    sketch = event.features;
+        //    select.setActive(false);
+        //    listener = event.features.getArray()[0].getGeometry().on('change', function (event) {
+        //        // clear features so they deselect when polygon moves away
+        //        selectedFeatures.clear();
+        //        var polygon = event.target;
+        //        var features = pointsLayer.getSource().getFeatures();
+
+        //        for (var i = 0; i < features.length; i++) {
+        //            if (polygon.intersectsExtent(features[i].getGeometry().getExtent())) {
+        //                selectedFeatures.push(features[i]);
+        //            }
+        //        }
+        //    });
+        //}, this);
+
+        ///* Reactivate select function */
+        //modify.on('modifyend', function (event) {
+        //    sketch = null;
+        //    delaySelectActivate();
+        //    selectedFeatures.clear();
+        //    var polygon = event.features.getArray()[0].getGeometry();
+        //    var features = pointsLayer.getSource().getFeatures();
+
+        //    for (var i = 0; i < features.length; i++) {
+        //        if (polygon.intersectsExtent(features[i].getGeometry().getExtent())) {
+        //            selectedFeatures.push(features[i]);
+        //        }
+        //    }
+
+        //}, this);
+
+
+        ///* //////////// SUPPORTING FUNCTIONS */
+
+        //function delaySelectActivate() {
+        //    setTimeout(function () {
+        //        select.setActive(true)
+        //    }, 300);
+        //}
+
+
+
+
+        /* permalink */
+        var shouldUpdate = true;
+        var view = map.getView();
+        var updatePermalink = function () {
+            if (!shouldUpdate) {
+                // do not update the URL when the view was changed in the 'popstate' handler
+                shouldUpdate = true;
+                return;
+            }
+
+            var center = view.getCenter();
+            var hash = '#map=' +
+                view.getZoom() + '/' +
+                Math.round(center[0] * 100) / 100 + '/' +
+                Math.round(center[1] * 100) / 100 + '/' +
+                view.getRotation();
+            var state = {
+                zoom: view.getZoom(),
+                center: view.getCenter(),
+                rotation: view.getRotation()
+            };
+            window.history.pushState(state, 'map', hash);
+        };
+
+        map.on('moveend', updatePermalink);
+
+        window.addEventListener('popstate', function (event) {
+            if (event.state === null) {
+                return;
+            }
+            map.getView().setCenter(event.state.center);
+            map.getView().setZoom(event.state.zoom);
+            map.getView().setRotation(event.state.rotation);
+            shouldUpdate = false;
+        });
+
+
+        /*Highlight points*/
+
+        var highlightStyle = new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 10, /* 5 */
+                fill: new ol.style.Fill({ color: '#ed38db' }),
+                stroke: new ol.style.Stroke({ color: '#FFF', width: 1 })
+            })
+            //stroke: new ol.style.Stroke({
+            //    color: '#f00',
+            //    width: 1
+            //}),
+            //fill: new ol.style.Fill({
+            //    color: 'rgba(255,0,0,0.1)'
+            //}),
+            //text: new ol.style.Text({
+            //    font: '12px Calibri,sans-serif',
+            //    fill: new ol.style.Fill({
+            //        color: '#000'
+            //    }),
+            //    stroke: new ol.style.Stroke({
+            //        color: '#f00',
+            //        width: 3
+            //    })
+            //})
+        });
+
+        var featureOverlay = new ol.layer.Vector({
+            source: new ol.source.Vector(),
+            map: map,
+            style: function (feature) {
+                //highlightStyle.getText().setText(feature.get('name'));
+                return highlightStyle;
+            }
+        });
+
+        var highlight;
+        var prueba
+        var displayFeatureInfo = function (pixel) {
+            //pixel[0] = +pixel[0].toFixed(6);
+            //pixel[1] = +pixel[1].toFixed(6);
+            //console.log(pixel);
+            var feature = map.forEachFeatureAtPixel(pixel, function (feature) {
+                //console.log('Punto:');
+                //console.log(feature.get('idpunto'));
+                return feature;
+            });
+            console.log("Show Feature");
+            console.log(feature);
+            prueba = feature;
+
+            let info = document.getElementById('info');
+            
+            if (feature) {
+                //console.log('True feature')
+                //info.innerHTML = feature.getId() + ': ' + feature.get('idpunto') + 'Publicacion: ' + feature.get('idpublicacion');
+                info.innerHTML = 'Punto' + ': ' + feature.get('idpunto') + ' ' + 'Publicacion: ' + feature.get('idpublicacion');
+                //PublicationInfo(feature.get('idpublicacion'));
+                console.log('call api Publication Info');
+            } else {
+                info.innerHTML = '&nbsp;';
+            }
+
+            if (feature !== highlight) {
+                if (highlight) {
+                    featureOverlay.getSource().removeFeature(highlight);
+                }
+                if (feature) {
+                    featureOverlay.getSource().addFeature(feature);
+                }
+                highlight = feature;
+            }
+
+        };
+
+        map.on('pointermove', function (evt) {
+            if (evt.dragging) {
+                return;
+            }
+            //var pixel = map.getEventPixel(evt.originalEvent);
+            //displayFeatureInfo(pixel);
+        });
+
+        map.on('click', function (evt) {
+            displayFeatureInfo(evt.pixel);
+            console.log(evt.pixel);
+        });
+
+
+    </script>
+</body>
+</html>
