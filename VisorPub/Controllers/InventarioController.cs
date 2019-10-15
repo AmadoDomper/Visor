@@ -25,6 +25,11 @@ namespace VisorPub.Controllers
             return View();
         }
 
+        public ActionResult RevisionInventarios()
+        {
+            return View("MisInventarios");
+        }
+
         public string ListarMisInventariosVegetacion(int nInvEst, int nPage = 1, int nSize = 10, string cNombreProy = "", string cAno = "")
         {
             InventarioVegetacionLN oInvVeg = new InventarioVegetacionLN();

@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using ADPostgres.Helper;
 using EPostgres;
+using Npgsql;
 
 namespace ADPostgres
 {
@@ -36,5 +37,39 @@ namespace ADPostgres
             }
             return lista;
         }
+
+        /// <summary>
+        /// Permite identificar si determinado usuario tiene permiso para la operación ingresada
+        /// </summary>
+        /// <param name="nUsuarioId">Código único del usuario</param>
+        /// <param name="nPermId">Código único del permiso</param>
+        /// <returns></returns>
+        public bool ValidaPermiso(int nUsuarioId, int nPermId)
+        {
+            var conexion = new ConexionPosgreSQL();
+            bool res = false;
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_ValidarPermiso))
+                    {
+                        cmd.Parameters.AddWithValue("_UsuarioId", nUsuarioId);
+                        cmd.Parameters.AddWithValue("_PermId", nPermId);
+
+                        res = (bool)cmd.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return res;
+        }
+
+
+
     }
 }

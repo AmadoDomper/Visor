@@ -26,12 +26,17 @@ namespace ADPostgres.Helper
         /*END REVISIÓN PUBLICACIONES*/
 
         /*CONFIGURACIÓN*/
-        public const string usp_ListarRoles = "usp_ListarRoles";
         public const string usp_ListarMenuRol = "usp_ListarMenuRol";
         public const string usp_ListarModuloRol = "usp_ListarModuloRol";
         public const string usp_ListarPermisoRol = "usp_ListarPermisoRol";
         public const string usp_CrearRol = "usp_CrearRol";
         public const string usp_EliminarRol = "usp_EliminarRol";
+        /*END CONFIGURACIÓN*/
+
+        /* ROL */
+        public const string usp_ListarRoles = "usp_ListarRoles";
+        public const string usp_ValidarPermiso = "usp_ValidarPermiso";
+        /*END ROL*/
 
 
         /*END CONFIGURACIÓN*/

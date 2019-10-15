@@ -10,9 +10,9 @@ namespace ADPostgres.Common
 {
     public class FrontUser
     {
-        //public static bool TienePermiso(RolesPermisos valor)
-        //{
-        //    return new RolAD().ValidaSugAprobacion(((Usuario)HttpContext.Current.Session["Datos"]).UserId, (int)valor);
-        //}
+        public static bool TienePermiso(RolesPermisos valor)
+        {
+            return new RolAD().ValidaPermiso(((Usuario)HttpContext.Current.Session["Datos"]).nUsuarioId, (int)valor);
+        }
     }
 }
