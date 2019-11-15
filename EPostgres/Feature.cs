@@ -10,5 +10,6 @@ namespace EPostgres
         public string Info;
         public int Tipo;
         public int n;
+        public int Id;
     }
 }

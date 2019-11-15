@@ -13,7 +13,7 @@ namespace EPostgres
         private string _cDesc;
         private string _cUri;
 
-        [JsonProperty(PropertyName = "Id")]
+        [JsonProperty(PropertyName = "id")]
         public int nTipoId
         {
             get { return _nTipoId; }

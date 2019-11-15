@@ -99,14 +99,15 @@ namespace ADPostgres
             {
                 try
                 {
-                    string sql = String.Format("SELECT ST_AsTEXT(wkb) from punto where pub_idpublicacion={0}", pub_idpublicacion);
+                    string sql = String.Format("SELECT pun_idpunto,ST_AsTEXT(wkb) from punto where pub_idpublicacion={0} ORDER BY pun_idpunto", pub_idpublicacion);
                     DataSet datos = ConexionPosgreSQL.ejecutar(sql);
                     
                     foreach (DataRow row in datos.Tables[0].Rows)
                     {
                         Feature item = new Feature();
-                        int tamano = row[0].ToString().Length;
-                        string info = row[0].ToString();
+                        int tamano = row[1].ToString().Length;
+                        string info = row[1].ToString();
+                        item.Id = Convert.ToInt32(row[0]);
                         item.Info = info.Substring(6, (tamano - 1) - 6);
                         item.Tipo = 1;
                         lsItems.Add(item);
@@ -663,6 +664,10 @@ namespace ADPostgres
             return lsItems;
         }
 
+        /// <summary>
+        /// Get all publication points in a JSON format
+        /// </summary>
+        /// <returns></returns>
         public Object GetAllPublicationPoints()
         {
             var conexion = new ConexionPosgreSQL();
@@ -686,6 +691,104 @@ namespace ADPostgres
         }
 
 
+        /// <summary>
+        /// Get all publication points ids in a JSON array format
+        /// </summary>
+        /// <returns></returns>
+        public Object GetSearchPublicactionPoints(string cPubTexto = "", int nTipo = -1, string cAno = "", int nAreaTem = -1)
+        {
+            NpgsqlConnection Conex = new NpgsqlConnection(Conexion.cadena);
+            NpgsqlCommand cmd = new NpgsqlCommand(Procedimiento.usp_getPublicationsPointsId, Conex);
+            cmd.CommandType = CommandType.StoredProcedure;
+            Conex.Open();
 
+            Object json;
+
+            using (var db = Conex)
+            {
+                try
+                {
+                    using (cmd)
+                    {
+                        cmd.Parameters.AddWithValue("_pub_texto", cPubTexto ?? "");
+                        cmd.Parameters.AddWithValue("_pub_nTipo", nTipo);
+                        cmd.Parameters.AddWithValue("_pub_cAno", cAno ?? "");
+                        cmd.Parameters.AddWithValue("_pub_nAreaTem", nAreaTem);
+
+                        json = JsonConvert.DeserializeObject(cmd.ExecuteScalar().ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return json;
+        }
+
+        /// <summary>
+        /// Get all publication ids found in a JSON array format
+        /// </summary>
+        /// <returns></returns>
+        public Object GetSearchPublicactionIds(string cPubTexto = "", int nTipo = -1, string cAno = "", int nAreaTem = -1)
+        {
+            NpgsqlConnection Conex = new NpgsqlConnection(Conexion.cadena);
+            NpgsqlCommand cmd = new NpgsqlCommand(Procedimiento.usp_getpublicationids, Conex);
+            cmd.CommandType = CommandType.StoredProcedure;
+            Conex.Open();
+
+            Object json;
+
+            using (var db = Conex)
+            {
+                try
+                {
+                    using (cmd)
+                    {
+                        cmd.Parameters.AddWithValue("_pub_texto", cPubTexto ?? "");
+                        cmd.Parameters.AddWithValue("_pub_nTipo", nTipo);
+                        cmd.Parameters.AddWithValue("_pub_cAno", cAno ?? "");
+                        cmd.Parameters.AddWithValue("_pub_nAreaTem", nAreaTem);
+
+                        json = JsonConvert.DeserializeObject(cmd.ExecuteScalar().ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return json;
+        }
+
+        /// <summary>
+        /// Get all publication information in a JSON format
+        /// </summary>
+        /// <returns></returns>
+        public Object GetAllPublicactionsJSON()
+        {
+            NpgsqlConnection Conex = new NpgsqlConnection(Conexion.cadena);
+            NpgsqlCommand cmd = new NpgsqlCommand(Procedimiento.usp_getallpublicationsJSON, Conex);
+            cmd.CommandType = CommandType.StoredProcedure;
+            Conex.Open();
+
+            Object json;
+
+            using (var db = Conex)
+            {
+                try
+                {
+                    using (cmd)
+                    {
+                        json = JsonConvert.DeserializeObject(cmd.ExecuteScalar().ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return json;
+        }
     }
 }

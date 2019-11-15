@@ -63,9 +63,11 @@ namespace ADPostgres.Helper
         /*API*/
 
         public const string usp_getAllPublicationPoints = "usp_getAllPublicationPoints";
-
+        public const string usp_getPublicationsPointsId = "usp_getPublicationsPointsId";
+        public const string usp_getpublicationids = "usp_getpublicationids";
         public const string usp_BuscarPublicacionesPaginado = "usp_BuscarPublicacionesPaginado";
         public const string usp_BuscarPublicacionesCantPag = "usp_BuscarPublicacionesCantPag";
+        public const string usp_getallpublicationsJSON = "usp_getallpublications_json";
 
         /*INVENTARIO DE VEGETACIONES*/
 

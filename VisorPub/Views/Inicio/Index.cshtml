@@ -7,17 +7,206 @@
     <title>Visor de mapas de Publicaciones</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link href="~/Content/css/ol/v4.6.5/ol.css" rel="stylesheet" type="text/css"  />
+    <link href="~/Content/css/ol/v4.6.5/ol.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/css/navbar/navbar.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/css/search-nav/search-nav.css" rel="stylesheet" />
+    <link href="~/Content/css/table/table.css" rel="stylesheet" />
+    <link href="~/Content/css/slidebar-v2/gmaps-sidebar-white.css" rel="stylesheet" />
+    <script src="~/Content/js/visor/data.js" async></script>
 </head>
 <body>
-    <div id="map"></div>
-    <div id="info"></div>
-    <div id="info-det"></div>
-    <button type="button" id="btnSelec">Selección</button> <button type="button" id="btnDeselec">Deselección</button>
-    <script src="~/Content/js/visor/data.js" async></script>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="">
+            <div class="navbar-header">
+                <a class="navbar-brand text-bold" href="/">Mapa Global de Publicaciones (Amazonía)</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li>
+                    <a target="_blank" href="interoperabilidad.html"><i class="fas fa-fw fa-handshake"></i> Interoperabilidad</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                    <a href="http://3.225.128.158:8081/Login/Login"> <i class="fas fa-fw fa-sign-in-alt"></i> Intranet</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <button type="button" id="btnSelec" style="display:none;">Selección</button> 
+    <button type="button" id="btnDeselec" style="display:none;">Deselección</button>
+    <div id="map">
+        <div id="sidebar" class="sidebar collapsed">
+            <!-- Nav tabs -->
+            <div class="sidebar-tabs">
+                <ul role="tablist">
+                    <li><a href="http://www.iiap.org.pe" target="_blank" title="IIAP"><img src="http://visores.iiap.gob.pe/publicaciones/images/logo-iiap.png" style="height:30px;margin-top: 5px;" /></a></li>
+                    <li><a href="#busqueda" role="tab" title="Búsqueda"><i class="fas fa-fw fa-search"></i></a></li>
+                    <li><a href="#lista-mapas" role="tab" title="Mapas"><i class="fas fa-fw fa-clone fa-rotate-270"></i></a></li>
+                    <li><a onclick="mapa.setZoom(5); mapa.setCenter(inicio);" title="Centrar el mapa"><i class="fas fa-fw fa-crosshairs"></i></a></li>
+                    <li><a href="#leyenda" onclick="mostrar_leyenda();" role="tab" title="Leyenda"><i class="fas fa-fw fa-info-circle"></i></a></li>
+                    <li><a href="#metadata" id="boton-metadata" role="tab" title="Consulta"><i class="fas fa-fw fa-map"></i></a></li>
+                    <li><a onclick="limpiar_mapa();" role="tab" title="Limpiar mapa"><i class="fas fa-fw fa-sync"></i></a></li>
+                </ul>
+                <ul id="listCelular" role="tablist">
+                    <li><a href="interoperabilidad.html" title="Interoperabilidad" role="tab"><i class="fas fa-fw fa-handshake"></i></a></li>
+                    <li><a href="http://3.225.128.158:8081/Login/Login" title="Intranet" role="tab"><i class="fas fa-fw fa-sign-in-alt"></i></a></li>
+                </ul>
+            </div>
+            <!-- Tab panes -->
+            <div class="sidebar-content">
+                <div class="sidebar-pane" id="lista-mapas">
+                    <h1 class="sidebar-header">
+                        Mapas
+                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                    </h1>
+                </div>
+                <div class="sidebar-pane" id="profile">
+                    <h1 class="sidebar-header">Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                </div>
+                <div class="sidebar-pane" id="messages">
+                    <h1 class="sidebar-header">Messages<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                </div>
+                <div class="sidebar-pane" id="settings">
+                    <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                </div>
+
+
+                <div class="sidebar-pane active" id="busqueda">
+                    <h1 class="sidebar-header">Búsqueda<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                    <div id="cntBusqueda" class="row">
+                        <form class="form-horizontal" action="">
+                            <div class="col-lg-12">
+                                <div>
+                                    <div class="text-left m-t-5">
+                                        <button title="Eliminar Marcadores" class="btnLimpiar btn btn-danger" type="button" onclick="limpiar_puntos();" disabled>
+                                            <i class="fas fa-fw fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group m-t-5">
+                                        <input id="txtBusqueda" type="search" class="form-control" placeholder="Buscar...">
+                                        <span class="input-group-btn">
+                                            <button id="btnSearch" class="btn btn-success" type="button">
+                                                <i class="fas fa-fw fa-search"></i>
+                                            </button>
+                                        </span>
+
+                                    </div>
+                                    <input type="search" style="display: none;" class="form-control" placeholder="Buscar...">
+                                </div>
+                                <div class="form-group">
+                                    <div class="panel panel-success m-b-0">
+                                        <div data-toggle="collapse" data-target="cntDetBusqueda" class="panel-heading">
+                                            <div class="row">
+                                                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-11">
+                                                    <h5>Opciones Avanzadas</h5>
+                                                </div>
+                                                <div class="col-xs-2 col-sm-2 col-md-1 col-lg-1">
+                                                    <i class="fas fa-fw fa-chevron-down"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="cntDetBusqueda" class="collapsed in" style="height: auto;">
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                        <div class="form-group">
+                                                            <label class="campo">TIPO</label>
+                                                            <select class="form-control" id="ddlTipo"><option value="-1"> - TODOS - </option></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                        <div class="form-group">
+                                                            <label class="campo">AÑO PUBLICACIÓN</label>
+                                                            <select class="form-control" id="ddlAnoPub"><option value="-1"> - TODOS - </option></select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                        <div class="form-group">
+                                                            <label class="campo">AREA TEMÁTICA</label>
+                                                            <select class="form-control" id="ddlTema"><option value="-1"> - TODOS -  </option></select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="panel panel-success m-b-0">
+                                        <div data-toggle="collapse" data-target="cntUbiGeo" class="panel-heading">
+                                            <div class="row">
+                                                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-11">
+                                                    <h5>Ubicación Geográfica</h5>
+                                                </div>
+                                                <div class="col-xs-2 col-sm-2 col-md-1 col-lg-1">
+                                                    <i class="fas fa-fw fa-chevron-down"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="cntUbiGeo" class="collapsed in" style="height: auto;">
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                        <div class="form-group">
+                                                            <label class="campo">DEPARTAMENTO</label>
+                                                            <select class="form-control" id="ddlDepartamento"><option value=""> - TODOS - </option></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                        <div class="form-group">
+                                                            <label class="campo">PROVINCIA</label>
+                                                            <select class="form-control" id="dllProvincias"><option value=""> - TODOS - </option></select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                        <div class="form-group">
+                                                            <label class="campo">DISTRITO</label>
+                                                            <select class="form-control" id="ddlDistrito"><option value=""> - TODOS -  </option></select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="text-center"><label>RESULTADOS</label></div>
+                                    <div id="ldBuscar" class="loader" style="display:none;"></div>
+                                    <div id="cntListaResultados" class="table-responsive">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                    <div id="ldBuscarId" class="loader m-t-40" style="display: none;"></div>
+                    <div id="cntDet" style="display:none;" class="row">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="info-lugar" style=""></div>
+    <div id="info-det" style="position: absolute;"></div>
+
+    @*<script src="~/Content/js/visor/data.js" async></script>*@
     <script src="~/Content/js/ol/v4.6.5/ol.js"></script>
+    <script src="~/Content/js/slidebar-v2/ol3-sidebar.js"></script>
     <script type="text/javascript">
         var map;
+
+        window.app = {};
+        var app = window.app;
+
         var zoom = 6;
         var center = ol.proj.transform(
             [-75, -4.4], 'EPSG:4326', 'EPSG:3857')
@@ -60,8 +249,8 @@
             /* jshint -W069 */
             var styles = {};
             var image = new ol.style.Circle({
-                radius: 10, /* 5 */
-                fill: new ol.style.Fill({ color: '#ff4444' }),
+                radius: 5, /* 5 */
+                fill: new ol.style.Fill({ color: '#ff4444' }), //#ff4444
                 stroke: new ol.style.Stroke({ color: '#FFF', width: 1 })
             });
             styles['Point'] = [new ol.style.Style({
@@ -79,11 +268,11 @@
             })];
             styles['default'] = [new ol.style.Style({
                 stroke: new ol.style.Stroke({
-                    color: 'yellow',
-                    width: 11
+                    color: 'skyblue',
+                    width: 3
                 }),
                 fill: new ol.style.Fill({
-                    color: 'rgba(255, 5, 0, 0.1)'
+                    color: 'rgba(0, 0, 0, 0.0)'
                 }),
                 image: image
             })];
@@ -98,11 +287,181 @@
         var pointsLayer = new ol.layer.Vector({
             title: 'random points',
             source: new ol.source.Vector({
-                url: '@(Request.Url.AbsoluteUri + "api/PublicacionApi/getAllPublicationPoints")',
+                url: '@(Request.Url.AbsoluteUri + "GeoJson/publicaciones.json")',
+                //api/PublicacionApi/getAllPublicationPoints
                 format: new ol.format.GeoJSON()
             }),
             style: styleFunction
         });
+
+       /* Add layer of regions features */
+        var regionsLayer = new ol.layer.Vector({
+            title: 'regions',
+            source: new ol.source.Vector({
+                url: '@(Request.Url.AbsoluteUri + "GeoJson/regions-topo.json")',
+                //api/PublicacionApi/getProvincias
+                 //"GeoJson/provincias-topo.json"
+                //format: new ol.format.GeoJSON()
+                format: new ol.format.TopoJSON({
+                    layers: ['regions']
+                }),
+                overlaps: false
+            }),
+            style: styleFunction
+        });
+
+        /* Add layer of provincias features */
+        var provinciasLayer = new ol.layer.Vector({
+            title: 'provincia',
+            source: new ol.source.Vector({
+                url: '@(Request.Url.AbsoluteUri + "GeoJson/provincias-topo.json")',
+                 //"GeoJson/provincias-topo.json"
+                //format: new ol.format.GeoJSON()
+                format: new ol.format.TopoJSON({
+                    layers: ['provincias']
+                }),
+                overlaps: false
+            }),
+            style: styleFunction
+        });
+
+        /* Add layer of provincias features */
+        var distritoLayer = new ol.layer.Vector({
+            title: 'distritos',
+            source: new ol.source.Vector({
+                url: '@(Request.Url.AbsoluteUri + "GeoJson/distritos.json")',
+                format: new ol.format.GeoJSON(),
+                //format: new ol.format.TopoJSON({
+                //    layers: ['distritos']
+                //}),
+                overlaps: false
+            }),
+            style: styleFunction
+        });
+
+        /* Add New Controls */
+
+        app.DepatamentoControl = function (opt_options) {
+
+            let options = opt_options || {};
+
+            let button = document.createElement('button');
+            button.setAttribute("id", "btnDepartamento");
+            button.innerHTML = '<span class="btnLarge">Departamento</span><span class="btnShort">DEP</span>';
+            button.classList.add("region");
+
+            button.addEventListener('click', btnDepartamento, false);
+            button.addEventListener('touchstart', btnDepartamento, false);
+
+            let element = document.createElement('div');
+            element.className = 'region ol-unselectable ol-control';
+            element.appendChild(button);
+
+            ol.control.Control.call(this, {
+                element: element,
+                target: options.target
+            });
+
+        };
+        ol.inherits(app.DepatamentoControl, ol.control.Control);
+
+        app.ProvinciaControl = function (opt_options) {
+
+            let options = opt_options || {};
+
+            let button = document.createElement('button');
+            button.setAttribute("id", "btnProvincia");
+            button.innerHTML = '<span class="btnLarge">Provincia</span><span class="btnShort">PRO</span>';
+            button.classList.add("provincia");
+
+            button.addEventListener('click', btnProvincia, false);
+            button.addEventListener('touchstart', btnProvincia, false);
+
+            let element = document.createElement('div');
+            element.className = 'provincia ol-unselectable ol-control';
+            element.appendChild(button);
+
+            ol.control.Control.call(this, {
+                element: element,
+                target: options.target
+            });
+
+        };
+        ol.inherits(app.ProvinciaControl, ol.control.Control);
+
+        app.DistritoControl = function (opt_options) {
+
+            let options = opt_options || {};
+
+            let button = document.createElement('button');
+            button.setAttribute("id", "btnDistrito");
+            button.innerHTML = '<span class="btnLarge">Distrito</span><span class="btnShort">DIS</span>';
+            button.classList.add("distrito");
+
+            button.addEventListener('click', btnDistrito, false);
+            button.addEventListener('touchstart', btnDistrito, false);
+
+            let element = document.createElement('div');
+            element.className = 'distrito ol-unselectable ol-control';
+            element.appendChild(button);
+
+            ol.control.Control.call(this, {
+                element: element,
+                target: options.target
+            });
+
+        };
+        ol.inherits(app.DistritoControl, ol.control.Control);
+
+        var departamento = true;
+        function btnDepartamento() {
+            console.log(this);
+            featureOverlay.getSource().clear();
+            ShowInformation("");
+            ShowInformationLugar("");
+            if (departamento) {
+                departamento = false;
+                map.removeLayer(regionsLayer)
+                document.getElementById("btnDepartamento").classList.remove("active");
+            } else {
+                departamento = true;
+                map.addLayer(regionsLayer)
+                document.getElementById("btnDepartamento").classList.add("active");
+            }
+        }
+
+        var provincia = false;
+        function btnProvincia() {
+            featureOverlay.getSource().clear();
+            ShowInformation("");
+            ShowInformationLugar("");
+            if (provincia) {
+                provincia = false;
+                map.removeLayer(provinciasLayer)
+                document.getElementById("btnProvincia").classList.remove("active");
+            } else {
+                provincia = true;
+                map.addLayer(provinciasLayer);
+                document.getElementById("btnProvincia").classList.add("active");
+            }
+        }
+
+        var distrito = false;
+        function btnDistrito() {
+            featureOverlay.getSource().clear();
+            ShowInformation("");
+            ShowInformationLugar("");
+            if (distrito) {
+                distrito = false;
+                map.removeLayer(distritoLayer);
+                document.getElementById("btnDistrito").classList.remove("active");
+            } else {
+                distrito = true;
+                map.addLayer(distritoLayer);
+                document.getElementById("btnDistrito").classList.add("active");
+            }
+        }
+
 
         /* Initialise map */
         function init() {
@@ -111,14 +470,25 @@
                 //the type of rendered we want to use.
                 renderer: 'canvas',
                 view: view,
-                controls: ol.control.defaults().extend([
+                controls: ol.control.defaults({
+                    attribution: false,
+                    attributionOptions: {
+                        collapsible: false
+                    }
+                }).extend([
                     new ol.control.ScaleLine(),
-                    new ol.control.ZoomSlider(),
+                    new app.DepatamentoControl(),
+                    new app.ProvinciaControl(),
+                    new app.DistritoControl(),
                     new ol.control.FullScreen()
                 ])
             });
+            var sidebar = new ol.control.Sidebar({ element: 'sidebar', position: 'left' });
+
+            map.addControl(sidebar);
             map.addLayer(baseLayer);
-            map.addLayer(pointsLayer);
+            map.addLayer(regionsLayer);
+            map.addOverlay(pointsLayer);
         }
 
         init();
@@ -126,9 +496,9 @@
         /* //////////// ADD SELECTION */
 
         /* add ol.collection to hold all selected features */
-        //var select = new ol.interaction.Select();
+        var select = new ol.interaction.Select();
         //map.addInteraction(select);
-        //var selectedFeatures = select.getFeatures();
+        var selectedFeatures = select.getFeatures();
 
         /* //////////// ADD DRAWING */
 
@@ -163,98 +533,114 @@
 
         ///* Deactivate select and delete any existing polygons.
         //    Only one polygon drawn at a time. */
-        //draw.on('drawstart', function (event) {
-        //    drawingSource.clear();
-        //    //selectedFeatures.clear();
-        //    select.setActive(false);
+        draw.on('drawstart', function (event) {
+            drawingSource.clear();
+            //selectedFeatures.clear();
+            select.setActive(false);
 
-        //    sketch = event.feature;
+            sketch = event.feature;
 
-        //    listener = sketch.getGeometry().on('change', function (event) {
-        //        selectedFeatures.clear();
-        //        var polygon = event.target;
-        //        var features = pointsLayer.getSource().getFeatures();
+            listener = sketch.getGeometry().on('change', function (event) {
+                selectedFeatures.clear();
+                var polygon = event.target;
+                var features = pointsLayer.getSource().getFeatures();
 
-        //        for (var i = 0; i < features.length; i++) {
-        //            if (polygon.intersectsExtent(features[i].getGeometry().getExtent())) {
-        //                selectedFeatures.push(features[i]);
-        //            }
-        //        }
-        //    });
-        //}, this);
+                for (var i = 0; i < features.length; i++) {
+
+                    if (polygon.intersectsExtent(features[i].getGeometry().getExtent())) {
+                        selectedFeatures.push(features[i]);
+                    }
+                }
+            });
+        }, this);
 
 
         ///* Reactivate select after 300ms (to avoid single click trigger)
         //    and create final set of selected features. */
-        //draw.on('drawend', function (event) {
-        //    sketch = null;
-        //    delaySelectActivate();
-        //    selectedFeatures.clear();
+        draw.on('drawend', function (event) {
+            sketch = null;
+            delaySelectActivate();
+            selectedFeatures.clear();
 
-        //    var polygon = event.feature.getGeometry();
-        //    var features = pointsLayer.getSource().getFeatures();
+            var polygon = event.feature.getGeometry();
+            var features = pointsLayer.getSource().getFeatures();
 
-        //    for (var i = 0; i < features.length; i++) {
-        //        if (polygon.intersectsExtent(features[i].getGeometry().getExtent())) {
-        //            selectedFeatures.push(features[i]);
-        //        }
-        //    }
+            for (var i = 0; i < features.length; i++) {
+                if (polygon.intersectsExtent(features[i].getGeometry().getExtent())) {
+                    selectedFeatures.push(features[i]);
+                }
+            }
 
+            //Show selected features
 
-        //});
+            if (selectedFeatures.getArray().length > 0) {
+                let content = "";
+                selectedFeatures.getArray().forEach(x => content += "Punto: " + x.getProperties().idpunto + " " + "Publicación: " + x.getProperties().idpublicacion + "<br/>")
+                ShowInformation(content);
+            }
+
+        });
 
 
         ///* Modify polygons interaction */
 
-        //var modify = new ol.interaction.Modify({
-        //    //only allow modification of drawn polygons
-        //    features: drawingSource.getFeaturesCollection()
-        //});
-        //map.addInteraction(modify);
+        var modify = new ol.interaction.Modify({
+            //only allow modification of drawn polygons
+            features: drawingSource.getFeaturesCollection()
+        });
+        map.addInteraction(modify);
 
-        ///* Point features select/deselect as you move polygon.
-        //    Deactivate select interaction. */
-        //modify.on('modifystart', function (event) {
-        //    sketch = event.features;
-        //    select.setActive(false);
-        //    listener = event.features.getArray()[0].getGeometry().on('change', function (event) {
-        //        // clear features so they deselect when polygon moves away
-        //        selectedFeatures.clear();
-        //        var polygon = event.target;
-        //        var features = pointsLayer.getSource().getFeatures();
+        /* Point features select/deselect as you move polygon.
+            Deactivate select interaction. */
+        modify.on('modifystart', function (event) {
+            sketch = event.features;
+            select.setActive(false);
+            listener = event.features.getArray()[0].getGeometry().on('change', function (event) {
+                // clear features so they deselect when polygon moves away
+                selectedFeatures.clear();
+                var polygon = event.target;
+                var features = pointsLayer.getSource().getFeatures();
 
-        //        for (var i = 0; i < features.length; i++) {
-        //            if (polygon.intersectsExtent(features[i].getGeometry().getExtent())) {
-        //                selectedFeatures.push(features[i]);
-        //            }
-        //        }
-        //    });
-        //}, this);
+                for (var i = 0; i < features.length; i++) {
+                    if (polygon.intersectsExtent(features[i].getGeometry().getExtent())) {
+                        selectedFeatures.push(features[i]);
+                    }
+                }
+            });
+        }, this);
 
         ///* Reactivate select function */
-        //modify.on('modifyend', function (event) {
-        //    sketch = null;
-        //    delaySelectActivate();
-        //    selectedFeatures.clear();
-        //    var polygon = event.features.getArray()[0].getGeometry();
-        //    var features = pointsLayer.getSource().getFeatures();
+        modify.on('modifyend', function (event) {
+            sketch = null;
+            delaySelectActivate();
+            selectedFeatures.clear();
+            var polygon = event.features.getArray()[0].getGeometry();
+            var features = pointsLayer.getSource().getFeatures();
 
-        //    for (var i = 0; i < features.length; i++) {
-        //        if (polygon.intersectsExtent(features[i].getGeometry().getExtent())) {
-        //            selectedFeatures.push(features[i]);
-        //        }
-        //    }
+            for (var i = 0; i < features.length; i++) {
+                if (polygon.intersectsExtent(features[i].getGeometry().getExtent())) {
+                    selectedFeatures.push(features[i]);
+                }
+            }
 
-        //}, this);
+            //Show selected features
+
+            if (selectedFeatures.getArray().length > 0) {
+                let content = "";
+                selectedFeatures.getArray().forEach(x => content += "Punto: " + x.getProperties().idpunto + " " + "Publicación: " + x.getProperties().idpublicacion + "<br/>")
+                ShowInformation(content);
+            }
+
+        }, this);
 
 
         ///* //////////// SUPPORTING FUNCTIONS */
 
-        //function delaySelectActivate() {
-        //    setTimeout(function () {
-        //        select.setActive(true)
-        //    }, 300);
-        //}
+        function delaySelectActivate() {
+            setTimeout(function () {
+                select.setActive(true)
+            }, 300);
+        }
 
 
 
@@ -300,27 +686,27 @@
 
         var highlightStyle = new ol.style.Style({
             image: new ol.style.Circle({
-                radius: 10, /* 5 */
-                fill: new ol.style.Fill({ color: '#ed38db' }),
+                radius: 5, /* 5 */
+                fill: new ol.style.Fill({ color: '#3b78ff' }),
                 stroke: new ol.style.Stroke({ color: '#FFF', width: 1 })
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#506afa',
+                width: 3
+            }),
+            fill: new ol.style.Fill({
+                color: 'rgba(0,0,0,0.0)'
+            }),
+            text: new ol.style.Text({
+                font: '12px Calibri,sans-serif',
+                fill: new ol.style.Fill({
+                    color: '#000'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#f00',
+                    width: 3
+                })
             })
-            //stroke: new ol.style.Stroke({
-            //    color: '#f00',
-            //    width: 1
-            //}),
-            //fill: new ol.style.Fill({
-            //    color: 'rgba(255,0,0,0.1)'
-            //}),
-            //text: new ol.style.Text({
-            //    font: '12px Calibri,sans-serif',
-            //    fill: new ol.style.Fill({
-            //        color: '#000'
-            //    }),
-            //    stroke: new ol.style.Stroke({
-            //        color: '#f00',
-            //        width: 3
-            //    })
-            //})
         });
 
         var featureOverlay = new ol.layer.Vector({
@@ -333,58 +719,115 @@
         });
 
         var highlight;
-        var prueba
+
         var displayFeatureInfo = function (pixel) {
-            //pixel[0] = +pixel[0].toFixed(6);
-            //pixel[1] = +pixel[1].toFixed(6);
-            //console.log(pixel);
             var feature = map.forEachFeatureAtPixel(pixel, function (feature) {
-                //console.log('Punto:');
-                //console.log(feature.get('idpunto'));
                 return feature;
             });
             console.log("Show Feature");
             console.log(feature);
-            prueba = feature;
-
-            let info = document.getElementById('info');
-            
-            if (feature) {
-                //console.log('True feature')
-                //info.innerHTML = feature.getId() + ': ' + feature.get('idpunto') + 'Publicacion: ' + feature.get('idpublicacion');
-                info.innerHTML = 'Punto' + ': ' + feature.get('idpunto') + ' ' + 'Publicacion: ' + feature.get('idpublicacion');
-                //PublicationInfo(feature.get('idpublicacion'));
-                console.log('call api Publication Info');
-            } else {
-                info.innerHTML = '&nbsp;';
-            }
-
-            if (feature !== highlight) {
-                if (highlight) {
-                    featureOverlay.getSource().removeFeature(highlight);
-                }
-                if (feature) {
-                    featureOverlay.getSource().addFeature(feature);
-                }
-                highlight = feature;
-            }
-
+            DisplayFeature(feature);
         };
+
+
+        function DisplayFeature(feature) {
+            if (feature == undefined) {
+                return false;
+            }
+
+            console.log("Continue!!");
+
+            // Verifica si un poligono - Región
+            if (feature.getGeometry().getType() == "Polygon" || feature.getGeometry().getType() == "MultiPolygon") {
+                delaySelectActivate();
+                //selectedFeatures.clear();
+                featureOverlay.getSource().clear()
+                let polygon = feature.getGeometry();
+
+                let features = pointsLayer.getSource().getFeatures();
+
+                for (var i = 0; i < features.length; i++) {
+                    if (polygon.intersectsExtent(features[i].getGeometry().getExtent())) {
+                        //selectedFeatures.push(features[i]);
+                        featureOverlay.getSource().addFeature(features[i]);
+                    }
+                }
+
+                //Show selected features
+
+                if (featureOverlay.getSource().getFeatures().length > 0) {
+                    let content = "";
+                    console.log(featureOverlay.getSource().getFeatures());
+                    featureOverlay.getSource().getFeatures().sort(OrderFeatureAsc).forEach(x => content += "Punto: " + x.getProperties().idpunto + " " + "Publicación: " + x.getProperties().idpublicacion + "<br/>")
+                    ShowInformation(content);
+                    ShowSelectedFeaturesInfo();
+                } else {
+                    ClearSearchResults();
+                }
+
+                let ubigeo = feature.get("FIRST_IDDP") || feature.get("FIRST_IDPR") || feature.get("IDDIST");
+
+                SetComboUbigeo(ubigeo);
+
+                ShowInformationLugar('Departamento: ' + (feature.get("FIRST_NOMB") || feature.get("NOMBDEP")) + '<br/>' + 'Provincia: ' + (feature.get("NOMBPROV") || "") + "<br/>")
+                featureOverlay.getSource().addFeature(feature);
+            } else {
+
+                if (feature) {
+                    //console.log('True feature')
+                    //info.innerHTML = feature.getId() + ': ' + feature.get('idpunto') + 'Publicacion: ' + feature.get('idpublicacion');
+                    ShowInformation('Punto' + ': ' + feature.get('idpunto') + ' ' + 'Publicacion: ' + feature.get('idpublicacion'));
+                    console.log('call api Publication Info');
+                    PublicationDetail2(feature.get('idpublicacion'), feature.get('idpunto'));
+                } else {
+                    info.innerHTML = '&nbsp;';
+                }
+
+
+                console.log("Pregunta IF");
+                if (feature !== highlight) {
+                    console.log("Ingreso IF");
+                    if (highlight) {
+                        console.log("highlight");
+                        featureOverlay.getSource().removeFeature(highlight);
+                    }
+                    if (feature) {
+                        console.log("feature");
+                        featureOverlay.getSource().addFeature(feature);
+                    }
+                    highlight = feature;
+                }
+            }
+        }
+
+
+
 
         map.on('pointermove', function (evt) {
             if (evt.dragging) {
                 return;
             }
+
+            //map.getTargetElement().style.cursor = map.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
             //var pixel = map.getEventPixel(evt.originalEvent);
             //displayFeatureInfo(pixel);
         });
 
         map.on('click', function (evt) {
-            displayFeatureInfo(evt.pixel);
-            console.log(evt.pixel);
+            if (!map.getInteractions().getArray().find(x => x === draw)) {
+                displayFeatureInfo(evt.pixel);
+                console.log(evt.pixel);
+            }
         });
 
 
+        select.on('select', function (event) {
+            console.log("select");
+        }, this);
+
+
     </script>
+    <script src="~/Content/js/bootstrap/bootstrap.js" async></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" async></script>
 </body>
 </html>

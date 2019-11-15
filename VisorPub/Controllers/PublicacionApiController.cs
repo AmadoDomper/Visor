@@ -34,14 +34,13 @@ namespace VisorPub.Controllers
             return Json(oCombo, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
         }
 
-        public string GetDatosPublicacion(int id)
+        public IHttpActionResult GetDatosPublicacion(int id)
         {
             PublicacionLN oPublicacion = new PublicacionLN();
             Publicacion oPubli = new Publicacion();
             oPubli = oPublicacion.CargaDatosPublicacion(id);
 
-            return JsonConvert.SerializeObject(oPubli, Formatting.None,
-            new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
+            return Json(oPubli, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
         }
 
         
@@ -55,9 +54,67 @@ namespace VisorPub.Controllers
             return Json(json);
         }
 
+        public IHttpActionResult GetAllPublicactionsJSON()
+        {
+            PublicacionLN oPubli = new PublicacionLN();
+            Object json;
+
+            json = oPubli.GetAllPublicactionsJSON();
+
+            return Json(json);
+        }
+
+        public IHttpActionResult GetSearchPublicactionPoints(string cPubTexto = "", int nTipo = -1, string cAno = "", int nAreaTem = -1)
+        {
+            PublicacionLN oPubli = new PublicacionLN();
+            Object json;
+
+            json = oPubli.GetSearchPublicactionPoints(cPubTexto, nTipo, cAno, nAreaTem);
+
+            return Json(json);
+        }
+
+        public IHttpActionResult GetSearchPublicactionIds(string cPubTexto = "", int nTipo = -1, string cAno = "", int nAreaTem = -1)
+        {
+            PublicacionLN oPubli = new PublicacionLN();
+            Object json;
+
+            json = oPubli.GetSearchPublicactionIds(cPubTexto, nTipo, cAno, nAreaTem);
+
+            return Json(json);
+        }
+
+        public IHttpActionResult getRegions()
+        {
+            string file = System.IO.File.ReadAllText(@"C:\Users\DELL\Documents\GitHub\Visor\VisorPub\GeoJson\regions-topo.json");
+            Object json;
+
+            json = JsonConvert.DeserializeObject(file);
+            return Json(json);
+        }
+
+        public IHttpActionResult getProvincias()
+        {
+            string file = System.IO.File.ReadAllText(@"C:\Users\DELL\Documents\GitHub\Visor\VisorPub\GeoJson\provincias-topo.json");
+            Object json;
+
+            json = JsonConvert.DeserializeObject(file);
+            return Json(json);
+        }
+
+        public IHttpActionResult getUbigeo()
+        {
+            string file = System.IO.File.ReadAllText(@"C:\Users\DELL\Documents\GitHub\Visor\VisorPub\GeoJson\ubigeo.json");
+            Object json;
+
+            json = JsonConvert.DeserializeObject(file);
+            return Json(json);
+        }
+
+
         //POST api/<controller>
         //[EnableCors("AllowSpecificOrigin")]
-        public string Post([FromBody]BuscadorApi v)
+        public IHttpActionResult Post([FromBody]BuscadorApi v)
         {
             PublicacionLN oPublica = new PublicacionLN();
             Usuario oUsuario = new Usuario();
@@ -65,10 +122,7 @@ namespace VisorPub.Controllers
 
             ListaPaginada oListaPublicaciones = oPublica.BuscarPublicacionesPag(v.nPage, v.nPageSize, v.cTexto, v.nTipo, v.cAnoPub,v.nAreaTema);
 
-            //ListaPaginada oListaPublicaciones = new ListaPaginada { nPage = 1, nPageSize = 1, nRows = 10, nPageTotal = 10 };
-
-            return JsonConvert.SerializeObject(oListaPublicaciones, Formatting.None,
-            new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
+            return Json(oListaPublicaciones, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
         }
 
         //PUT api/<controller>/5

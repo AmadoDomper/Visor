@@ -1,0 +1,186 @@
+﻿html, body, #map {
+    height: 100%;
+    margin: 0;
+    font: 10pt "Open Sans", Arial, Helvetica, sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul, ol {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.nav {
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+    .nav > li {
+        position: relative;
+        display: block;
+    }
+
+        .nav > li > a {
+            position: relative;
+            display: block;
+            padding: 10px 15px;
+        }
+
+.navbar {
+    position: relative;
+    min-height: 50px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+}
+
+.navbar-inverse {
+    background-image: linear-gradient(to bottom,#449d44 0,#419641 100%);
+    border-color: #439b43;
+}
+
+    .navbar-inverse .navbar-brand {
+        color: #fff;
+    }
+
+    .navbar-inverse .navbar-nav > li > a {
+        color: #f5f5f5;
+        font-size: 18px;
+    }
+
+.ol-full-screen {
+    right: .5em;
+    top: 4.5em;
+}
+
+.ol-zoom {
+    bottom: 3.5em;
+    right: .5em;
+    top: unset;
+    left: unset;
+}
+
+.region {
+    top: 4.5em;
+    right: 25.5em;
+}
+
+.provincia {
+    top: 4.5em;
+    right: 18.5em;
+}
+
+.distrito {
+    top: 4.5em;
+    right: 12.5em;
+}
+
+.ol-touch .region {
+    top: 80px;
+}
+
+.ol-control button.region, button.provincia, button.distrito {
+    width: auto;
+    padding: 7px;
+    background-color: #696f73;
+    cursor: pointer;
+}
+
+.ol-control button.distrito:focus, .ol-control button.distrito:hover,
+.ol-control button.provincia:focus, .ol-control button.provincia:hover,
+.ol-control button.region:focus, .ol-control button.region:hover {
+    background-color: #696f73;
+}
+
+button.active.on {
+    background-color: #449d44 !important;
+}
+
+button.active {
+    background-color: #ff6300 !important;
+}
+
+span.btnShort {
+    display: none;
+}
+
+
+@media (min-width: 768px) {
+    .navbar-fixed-top {
+        border-radius: 0;
+    }
+
+    .navbar-header {
+        float: left;
+    }
+
+    .navbar-nav > li {
+        float: left;
+    }
+
+        .navbar-nav > li > a {
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+    .navbar-right {
+        float: right !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar.navbar-inverse.navbar-fixed-top {
+        display: none;
+    }
+
+    .ol-full-screen, .region, .provincia, .distrito {
+        top: .3em;
+    }
+
+    .region {
+        right: 11.5em;
+    }
+
+    .provincia {
+        right: 7.5em;
+    }
+
+    .distrito {
+        right: 4em;
+    }
+
+    span.btnLarge {
+        display: none;
+    }
+
+    span.btnShort {
+        display: block;
+    }
+}
+
+.navbar-fixed-top {
+    position: fixed;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+    top: 0;
+    border-width: 0 0 1px;
+}
+
+.navbar-brand {
+    float: left;
+    padding: 15px;
+    font-size: 18px;
+    line-height: 20px;
+    height: 20px;
+}
+
+@media (min-width: 1220px) {
+    .navbar-nav {
+        margin: 0;
+    }
+}
+

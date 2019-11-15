@@ -59,6 +59,20 @@ namespace LNPostgres
             return oPublicacionAD.GetAllPublicationPoints();
         }
 
-        
+        public Object GetSearchPublicactionPoints(string cPubTexto = "", int nTipo = -1, string cAno = "", int nAreaTem = -1)
+        {
+            return oPublicacionAD.GetSearchPublicactionPoints(cPubTexto, nTipo, cAno, nAreaTem);
+        }
+
+        public Object GetSearchPublicactionIds(string cPubTexto = "", int nTipo = -1, string cAno = "", int nAreaTem = -1)
+        {
+            return oPublicacionAD.GetSearchPublicactionIds(cPubTexto, nTipo, cAno, nAreaTem);
+        }
+
+        public Object GetAllPublicactionsJSON()
+        {
+            return oPublicacionAD.GetAllPublicactionsJSON();
+        }
+
     }
 }
