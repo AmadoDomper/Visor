@@ -136,6 +136,16 @@ span.bold-pub {
     font-weight: bold;
 }
 
+.text-left {
+    text-align: left;
+    position: absolute;
+}
+
+.text-right {
+    text-align: right;
+    position: relative;
+}
+
 @-webkit-keyframes spin {
     0% {
         -webkit-transform: rotate(0deg);

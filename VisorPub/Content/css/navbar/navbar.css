@@ -78,10 +78,6 @@ ul, ol {
     right: 12.5em;
 }
 
-.ol-touch .region {
-    top: 80px;
-}
-
 .ol-control button.region, button.provincia, button.distrito {
     width: auto;
     padding: 7px;

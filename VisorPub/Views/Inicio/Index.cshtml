@@ -77,13 +77,6 @@
                     <div id="cntBusqueda" class="row">
                         <form class="form-horizontal" action="">
                             <div class="col-lg-12">
-                                <div>
-                                    <div class="text-left m-t-5">
-                                        <button title="Eliminar Marcadores" class="btnLimpiar btn btn-danger" type="button" onclick="limpiar_puntos();" disabled>
-                                            <i class="fas fa-fw fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
                                 <div class="form-group">
                                     <div class="input-group m-t-5">
                                         <input id="txtBusqueda" type="search" class="form-control" placeholder="Buscar...">
@@ -298,8 +291,8 @@
         var regionsLayer = new ol.layer.Vector({
             title: 'regions',
             source: new ol.source.Vector({
-                url: '@(Request.Url.AbsoluteUri + "GeoJson/regions-topo.json")',
-                //api/PublicacionApi/getProvincias
+                url: '@(Request.Url.AbsoluteUri + "api/PublicacionApi/getRegions")',
+                //api/PublicacionApi/getRegions
                  //"GeoJson/provincias-topo.json"
                 //format: new ol.format.GeoJSON()
                 format: new ol.format.TopoJSON({
@@ -314,7 +307,7 @@
         var provinciasLayer = new ol.layer.Vector({
             title: 'provincia',
             source: new ol.source.Vector({
-                url: '@(Request.Url.AbsoluteUri + "GeoJson/provincias-topo.json")',
+                url: '@(Request.Url.AbsoluteUri + "api/PublicacionApi/getProvincias")',
                  //"GeoJson/provincias-topo.json"
                 //format: new ol.format.GeoJSON()
                 format: new ol.format.TopoJSON({
@@ -329,7 +322,7 @@
         var distritoLayer = new ol.layer.Vector({
             title: 'distritos',
             source: new ol.source.Vector({
-                url: '@(Request.Url.AbsoluteUri + "GeoJson/distritos.json")',
+                url: '@(Request.Url.AbsoluteUri + "api/PublicacionApi/getDistritos")',
                 format: new ol.format.GeoJSON(),
                 //format: new ol.format.TopoJSON({
                 //    layers: ['distritos']
@@ -349,6 +342,7 @@
             button.setAttribute("id", "btnDepartamento");
             button.innerHTML = '<span class="btnLarge">Departamento</span><span class="btnShort">DEP</span>';
             button.classList.add("region");
+            button.classList.add("active");
 
             button.addEventListener('click', btnDepartamento, false);
             button.addEventListener('touchstart', btnDepartamento, false);
@@ -373,6 +367,7 @@
             button.setAttribute("id", "btnProvincia");
             button.innerHTML = '<span class="btnLarge">Provincia</span><span class="btnShort">PRO</span>';
             button.classList.add("provincia");
+            button.classList.add("active");
 
             button.addEventListener('click', btnProvincia, false);
             button.addEventListener('touchstart', btnProvincia, false);
@@ -397,6 +392,7 @@
             button.setAttribute("id", "btnDistrito");
             button.innerHTML = '<span class="btnLarge">Distrito</span><span class="btnShort">DIS</span>';
             button.classList.add("distrito");
+            button.classList.add("active");
 
             button.addEventListener('click', btnDistrito, false);
             button.addEventListener('touchstart', btnDistrito, false);
@@ -430,7 +426,7 @@
             }
         }
 
-        var provincia = false;
+        var provincia = true;
         function btnProvincia() {
             featureOverlay.getSource().clear();
             ShowInformation("");
@@ -446,7 +442,7 @@
             }
         }
 
-        var distrito = false;
+        var distrito = true;
         function btnDistrito() {
             featureOverlay.getSource().clear();
             ShowInformation("");
@@ -488,7 +484,13 @@
             map.addControl(sidebar);
             map.addLayer(baseLayer);
             map.addLayer(regionsLayer);
+            map.addLayer(provinciasLayer);
+            map.addLayer(distritoLayer);
             map.addOverlay(pointsLayer);
+            delaySelectActivate();
+            //map.removeLayer(regionsLayer);
+            //map.removeLayer(provinciasLayer);
+            //map.removeLayer(distritoLayer);
         }
 
         init();

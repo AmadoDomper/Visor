@@ -294,15 +294,18 @@ function GetSearchPublicactionIds() {
             let pro = document.getElementById("dllProvincias").value;
             let dis = document.getElementById("ddlDistrito").value;
 
-            dep ? activarCapa.departamento() : desactivarCapa.departamento();
-            pro ? activarCapa.provincia() : desactivarCapa.provincia();
-            dis ? activarCapa.distrito() : desactivarCapa.distrito();
+            if(dep) activarCapa.departamento();
+            if(pro) activarCapa.provincia();
+            if(dis) activarCapa.distrito();
 
             document.getElementById('ldBuscar').style.display = "none";
             document.getElementById('cntListaResultados').style.display = "";
 
             searchPoints = GetPointsByPublicationIds(searchPub);
+            searchPoints = FilterPointsByUbigeo(searchPoints);
+            SelectLastUbigeoFeature();
             SelectAllPointFeatures(searchPoints);
+            searchPub = GeAllPublicationSelectedIds();
             ListSearchPublications(1,10);
         } else {
             console.log('We encountered an error!');
@@ -354,7 +357,7 @@ function CreateTable(info, tableId) {
     let html = `<table id="${tableId}" class="table table-bordered table-hover">
                     <thead>
                         <th style="display: none;">#</th>
-                        <th style="width: 200px;"> Título </th>
+                        <th style="width: 150px;"> Título </th>
                         <th style="width: 200px;"> Referencia Bibliográfica </th>
                         <th style="width: 50px;"> Det. </th>
                     </thead>
@@ -508,7 +511,7 @@ function PublicationDetail(id, point) {
                 let tipo = document.querySelector(`#ddlTipo option[value="${pub.tipo.id}"]`).innerHTML
 
                 let det = `<div class="col-lg-12">
-                        <div class="text-left m-t-5">
+                        <div class="m-t-5">
                             <button title="Eliminar Marcadores" class="btnLimpiar btn btn-danger" type="button" onclick="limpiar_puntos();" disabled>
                                 <i class="fas fa-fw fa-trash"></i>
                             </button>
@@ -661,10 +664,7 @@ function PublicationDetail2(id, point) {
                 let tema = document.querySelector(`#ddlTema option[value="${p.te}"]`).innerHTML
 
                 let det = `<div class="col-lg-12">
-                        <div class="text-left m-t-5">
-                            <button title="Eliminar Marcadores" class="btnLimpiar btn btn-danger" type="button" onclick="limpiar_puntos();" disabled>
-                                <i class="fas fa-fw fa-trash"></i>
-                            </button>
+                        <div class="m-t-5">
                             <button title="Volver a los resultados" class="btn btn-success pull-right" type="button" onclick="Resultado();">
                                 <i class="fas fa-fw fa-arrow-left"></i>
                             </button>
@@ -829,6 +829,33 @@ function GetFeatureDistritoById(id) {
     return distritoLayer.getSource().getFeatures().find(x => x.getProperties().IDDIST == id)
 }
 
+
+function GetFeatureLastUbigeoSelected() {
+    let dep = document.getElementById("ddlDepartamento").value;
+    let pro = document.getElementById("dllProvincias").value;
+    let dis = document.getElementById("ddlDistrito").value;
+
+    return dis ? GetFeatureDistritoById(dis) : (pro ? GetFeatureProvinciaById(pro) : (dep ? GetFeatureRegionById(dep) : ""));
+}
+
+function FilterPointsByUbigeo(points) {
+    ubigeoFeature = GetFeatureLastUbigeoSelected();
+
+    if (!ubigeoFeature || !points) { return points }
+
+    let polygon = ubigeoFeature.getGeometry();
+    return points.filter(poi => polygon.intersectsExtent(pointsLayer.getSource().getFeatureById(poi).getGeometry().getExtent()));
+}
+
+function SelectLastUbigeoFeature() {
+    let ubigioFeature = GetFeatureLastUbigeoSelected();
+    if (ubigioFeature) {
+        featureOverlay.getSource().addFeature(ubigioFeature);
+    }
+} 
+
+
+
 function ClearSearchResults() {
     document.getElementById('cntListaResultados').innerHTML = "";
 }
@@ -849,6 +876,8 @@ function GetPublicationsByIdsFromGlobal(arrIds) {
 }
 
 function GetPointsByPublicationIds(arrIds) {
+    if (!arrIds) { return;}
+
     let points = [];
     pub.filter(u => arrIds.includes(u.id)).forEach(p => p.points.forEach(c => points.push(c.id)))
     return points;
@@ -870,15 +899,17 @@ function ListSearchPublications(page, size) {
 
     let total = searchPub.length;
     let pages = parseInt(total / 10) + (total % 10 ? 1 : 0);
-
+    let totalPoints = searchPoints.length || 0;
 
     let arrIds = GetPublicationsByPagination(page, size, searchPub);
     let p = GetPublicationsByIdsFromGlobal(arrIds);
 
-    let html = `<table id="${tableId}" class="table table-bordered table-hover">
+    let html = `<div class="text-left"><span id="page-result">P&aacute;gina ${page} a ${pages || 0} de  ${total || 0} publicaciones</span></div>
+                <div class="text-right"><span id="cant-pub"> Puntos encontrados ${totalPoints}</span></div>
+                  <table id="${tableId}" class="table table-bordered table-hover">
                     <thead>
                         <th style="display: none;">#</th>
-                        <th style="width: 200px;"> Título </th>
+                        <th style="width: 150px;"> Título </th>
                         <th style="width: 200px;"> Referencia Bibliográfica </th>
                         <th style="width: 50px;"> Det. </th>
                     </thead>

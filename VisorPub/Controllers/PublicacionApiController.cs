@@ -10,12 +10,20 @@ using EPostgres;
 using LNPostgres;
 using System.Web.Script.Serialization;
 using System.Web.Http.Cors;
+using System.Configuration;
 
 namespace VisorPub.Controllers
 {
     [EnableCors(origins: "http://visores.iiap.gob.pe", headers: "*", methods: "*")]
     public class PublicacionApiController : ApiController
     {
+        readonly string routeJSON;
+
+        public PublicacionApiController()
+        {
+            routeJSON = ConfigurationManager.AppSettings["routeJSON"].ToString();
+        }
+
         // GET api/<controller>
         public IEnumerable<string> Get()
         {
@@ -43,7 +51,7 @@ namespace VisorPub.Controllers
             return Json(oPubli, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
         }
 
-        
+
         public IHttpActionResult getAllPublicationPoints()
         {
             PublicacionLN oPubli = new PublicacionLN();
@@ -86,7 +94,9 @@ namespace VisorPub.Controllers
 
         public IHttpActionResult getRegions()
         {
-            string file = System.IO.File.ReadAllText(@"C:\Users\DELL\Documents\GitHub\Visor\VisorPub\GeoJson\regions-topo.json");
+
+            string file = System.IO.File.ReadAllText(routeJSON + "GeoJson\\regions-topo.json");
+
             Object json;
 
             json = JsonConvert.DeserializeObject(file);
@@ -95,7 +105,18 @@ namespace VisorPub.Controllers
 
         public IHttpActionResult getProvincias()
         {
-            string file = System.IO.File.ReadAllText(@"C:\Users\DELL\Documents\GitHub\Visor\VisorPub\GeoJson\provincias-topo.json");
+            string file = System.IO.File.ReadAllText(routeJSON + "GeoJson\\provincias-topo.json");
+
+            Object json;
+
+            json = JsonConvert.DeserializeObject(file);
+            return Json(json);
+        }
+
+        public IHttpActionResult getDistritos()
+        {
+            string file = System.IO.File.ReadAllText(routeJSON + "GeoJson\\distritos.json");
+
             Object json;
 
             json = JsonConvert.DeserializeObject(file);
@@ -104,13 +125,13 @@ namespace VisorPub.Controllers
 
         public IHttpActionResult getUbigeo()
         {
-            string file = System.IO.File.ReadAllText(@"C:\Users\DELL\Documents\GitHub\Visor\VisorPub\GeoJson\ubigeo.json");
+            string file = System.IO.File.ReadAllText(routeJSON + "GeoJson\\ubigeo.json");
+
             Object json;
 
             json = JsonConvert.DeserializeObject(file);
             return Json(json);
         }
-
 
         //POST api/<controller>
         //[EnableCors("AllowSpecificOrigin")]
@@ -120,7 +141,7 @@ namespace VisorPub.Controllers
             Usuario oUsuario = new Usuario();
             oUsuario.cDni = "";
 
-            ListaPaginada oListaPublicaciones = oPublica.BuscarPublicacionesPag(v.nPage, v.nPageSize, v.cTexto, v.nTipo, v.cAnoPub,v.nAreaTema);
+            ListaPaginada oListaPublicaciones = oPublica.BuscarPublicacionesPag(v.nPage, v.nPageSize, v.cTexto, v.nTipo, v.cAnoPub, v.nAreaTema);
 
             return Json(oListaPublicaciones, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
         }
