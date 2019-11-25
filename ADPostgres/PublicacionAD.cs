@@ -612,21 +612,32 @@ namespace ADPostgres
 
         public List<Tema> ListarTemas()
         {
-            var conexion = new ConexionPosgreSQL();
+            NpgsqlConnection Conex = new NpgsqlConnection(Conexion.cadena);
+            NpgsqlCommand cmd = new NpgsqlCommand(Procedimiento.usp_ObtenerTema, Conex);
+            cmd.CommandType = CommandType.StoredProcedure;
+            Conex.Open();
+
             List<Tema> lista = new List<Tema>();
 
-            using (var db = conexion.AbreConexion())
+            using (var db = Conex)
             {
                 try
                 {
-                    DataTable datos = ConexionPosgreSQL.ejecutarDT(Procedimiento.usp_ObtenerTema);
+                    using (cmd)
+                    {
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
 
-                    lista = datos.AsEnumerable().Select(row =>
-                        new Tema
+                        while (reader.Read())
                         {
-                            nTemaId = row.Field<int>("tem_idtema"),
-                            cDesc = row.Field<string>("tem_descripcion")
-                        }).ToList();
+                            Tema item = new Tema
+                            {
+                                nTemaId = (int)reader["tem_idtema"],
+                                cDesc = (string)reader["tem_descripcion"]
+                            };
+
+                            lista.Add(item);
+                        }
+                    }
                 }
                 catch (Exception)
                 {
@@ -639,21 +650,31 @@ namespace ADPostgres
 
         public List<Tipo> ListarTipos()
         {
-            var conexion = new ConexionPosgreSQL();
+            NpgsqlConnection Conex = new NpgsqlConnection(Conexion.cadena);
+            NpgsqlCommand cmd = new NpgsqlCommand(Procedimiento.usp_ObtenerTipos, Conex);
+            cmd.CommandType = CommandType.StoredProcedure;
+            Conex.Open();
+
             List<Tipo> lsItems = new List<Tipo>();
 
-            using (var db = conexion.AbreConexion())
+            using (var db = Conex)
             {
                 try
                 {
-                    DataSet datos = ConexionPosgreSQL.Seleccionar("tip_idtipo,tip_descripcion,tip_uri", "tipo", "tip_descripcion");
-
-                    foreach (DataRow row in datos.Tables[0].Rows)
+                    using (cmd)
                     {
-                        Tipo item = new Tipo();
-                        item.nTipoId = Int32.Parse(row[0].ToString());
-                        item.cDesc = row[1].ToString();
-                        lsItems.Add(item);
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            Tipo item = new Tipo
+                            {
+                                nTipoId = (int)reader["tip_idtipo"],
+                                cDesc = (string)reader["tip_descripcion"]
+                            };
+
+                            lsItems.Add(item);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -670,14 +691,18 @@ namespace ADPostgres
         /// <returns></returns>
         public Object GetAllPublicationPoints()
         {
-            var conexion = new ConexionPosgreSQL();
+            NpgsqlConnection Conex = new NpgsqlConnection(Conexion.cadena);
+            NpgsqlCommand cmd = new NpgsqlCommand(Procedimiento.usp_getAllPublicationPoints, Conex);
+            cmd.CommandType = CommandType.StoredProcedure;
+            Conex.Open();
+
             Object json;
 
-            using (var db = conexion.AbreConexion())
+            using (var db = Conex)
             {
                 try
                 {
-                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_getAllPublicationPoints))
+                    using (cmd)
                     {
                         json = JsonConvert.DeserializeObject(cmd.ExecuteScalar().ToString());
                     }

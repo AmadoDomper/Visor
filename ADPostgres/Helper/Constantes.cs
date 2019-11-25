@@ -10,6 +10,7 @@ namespace ADPostgres.Helper
     {
 
         public const string usp_ObtenerTema = "usp_ObtenerTema";
+        public const string usp_ObtenerTipos = "usp_obtenertipos";
         public const string usp_ObtenerTemasPorPublicacionId = "usp_ObtenerTemasPorPublicacionId";
 
 
