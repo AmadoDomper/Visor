@@ -359,7 +359,7 @@
     <Content Include="Views\publicacion\Registrar.cshtml" />
     <Content Include="Views\publicacion\Listar.cshtml" />
     <Content Include="Views\publicacion\Editar.cshtml" />
-    <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Inicio\Contacto.cshtml" />
     <Content Include="Views\Shared\_LayoutGestion.cshtml" />
     <Content Include="Views\Gestion\Index.cshtml" />

@@ -26,10 +26,11 @@ namespace VisorPub.Controllers
             base.Initialize(requestContext);
         }
 
-        public ActionResult Login()
+        public ActionResult Index()
         {
             return View();
         }
+
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Logear()
         {
@@ -57,6 +58,7 @@ namespace VisorPub.Controllers
                 throw ex;
             }
         }
+
         public ActionResult CerrarSession()
         {
             FormsService.SignOut();

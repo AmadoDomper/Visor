@@ -2,68 +2,6 @@
     ViewBag.Title = "Iniciar sesión";
     Layout = null;
 }
-@*<style>
-        body {
-            padding-top: 40px;
-            padding-bottom: 40px;
-        }
-
-        .form-signin {
-            max-width: 330px;
-            padding: 15px;
-            margin: 0 auto;
-        }
-
-            .form-signin .form-signin-heading,
-            .form-signin .checkbox {
-                margin-bottom: 10px;
-            }
-
-            .form-signin .checkbox {
-                font-weight: normal;
-            }
-
-            .form-signin .form-control {
-                position: relative;
-                height: auto;
-                -webkit-box-sizing: border-box;
-                -moz-box-sizing: border-box;
-                box-sizing: border-box;
-                padding: 10px;
-                font-size: 16px;
-            }
-
-                .form-signin .form-control:focus {
-                    z-index: 2;
-                }
-
-            .form-signin input[type="text"] {
-                margin-bottom: -1px;
-                border-bottom-right-radius: 0;
-                border-bottom-left-radius: 0;
-            }
-
-            .form-signin input[type="password"] {
-                margin-bottom: 10px;
-                border-top-left-radius: 0;
-                border-top-right-radius: 0;
-            }
-    </style>
-
-
-    <div class="row">
-        <div class="col-md-12">
-            <form class="form-signin" action="@Url.Action("Logear", "Login")" method="post">
-                <h2 class="form-signin-heading text-center">Iniciar sesión</h2>
-                <label for="txtusuario" class="sr-only">Usuario</label>
-                <input type="text" id="txtusuario" name="txtusuario" class="form-control" placeholder="Usuario" required autofocus>
-                <label for="inputPassword" class="sr-only">Contraseña</label>
-                <input type="password" id="txtpassword" name="txtpassword" class="form-control" placeholder="Contraseña" required>
-                <button class="btn btn-lg btn-success btn-block" type="submit">Iniciar</button>
-                <div>¿No tiene una cuenta?   <a href="@Url.Action("NuevoUsuario", "Usuario")" id="signup" class="display-inline-block" aria-label="Crear una cuenta IIAP">Cree una.</a> </div>
-            </form>
-        </div>
-    </div>*@
 <!DOCTYPE html>
 <html>
 <head>
@@ -96,8 +34,7 @@
             box-shadow: 0 1px #19a948 inset, 0 0 10px 5px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
             width: 360px;
-            /*width: 315px;*/
-            height: 380px;
+            height: 445px;
             margin: 60px auto;
             padding: 50px 30px 0 30px;
             text-align: center;
@@ -129,7 +66,7 @@
             color: #afafaf;
             font-weight: 400;
             font-family: 'Lato', sans-serif;
-            cursor: pointer;
+            cursor: text;
         }
 
         .login-form input[type="email"],.login-form input[type="text"] {
@@ -148,29 +85,67 @@
         .login-form input[type="submit"] {
             font-family: 'Lato', sans-serif;
             font-weight: 400;
-            background: -webkit-linear-gradient(top, #e0e0e0 0%, #cecece 100%);
-            background: linear-gradient(to bottom, #e0e0e0 0%, #cecece 100%);
+            background: #ec8021;
             display: block;
-            margin: 20px auto 0 auto;
+            margin: 5px auto 0 auto;
             width: 100%;
             border: none;
             border-radius: 3px;
             padding: 8px;
             font-size: 17px;
-            color: #636363;
-            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+            color: #fffcfc;
             font-weight: 700;
-            box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.17), 0 1px 0 rgba(255, 255, 255, 0.36) inset;
+            cursor: pointer;
         }
 
             .login-form input[type="submit"]:hover {
-                background: #DDD;
+                background: #e66f07;
             }
 
             .login-form input[type="submit"]:active {
                 padding-top: 9px;
                 padding-bottom: 7px;
-                background: #C9C9C9;
+                background: #e66f07;
+            }
+
+        .line {
+            align-items: center;
+            border-bottom: 1px solid #dadde1;
+            display: flex;
+            margin: 20px 16px;
+            text-align: center;
+        }
+
+        .pass-reset {
+            margin-top: 16px;
+        }
+
+            .pass-reset a {
+                color: #1d68ff;
+                font-size: 14px;
+                font-weight: 500;
+                text-decoration: none;
+            }
+
+                .pass-reset a:hover {
+                    text-decoration: underline;
+                }
+
+        .new {
+            background-color: #2d7b14;
+            color: #fff;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 26px;
+            padding: 0 16px;
+            font-weight: bold;
+        }
+
+            .new:hover {
+                background-color: #1b5c07;
             }
     </style>
 
@@ -187,6 +162,9 @@
                 <input type="password" id="txtpassword" name="txtpassword" required placeholder="Contraseña">
             </label>
             <input type="submit" value="Iniciar">
+            <div class="pass-reset"><a href="https://www.facebook.com/recover/initiate/?ars=facebook_login">¿Olvidaste tu cuenta?</a></div>
+            <div class="line"></div>
+            <a class="new">Crear cuenta nueva</a>
         </form>      
     </section>
 </body>
