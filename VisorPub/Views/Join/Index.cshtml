@@ -1,8 +1,10 @@
-﻿@{
-    ViewBag.Title = "Iniciar sesión";
+﻿
+@{
     Layout = null;
 }
+
 <!DOCTYPE html>
+
 <html>
 <head>
     <meta charset="utf-8">
@@ -34,14 +36,14 @@
             box-shadow: 0 1px #19a948 inset, 0 0 10px 5px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
             width: 360px;
-            height: 445px;
+            height: 681px;
             margin: 60px auto;
-            padding: 50px 30px 0 30px;
+            padding: 30px 30px 0 30px;
             text-align: center;
         }
 
             .login-form-wrap h1 {
-                margin: 0 0 50px 0;
+                margin: 0 0 20px 0;
                 padding: 0;
                 font-size: 26px;
                 color: #fff;
@@ -58,27 +60,23 @@
                     font-weight: 400;
                 }
 
-        .login-form input[type="email"],.login-form input[type="text"], .login-form input[type="password"] {
+        .login-form input[type="email"], .login-form input[type="text"], .login-form input[type="password"] {
             width: 100%;
             border: 1px solid #24921f;
-            outline: none;
             padding: 12px 20px;
-            color: #afafaf;
             font-weight: 400;
             font-family: 'Lato', sans-serif;
             cursor: text;
         }
 
-        .login-form input[type="email"],.login-form input[type="text"] {
-            border-bottom: none;
-            border-radius: 4px 4px 0 0;
+        .login-form input[type="email"], .login-form input[type="text"] {
+            border-radius: 8px;
             padding-bottom: 13px;
-            box-shadow: 0 -1px 0 #E0E0E0 inset, 0 1px 2px rgba(0, 0, 0, 0.23) inset;
         }
 
         .login-form input[type="password"] {
             border-top: none;
-            border-radius: 0 0 4px 4px;
+            border-radius: 8px;
             box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.23) inset, 0 1px 2px rgba(255, 255, 255, 0.1);
         }
 
@@ -108,65 +106,80 @@
                 background: #e66f07;
             }
 
-        .line {
-            align-items: center;
-            border-bottom: 1px solid #dadde1;
-            display: flex;
-            margin: 20px 16px;
-            text-align: center;
+        .form-group label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #353a3f;
+            margin-bottom: 5px;
+            display: block;
         }
 
-        .pass-reset {
-            margin-top: 16px;
+        .form-group {
+            text-align: left;
         }
 
-            .pass-reset a {
-                color: #1d68ff;
-                font-size: 14px;
-                font-weight: 500;
-                text-decoration: none;
+            .form-group input {
+                border-radius: 8px;
+                padding-bottom: 13px;
+                margin-bottom: 5px;
             }
 
-                .pass-reset a:hover {
-                    text-decoration: underline;
-                }
+            .form-group.required label:after {
+                padding-left: 5px;
+                color: #cb2431;
+                content: "*";
+            }
 
-        .new {
-            background-color: #2d7b14;
-            color: #fff;
-            display: inline-block;
-            cursor: pointer;
-            border: none;
-            border-radius: 6px;
+        h2 {
+            color: #fffcfc;
+        }
+
+        span {
+            min-height: 17px;
+            color: #353a3f;
             font-size: 12px;
-            line-height: 26px;
-            padding: 0 16px;
-            font-weight: bold;
-            text-decoration: none;
         }
 
-            .new:hover {
-                background-color: #1b5c07;
-            }
+        .form-group input:focus {
+            border-color: #2188ff;
+            outline: none;
+        }
+
     </style>
 
 </head>
-<body>
+<body cz-shortcut-listen="true">
     <section class="login-form-wrap">
-        <img class="pull-right" src="http://iiap.org.pe/visor/img/logoiiap.png" alt="DSpace logo" style="width: 85px;">
+        <img class="pull-right" src="http://iiap.org.pe/visor/img/logoiiap.png" alt="DSpace logo" style="width: 50px;">
 
-        <form class="login-form" action="@Url.Action("Logear", "Login")" method="post">
-            <label>
-                <input type="text" id="txtusuario" name="txtusuario" required placeholder="Usuario">
-            </label>
-            <label>
-                <input type="password" id="txtpassword" name="txtpassword" required placeholder="Contraseña">
-            </label>
-            <input type="submit" value="Iniciar">
-            <div class="pass-reset"><a href="https://www.facebook.com/recover/initiate/?ars=facebook_login">¿Olvidaste tu cuenta?</a></div>
-            <div class="line"></div>
-            <a class="new" href="@Url.Action("Index", "Join")">Crear cuenta nueva</a>
-        </form>      
+        <form class="login-form" action="/Login/Logear" method="post">
+            <h1>
+                Crea tu cuenta
+            </h1>
+            <div class="form-group required">
+                <label>Nombre </label>
+                <input type="text" id="txtNombre" name="txtNombre" required="" style="margin-top: 0px;">
+            </div><div class="form-group required">
+                <label>Apellido Paterno</label>
+                <input type="text" id="txtApePa" name="txtApePa" required="">
+            </div><div class="form-group required">
+                <label>Apellido Materno</label>
+                <input type="text" id="txtApeMa" name="txtApeMa" required="">
+            </div><div class="form-group">
+                <label>Institución</label>
+                <input type="text" id="txtInst" name="txtInst" required="">
+            </div>
+            <div class="form-group required">
+                <label>Correo</label>
+                <input type="text" id="txtusuario" name="txtusuario" required="">
+            </div>
+            <div class="form-group required">
+                <label>Contraseña</label>
+                <input type="password" id="txtpassword" name="txtpassword" required="">
+                <span>Asegúrese de que tenga al menos 15 caracteres O al menos 8 caracteres, incluido un número y una letra minúscula.</span>
+            </div>
+            <input type="submit" value="Crear Cuenta">
+        </form>
     </section>
 </body>
 </html>
