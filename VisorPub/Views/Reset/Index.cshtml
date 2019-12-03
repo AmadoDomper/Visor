@@ -1,0 +1,134 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="http://iiap.org.pe/favicon.ico" type="image/x-icon">
+
+
+    <style type="text/css">
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            background: #98d684;
+        }
+
+        body {
+            background: #98d684;
+            margin: 0;
+            padding: 0;
+            font-family: 'Lato', sans-serif;
+        }
+
+        .login-form-wrap {
+            background: -webkit-radial-gradient(center ellipse, #5170ad 0%, #355493 100%);
+            background: radial-gradient(ellipse at center, #47cf73 0%, #439335 100%);
+            border: 1px solid #42a045;
+            box-shadow: 0 1px #19a948 inset, 0 0 10px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            width: 360px;
+            height: 341px;
+            margin: 60px auto;
+            padding: 30px 30px 0 30px;
+            text-align: center;
+        }
+
+            .login-form-wrap h1 {
+                margin: 0 0 20px 0;
+                padding: 0;
+                font-size: 21px;
+                color: #fff;
+            }
+
+         .login-form input[type="text"] {
+            width: 100%;
+            border: 1px solid #24921f;
+            padding: 12px 20px;
+            font-weight: 400;
+            font-family: 'Lato', sans-serif;
+            cursor: text;
+        }
+
+
+        .login-form input[type="submit"] {
+            font-family: 'Lato', sans-serif;
+            font-weight: 400;
+            background: #ec8021;
+            display: block;
+            margin: 5px auto 0 auto;
+            width: 100%;
+            border: none;
+            border-radius: 3px;
+            padding: 8px;
+            font-size: 17px;
+            color: #fffcfc;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+            .login-form input[type="submit"]:hover {
+                background: #e66f07;
+            }
+
+            .login-form input[type="submit"]:active {
+                padding-top: 9px;
+                padding-bottom: 7px;
+                background: #e66f07;
+            }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #353a3f;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+            .form-group input {
+                border-radius: 8px;
+                padding-bottom: 13px;
+                margin-bottom: 5px;
+            }
+
+        .form-group input:focus {
+            border-color: #2188ff;
+            outline: none;
+        }
+    </style>
+
+</head>
+<body cz-shortcut-listen="true">
+    <section class="login-form-wrap">
+        <img class="pull-right" src="http://iiap.org.pe/visor/img/logoiiap.png" alt="DSpace logo" style="width: 50px;">
+
+        <form class="login-form" action="/Login/Logear" method="post">
+            <h1>Restablece tu contraseña</h1>
+
+            <div class="form-group">
+                <label>Ingrese la dirección de correo electrónico verificada de su cuenta de usuario y le enviaremos un enlace para restablecer la contraseña.</label>
+                <input type="text" id="txtusuario" placeholder="Ingrese su correo" name="txtusuario" required="">
+            </div>
+            <div class="form-group required">
+
+
+
+            </div>
+            <input type="submit" value="Enviar ">
+        </form>
+    </section>
+
+</body>
+</html>

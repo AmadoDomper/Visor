@@ -163,7 +163,7 @@
                 <input type="password" id="txtpassword" name="txtpassword" required placeholder="Contraseña">
             </label>
             <input type="submit" value="Iniciar">
-            <div class="pass-reset"><a href="https://www.facebook.com/recover/initiate/?ars=facebook_login">¿Olvidaste tu cuenta?</a></div>
+            <div class="pass-reset"><a href="@Url.Action("Index", "Reset")">¿Olvidaste tu cuenta?</a></div>
             <div class="line"></div>
             <a class="new" href="@Url.Action("Index", "Join")">Crear cuenta nueva</a>
         </form>      
