@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using EPostgres;
 using LNPostgres;
+using SendEmail;
 
 namespace VisorPub.Controllers
 {
@@ -19,7 +21,8 @@ namespace VisorPub.Controllers
 
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public JsonResult SaveAccount(Usuario oUser)
+        [HttpPost]
+        public async Task<JsonResult> SaveAccount(Usuario oUser)
         {
             int resultado;
             try
@@ -27,7 +30,10 @@ namespace VisorPub.Controllers
                 if (ValidationOK(oUser)) { 
                     UsuarioLN oUsuarioLN = new UsuarioLN();
 
-                    resultado = oUsuarioLN.RegistrarModificarUsuario(oUser);
+                    //resultado = oUsuarioLN.RegistrarModificarUsuario(oUser);
+                    resultado = 0;
+
+                    await GmailClient.SendEmailAsync("amado.domper@gmail.com", "", "", "Your Account Is Successfully Created", "<h1>HI!</h1>","");
                 }
                 else
                 {

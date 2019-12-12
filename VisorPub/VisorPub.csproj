@@ -394,6 +394,10 @@
       <Project>{8af29b64-5f20-4c95-a550-b95e2e7a09c2}</Project>
       <Name>Seguridad</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SendEmail\SendEmail.csproj">
+      <Project>{c80a05e5-da72-430d-8802-6d588055e87a}</Project>
+      <Name>SendEmail</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
