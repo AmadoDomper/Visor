@@ -59,9 +59,12 @@
     <Compile Include="PublicacionTest.cs" />
     <Compile Include="SuelosPerfilModalTest.cs" />
     <Compile Include="RolTest.cs" />
+    <Compile Include="HistorialTest.cs" />
+    <Compile Include="HistorialDetalleTest.cs" />
     <Compile Include="VegetacionParcelaTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

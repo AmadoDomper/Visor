@@ -23,6 +23,7 @@ namespace EPostgres
         private string _cEstado;
         private List<Tema> _ListaTemas;
         private List<Feature> _ListaFeatures;
+        private int _nHistorialId;
 
         [JsonProperty(PropertyName = "Id")]
         public int nPubliId
@@ -127,6 +128,13 @@ namespace EPostgres
         {
             get { return _cEstado; }
             set { _cEstado = value; }
+        }
+
+        [JsonProperty(PropertyName = "nHistId")]
+        public int nHistorialId
+        {
+            get { return _nHistorialId; }
+            set { _nHistorialId = value; }
         }
 
 

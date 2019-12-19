@@ -157,14 +157,14 @@ namespace Seguridad
         //    return oUsuario != null;
         //}
 
-        public override bool ValidateUser(string username, string password)
+        public override bool ValidateUser(string useremail, string password)
         {
             try
             {
                 SeguridadLN oSeguridadLN = new SeguridadLN();
                 Usuario oUsuario = new Usuario();
 
-                oUsuario = oSeguridadLN.ValidaAccesoUsuario(username, password);
+                oUsuario = oSeguridadLN.ValidaAccesoUsuario(useremail, password);
 
                 bool validar = false;
                 if (oUsuario != null)

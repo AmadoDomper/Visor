@@ -21,5 +21,17 @@ namespace Test
 
             Assert.IsNotNull(res);
         }
+
+        [TestMethod]
+        public void ValidaSupervisorEmails_Test()
+        {
+            RolLN oRolLN = new RolLN();
+            string res;
+
+            res = oRolLN.GetSupervisorEmails();
+
+            Assert.IsNotNull(res);
+        }
+
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Configuration;
 using System.Threading.Tasks;
 using System.Net.Mail;
 
@@ -12,20 +13,17 @@ namespace SendEmail
         /// <summary>
         /// Send email
         /// </summary>
-        /// <param name="gmailid"></param>
-        /// <param name="password"></param>
         /// <param name="toemail"></param>
         /// <param name="subject"></param>
         /// <param name="body"></param>
         /// <param name="attachment"></param>
         /// <returns></returns>
-        public async static Task SendEmailAsync(string gmailId, string password, string toEmail, string subject, string body, string attachment)
+        public async static Task SendEmailAsync(string toEmail, string subject, string body, string attachment)
         {
-            //string msg = null;
             try
             {
                 using (MailMessage mail = new MailMessage()) { 
-                    mail.From = new MailAddress(gmailId);
+                    mail.From = new MailAddress(ConfigurationManager.AppSettings["Email"].ToString());
                     mail.To.Add(toEmail);
 
                     mail.Subject = subject;
@@ -40,10 +38,9 @@ namespace SendEmail
                         smtp.EnableSsl = true;
                         smtp.UseDefaultCredentials = false;
                         smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                        smtp.Credentials = new System.Net.NetworkCredential(gmailId, password);
+                        smtp.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["Email"].ToString(), ConfigurationManager.AppSettings["EmailPassword"].ToString());
 
                         await smtp.SendMailAsync(mail);
-                        //msg = "Send";
                     }
                 }
             }

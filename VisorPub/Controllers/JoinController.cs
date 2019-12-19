@@ -30,10 +30,10 @@ namespace VisorPub.Controllers
                 if (ValidationOK(oUser)) { 
                     UsuarioLN oUsuarioLN = new UsuarioLN();
 
-                    //resultado = oUsuarioLN.RegistrarModificarUsuario(oUser);
+                    resultado = oUsuarioLN.RegistrarModificarUsuario(oUser);
                     resultado = 0;
 
-                    await GmailClient.SendEmailAsync("amado.domper@gmail.com", "", "", "Your Account Is Successfully Created", "<h1>HI!</h1>","");
+                    await GmailClient.SendEmailAsync(oUser.cEmail, "Your Account Is Successfully Created", "<h1>HI!</h1>","");
                 }
                 else
                 {

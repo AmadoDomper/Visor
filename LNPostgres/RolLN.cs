@@ -33,5 +33,10 @@ namespace LNPostgres
             return oRolAD.ValidaPermiso(nUsuarioId, nPermId);
         }
 
+        public string GetSupervisorEmails()
+        {
+            return oRolAD.GetSupervisorEmails();
+        }
+
     }
 }

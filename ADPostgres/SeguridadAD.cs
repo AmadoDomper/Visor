@@ -12,7 +12,7 @@ namespace ADPostgres
 {
     public class SeguridadAD
     {
-        public Usuario ValidaAccesoUsuario(string  cUsuario, string cClave)
+        public Usuario ValidaAccesoUsuario(string  cUsuarioEmail, string cClave)
         {
             var oUsuario = new Usuario();
             var conexion = new ConexionPosgreSQL();
@@ -21,25 +21,25 @@ namespace ADPostgres
             {
                 try
                 {
-                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_ValidaAccesoUsuario))
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_validaaccesousuario_email))
                     {
-                        cmd.Parameters.AddWithValue("_usu_cdni", cUsuario);
+                        cmd.Parameters.AddWithValue("_usu_cemail", cUsuarioEmail);
                         cmd.Parameters.AddWithValue("_usu_cContrasena", cClave);
 
                         NpgsqlDataReader reader = cmd.ExecuteReader();
 
                         while (reader.Read())
                         {
-                            oUsuario.nUsuarioId = Int32.Parse(reader[0].ToString());
-                            oUsuario.cDni = reader[1].ToString();
-                            oUsuario.cNombres = reader[2].ToString();
-                            oUsuario.nRolId = Int32.Parse(reader[3].ToString());
-                            oUsuario.cRolDesc = reader[4].ToString();
-                            oUsuario.bEsInterno = Boolean.Parse(reader[5].ToString());
-                            oUsuario.nEstado = Int32.Parse(reader[6].ToString());
+                            oUsuario.nUsuarioId = (int)reader["usu_nusuarioid"];
+                            oUsuario.cDni = (string)reader["usu_cdni"];
+                            oUsuario.cNombres = (string)reader["cnombre"];
+                            oUsuario.nRolId = (int)reader["nrolid"];
+                            oUsuario.cRolDesc = (string)reader["croldesc"];
+                            oUsuario.cEmail = (string)reader["usu_cemail"];
+                            oUsuario.bEsInterno = (bool)reader["usu_es_interno"];
+                            oUsuario.nEstado = (int)reader["usu_nestado"];
                         }
                     }
-
                 }
                 catch (Exception ex)
                 {

@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfiguracionLN.cs" />
+    <Compile Include="HistorialDetalleLN.cs" />
+    <Compile Include="HistorialLN.cs" />
     <Compile Include="InventarioSuelosLN.cs" />
     <Compile Include="InventarioVegetacionLN.cs" />
     <Compile Include="MenuLN.cs" />

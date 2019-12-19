@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using ADPostgres.Helper;
 using EPostgres;
+using EPostgres.Helper;
 using Npgsql;
 using Newtonsoft.Json;
 
@@ -78,6 +79,7 @@ namespace ADPostgres
 
                     oPub.ListaTemas = new TemaAD().ObtenerTemasPorPublicacionId(nPubId);
                     oPub.ListaFeatures = obtenerPuntos(nPubId);
+                    oPub.nHistorialId = new HistorialAD().GetRecordIdByReferenciaId(nPubId, TipoReferencia.Publicaciones);
                 }
                 catch (Exception ex)
                 {

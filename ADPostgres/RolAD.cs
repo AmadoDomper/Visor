@@ -38,6 +38,32 @@ namespace ADPostgres
             return lista;
         }
 
+        public string GetSupervisorEmails()
+        {
+            NpgsqlConnection Conex = new NpgsqlConnection(Conexion.cadena);
+            NpgsqlCommand cmd = new NpgsqlCommand(Procedimiento.usp_getSupervisorEmails, Conex);
+            cmd.CommandType = CommandType.StoredProcedure;
+            Conex.Open();
+
+            string emails = "";
+
+            using (var db = Conex)
+            {
+                try
+                {
+                    using (cmd)
+                    {
+                        emails = cmd.ExecuteScalar().ToString();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return emails;
+        }
+
         /// <summary>
         /// Permite identificar si determinado usuario tiene permiso para la operación ingresada
         /// </summary>

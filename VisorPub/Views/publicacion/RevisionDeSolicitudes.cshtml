@@ -15,6 +15,7 @@
 <div class="col-lg-11 col-lg-offset-0-5">
     <input id="hdnEstado" type="hidden" />
     <input id="hdnPubId" type="hidden" />
+    <input id="hdnHistId" type="hidden" />
     <input id="hdnPag" type="hidden" />
     @*<div class="row">*@
     <div id="target1" class="panel move panel-inverse active m-t-5">
@@ -525,9 +526,10 @@
                                 var oPub = JSON.parse(data);
 
                                 $('#hdnPubId').val(oPub.Id);
+                                $('#hdnHistId').val(oPub.nHistId);
                                 $("#hdnPubEst").val(oPub.nEstado);
                                 $('#txtTitulo').val(oPub.titulo);
-                                $('#ddlTipo').val(oPub.tipo.Id);
+                                $('#ddlTipo').val(oPub.tipo.id);
                                 $('#ddlTema').val(oPub.lsTemas[0].id);
                                 $('#txtAnoPublicacion').val(oPub.ano);
                                 $('#txtEnlace').val(oPub.enlace);

@@ -10,6 +10,8 @@ using EPostgres;
 using LNPostgres;
 using VisorPub.Models;
 using Seguridad.filters;
+using SendEmail;
+using System.Threading.Tasks;
 
 namespace VisorPub.Controllers
 {
@@ -77,13 +79,12 @@ namespace VisorPub.Controllers
             return View(modelo);
         }
         //[RequiresAuthenticationAttribute]
-        public JsonResult RegistrarPublicacion(int pub_anopublicacion, string pub_referenciabibliografica, string pub_enlace, int tip_idtipo, string ls_tem_idtema, string features, string pub_titulo)
+        public async Task<JsonResult> RegistrarPublicacion(int pub_anopublicacion, string pub_referenciabibliografica, string pub_enlace, int tip_idtipo, string ls_tem_idtema, string features, string pub_titulo)
         {
 
             RespuestaViewModel respuesta = new RespuestaViewModel();
             List<Feature> lsFeatures = new List<Feature>();
             JsonConvert.PopulateObject(features, lsFeatures);
-
             foreach (Feature itemF in lsFeatures)
             {
                 itemF.Info = itemF.Info.Replace('|', ' ');
@@ -94,21 +95,21 @@ namespace VisorPub.Controllers
             }
 
             string[] ls_tem_idtemaArr = ls_tem_idtema.Split(',');
+
+            Usuario oUsuarioReg = ((Usuario)Session["Datos"]);
+
             Publicacion oPubli = new Publicacion();
-            PublicacionLN oPubliLN = new PublicacionLN();
+            oPubli.oTipo = new Tipo();
+            oPubli.ListaTemas = new List<Tema>();
 
-            PublicacionAD hand = new PublicacionAD();
-
-            oPubli.nUsuId = ((Usuario)Session["Datos"]).nUsuarioId;
+            oPubli.nUsuId = oUsuarioReg.nUsuarioId;
             oPubli.nPubliAno = pub_anopublicacion;
             oPubli.cRefBiblio = pub_referenciabibliografica;
             oPubli.cEnlace = pub_enlace;
-            oPubli.oTipo = new Tipo();
             oPubli.oTipo.nTipoId = tip_idtipo;
             oPubli.ListaFeatures = lsFeatures;
             oPubli.cTitulo = pub_titulo;
-            oPubli.ListaTemas = new List<Tema>();
-
+            
             foreach (string itemTema in ls_tem_idtemaArr)
             {
                 Tema itemTemaO = new Tema();
@@ -116,17 +117,24 @@ namespace VisorPub.Controllers
                 oPubli.ListaTemas.Add(itemTemaO);
             }
 
+            PublicacionLN oPubliLN = new PublicacionLN();
             oPubli = oPubliLN.RegistrarPublicacion(oPubli);
 
             if (oPubli.nPubliId != 0)
             {
                 respuesta.estado = 1;
                 respuesta.mensaje = "Se ha registrado la publicación";
+
+                //Codificar url historial
+
+                //Enviar correo usuario registra
+                await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, "Registro de Publicación #000 ", "<p>Estimado/a" + oUsuarioReg.cNombres +  "</p><p> Se ha registrado su solicitud y estará en proceso de evaluación. Muchas Gracias </p>", "");
+                //Enviar correo usuarios perfil supervisor
+                RolLN oRol = new RolLN();
+                var cSupervisorEmails = oRol.GetSupervisorEmails();
+                await GmailClient.SendEmailAsync(cSupervisorEmails, "Registro de Publicación #000 ", "<p> Se ha registrado una nueva solicitud de Publicación con código 000, favor de ingresar a la intranet para proceder con su validación. </p>", "");
             }
             return Json(JsonConvert.SerializeObject(respuesta));
-
-
-
         }
 
         //[RequiresAuthenticationAttribute]

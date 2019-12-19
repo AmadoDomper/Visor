@@ -46,6 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuscadorApi.cs" />
+    <Compile Include="Helper\Constantes.cs" />
+    <Compile Include="Historial.cs" />
+    <Compile Include="HistorialDetalle.cs" />
     <Compile Include="InventarioSuelos.cs" />
     <Compile Include="InventarioVegetacion.cs" />
     <Compile Include="ListaPaginada.cs" />

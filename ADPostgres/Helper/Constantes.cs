@@ -37,6 +37,7 @@ namespace ADPostgres.Helper
         /* ROL */
         public const string usp_ListarRoles = "usp_ListarRoles";
         public const string usp_ValidarPermiso = "usp_ValidarPermiso";
+        public const string usp_getSupervisorEmails = "usp_getSupervisorEmails";
         /*END ROL*/
 
 
@@ -53,6 +54,7 @@ namespace ADPostgres.Helper
         /*SEGURIDAD*/
 
         public const string usp_ValidaAccesoUsuario = "usp_ValidaAccesoUsuario";
+        public const string usp_validaaccesousuario_email = "usp_validaaccesousuario_email";
 
         /*END SEGURIDAD*/
 
@@ -105,6 +107,16 @@ namespace ADPostgres.Helper
         public const string usp_elimina_inventario_suelos_detalle = "usp_elimina_inventario_suelos_detalle";
         public const string usp_lista_inventario_suelos_detalle = "usp_lista_inventario_suelos_detalle";
         public const string usp_cargar_datos_inventario_suelos_detalle = "usp_cargar_datos_inventario_suelos_detalle";
+
+        /* HISTORIAL */
+
+        public const string usp_crear_historial = "usp_crear_historial";
+        public const string usp_get_recordid_by_refid = "usp_get_recordid_by_refid";
+
+
+        /* HISTORIAL DETALLE */
+
+        public const string usp_registrar_detalle_historial = "usp_registrar_detalle_historial";
 
     }
 }

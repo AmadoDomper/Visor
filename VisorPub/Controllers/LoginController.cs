@@ -36,14 +36,14 @@ namespace VisorPub.Controllers
         {
             try
             {
-                string UserName = Request["txtusuario"];
+                string UserEmail = Request["txtemail"];
                 string Password = Request["txtpassword"];
                 //validamos usuario
-                bool validar = Membership.Provider.ValidateUser(UserName, Password);
+                bool validar = Membership.Provider.ValidateUser(UserEmail, Password);
                 if (validar)
                 {
                     //registramos usuario
-                    FormsService.SignIn(UserName, true);
+                    FormsService.SignIn(UserEmail, true);
                     Usuario oUsuario = new Usuario();
                     oUsuario = (Usuario)Session["Datos"];
 

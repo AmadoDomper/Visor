@@ -17,11 +17,11 @@ namespace LNPostgres
             oSeguridadAD = new SeguridadAD();
         }
 
-        public Usuario ValidaAccesoUsuario(string cUsuario, string cClave)
+        public Usuario ValidaAccesoUsuario(string cUsuarioEmail, string cClave)
         {
             try
             {
-                return new SeguridadAD().ValidaAccesoUsuario(cUsuario, cClave);
+                return new SeguridadAD().ValidaAccesoUsuario(cUsuarioEmail, cClave);
             }
             catch (Exception ex)
             {

@@ -60,6 +60,8 @@
     <Compile Include="Common\RolesPermisos.cs" />
     <Compile Include="ConfiguracionAD.cs" />
     <Compile Include="Helper\Conexion.cs" />
+    <Compile Include="HistorialAD.cs" />
+    <Compile Include="HistorialDetalleAD.cs" />
     <Compile Include="InventarioSuelosAD.cs" />
     <Compile Include="InventarioVegetacionAD.cs" />
     <Compile Include="MenuAD.cs" />

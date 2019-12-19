@@ -157,13 +157,13 @@
 
         <form class="login-form" action="@Url.Action("Logear", "Login")" method="post">
             <label>
-                <input type="text" id="txtusuario" name="txtusuario" required placeholder="Usuario">
+                <input type="text" id="txtemail" name="txtemail" required placeholder="Email">
             </label>
             <label>
                 <input type="password" id="txtpassword" name="txtpassword" required placeholder="Contraseña">
             </label>
             <input type="submit" value="Iniciar">
-            <div class="pass-reset"><a href="@Url.Action("Index", "Reset")">¿Olvidaste tu cuenta?</a></div>
+            <div class="pass-reset"><a href="@Url.Action("Index", "Reset")">¿Olvidaste tu constraseña?</a></div>
             <div class="line"></div>
             <a class="new" href="@Url.Action("Index", "Join")">Crear cuenta nueva</a>
         </form>      
