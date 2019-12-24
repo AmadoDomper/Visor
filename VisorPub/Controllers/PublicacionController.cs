@@ -7,6 +7,7 @@ using ADPostgres;
 using VisorPub.Models.Publicacion;
 using Newtonsoft.Json;
 using EPostgres;
+using EPostgres.Helper;
 using LNPostgres;
 using VisorPub.Models;
 using Seguridad.filters;
@@ -46,7 +47,7 @@ namespace VisorPub.Controllers
             Usuario oUsuario = new Usuario();
             oUsuario = (Usuario)Session["Datos"]; //Agregar verificacíon de sessión
 
-            ListaPaginada oListaPublicaciones = oPublica.ListarMisPublicaciones(nPubEst, nPage, nSize, nPubId, cPubTitulo, oUsuario.cDni, cInst);
+            ListaPaginada oListaPublicaciones = oPublica.ListarMisPublicaciones(nPubEst, oUsuario.nUsuarioId, nPage, nSize, nPubId, cPubTitulo, cInst);
 
             return JsonConvert.SerializeObject(oListaPublicaciones, Formatting.None,
             new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
@@ -126,15 +127,94 @@ namespace VisorPub.Controllers
                 respuesta.mensaje = "Se ha registrado la publicación";
 
                 //Codificar url historial
+                HistorialLN oHistorialLN = new HistorialLN();
+                Historial oHistorial = new Historial
+                {
+                    nRefId = oPubli.nPubliId,
+                    nTipoReferencia = (int)TipoReferencia.Publicaciones,
+                    nEstado = 1
+                };
+
+                var nHistId = oHistorialLN.CrearHistorial(oHistorial);
+
+                // Registra historial - Solicitud Registrada
+                HistorialDetalleLN oHistDetLN = new HistorialDetalleLN();
+                HistorialDetalle oHistDet = new HistorialDetalle {
+                    nHistorialId = nHistId,
+                    nUsuarioRegistra = oUsuarioReg.nUsuarioId,
+                    Estado = (int)EstadoSolicitud.Solicitado
+                };
+
+                var nHisDet = oHistDetLN.RegistrarHistorialDetalle(oHistDet);
+                var cHistUniqueId = oHistorialLN.GetRecordUniqueIdByReferenciaId(oPubli.nPubliId, TipoReferencia.Publicaciones);
 
                 //Enviar correo usuario registra
-                await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, "Registro de Publicación #000 ", "<p>Estimado/a" + oUsuarioReg.cNombres +  "</p><p> Se ha registrado su solicitud y estará en proceso de evaluación. Muchas Gracias </p>", "");
+                await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, "Registro de Publicación - VISOR IIAP", "<p>Estimado/a " + oUsuarioReg.cNombres + "</p><p> Se ha registrado su solicitud y estará en proceso de evaluación. Muchas Gracias </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
                 //Enviar correo usuarios perfil supervisor
                 RolLN oRol = new RolLN();
                 var cSupervisorEmails = oRol.GetSupervisorEmails();
-                await GmailClient.SendEmailAsync(cSupervisorEmails, "Registro de Publicación #000 ", "<p> Se ha registrado una nueva solicitud de Publicación con código 000, favor de ingresar a la intranet para proceder con su validación. </p>", "");
+                await GmailClient.SendEmailAsync(cSupervisorEmails, "Registro de Publicación - VISOR IIAP", "<p> Se ha registrado una nueva solicitud de Publicación con código 000, favor de ingresar a la intranet para proceder con su validación. </p>", "");
             }
             return Json(JsonConvert.SerializeObject(respuesta));
+        }
+
+        public async Task<JsonResult> RegistrarObservacion(int nPubId, int nUsuId, int nHistId, string nUHistId, string cMensaje)
+        {
+            Usuario oUsuarioReg = ((Usuario)Session["Datos"]);
+
+            //Cambiar estado publicación
+
+
+            //Obtener datos usuario de la publicación
+
+            UsuarioLN oUsuarioLN = new UsuarioLN();
+            var oUsuarioPub = oUsuarioLN.CargarDatosUsuario(nUsuId);
+
+            // Registra historial - Observación
+            HistorialDetalleLN oHistDetLN = new HistorialDetalleLN();
+            HistorialDetalle oHistDet = new HistorialDetalle
+            {
+                nHistorialId = nHistId,
+                nUsuarioRegistra = oUsuarioReg.nUsuarioId,
+                cDescripcion = cMensaje,
+                Estado = (int)EstadoSolicitud.Observado
+            };
+
+            var nHisDet = oHistDetLN.RegistrarHistorialDetalle(oHistDet);
+
+            HistorialLN oHistorialLN = new HistorialLN();
+            //Supervisor envia correo a usuario registro
+            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, "Observaciones encontradas - Visor IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + "</p><p> Se ha encontrado observaciones a la solicitud realizada. Agradeceremos levantar las observaciones para proceder a su aprobación. </p><a href='http://localhost:59423/Historial/Publicaciones/" + nUHistId + "' target='_blank'> Ver Detalle </a>", "");
+
+            return Json(JsonConvert.SerializeObject(nHisDet));
+        }
+
+        public async Task<JsonResult> RegistrarRechazo(int nPubId, int nHistId, string cMensaje)
+        {
+            Usuario oUsuarioReg = ((Usuario)Session["Datos"]);
+
+            //Cambiar estado publicación
+
+
+
+            // Registra historial - Rechazado
+            HistorialDetalleLN oHistDetLN = new HistorialDetalleLN();
+            HistorialDetalle oHistDet = new HistorialDetalle
+            {
+                nHistorialId = nHistId,
+                nUsuarioRegistra = oUsuarioReg.nUsuarioId,
+                cDescripcion = cMensaje,
+                Estado = (int)EstadoSolicitud.Rechazado
+            };
+
+            var nHisDet = oHistDetLN.RegistrarHistorialDetalle(oHistDet);
+
+            HistorialLN oHistorialLN = new HistorialLN();
+            var cHistUniqueId = oHistorialLN.GetRecordUniqueIdByReferenciaId(nPubId, TipoReferencia.Publicaciones);
+            //Supervisor envia correo a usuario registro
+            await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, "Publicación Rechazada - Visor IIAP", "<p>Estimado/a " + oUsuarioReg.cNombres + "</p><p>Agradecemos su colaboración, sin embargo, se ha rechazado su solicitud. Agradeceremos ponerse en contacto con nosotros de existir algún mal entendido. Muchas gracias. </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Ver Detalle </a>", "");
+
+            return Json(JsonConvert.SerializeObject(nHisDet));
         }
 
         //[RequiresAuthenticationAttribute]

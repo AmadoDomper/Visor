@@ -5,6 +5,7 @@ using System.Data;
 using ADPostgres.Helper;
 using EPostgres;
 using Npgsql;
+using Newtonsoft.Json;
 
 namespace ADPostgres
 {
@@ -36,6 +37,34 @@ namespace ADPostgres
                 }
             }
             return id;
+        }
+
+        public Object GetHistorialDetalleJSON(string cId)
+        {
+            NpgsqlConnection Conex = new NpgsqlConnection(Conexion.cadena);
+            NpgsqlCommand cmd = new NpgsqlCommand(Procedimiento.usp_get_historial_det, Conex);
+            cmd.CommandType = CommandType.StoredProcedure;
+            Conex.Open();
+
+            Object json;
+
+            using (var db = Conex)
+            {
+                try
+                {
+                    using (cmd)
+                    {
+                        cmd.Parameters.AddWithValue("_cId", cId);
+
+                        json = JsonConvert.DeserializeObject(cmd.ExecuteScalar().ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return json;
         }
     }
 }

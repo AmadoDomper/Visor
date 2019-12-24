@@ -152,7 +152,11 @@
                             </div>
                         </div>
                         <div class="row m-t-5">
-                            <div class="col-md-8"></div>
+                            <div class="col-md-8">
+                                <div class="col-md-3">
+                                    <input type="button" class="btn btn-warning btn-block btn-fill" style="margin-top: 0px;" value="Historial" id="btnHistorial">
+                                </div>
+                            </div>
                             <div class="col-md-2">
                                 <input type="button" class="btn btn-primary btn-block btn-fill" value="Enviar" id="btenviar" name="btenviar">
                             </div>
@@ -241,18 +245,27 @@
 
                 $("#cntListaPublicaciones").Tabla({
                     tblId: "tblPublicaciones",
-                    cabecera: "#,Título,Investigador,Institución,F. Creación,Estado",
-                    campos: "Id,titulo,usuario.cNom, usuario.cInst, cFeReg,cEstado",
+                    cabecera: "#,Título,Investigador,Institución,F. Creación,Estado,HistId",
+                    campos: "Id,titulo,usuario.cNom, usuario.cInst, cFeReg,cEstado,oHist.UniqueId",
                     scrollVertical: "Si",
                     tipoCampo: ",,,,,",
                     alinear: "C,L,C,C,C,C",
-                    cellLen: "50,200,100,100,80,80,50",
+                    cellLen: "50,200,100,100,80,80,0,50,50",
                     cantRegVertical: 15,
                     pag: true,
                     pagDato: { "nPage": d.nPage, "nPageTot": d.nPageTot, "nPageSize": d.nPageSize, "nRows": d.nRows },
                     pagEvent: ListarMisPub,
                     edit: true,
+                    hist: true,
                     dblClick: true,
+                    histEvent: function (fila) {
+                        let cHistid = fila.find("td").eq(6).html();
+
+                        window.open(
+                            'http://localhost:59423/Historial/Publicaciones/' + cHistid,
+                            '_blank'
+                        );
+                    },  
                     editEvent: function (fila) {
                         var nPubId = fila.find("td").eq(0).html();
                         $("#hdnEstado").val("E");
@@ -359,6 +372,7 @@
     function SetEstadoSolicitado() {
         $("#target2 :input").prop("disabled", true);
         $("#btcancelar").prop("disabled", false);
+        $("#btnHistorial").prop("disabled", false);
     }
 
     $("#btcancelar").bind("click", function () {
@@ -375,6 +389,15 @@
         ListarMisPub();
     });
 
+    $("#btnHistorial").bind("click", function () {
+        let cHistid = $("#hdnHistId").val();
+
+        window.open(
+            'http://localhost:59423/Historial/Publicaciones/' + cHistid,
+            '_blank'
+        );
+    });
+
     $("#txtValor").keyup(function (e) {
         if (e.which == 13) { ListarMisPub(); }
     });
@@ -382,6 +405,8 @@
     function Limpiar() {
         $('#frm')[0].reset();
         $("#target2 :input").prop("disabled", false);
+        $("#hdnHistId").val("");
+        $("#hdnPubId").val("");
 
         map.getLayers().getArray()[1].getSource().clear();
 

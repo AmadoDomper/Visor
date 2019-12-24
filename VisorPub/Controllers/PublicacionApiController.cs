@@ -133,6 +133,16 @@ namespace VisorPub.Controllers
             return Json(json);
         }
 
+        public IHttpActionResult GetHistorialDet(string id)
+        {
+            HistorialDetalleLN oHistDet = new HistorialDetalleLN();
+            Object json;
+
+            json = oHistDet.GetHistorialDetalleJSON(id);
+
+            return Json(json);
+        }
+
         //POST api/<controller>
         //[EnableCors("AllowSpecificOrigin")]
         public IHttpActionResult Post([FromBody]BuscadorApi v)

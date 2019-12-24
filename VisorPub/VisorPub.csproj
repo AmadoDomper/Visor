@@ -164,6 +164,7 @@
   <ItemGroup>
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\GestionController.cs" />
+    <Compile Include="Controllers\HistorialController.cs" />
     <Compile Include="Controllers\InicioController.cs" />
     <Compile Include="Controllers\InventarioController.cs" />
     <Compile Include="Controllers\JoinController.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="Content\css\css.css" />
+    <Content Include="Content\css\historial\historial.css" />
     <Content Include="Content\css\mainGestion.css" />
     <Content Include="Content\css\navbar\navbar.css" />
     <Content Include="Content\css\ol\v4.6.5\ol.css" />
@@ -211,6 +213,13 @@
     <Content Include="Content\font-awesome-4.7.0\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\font-awesome-4.7.0\HELP-US-OUT.txt" />
     <Content Include="Content\img\favicon.ico" />
+    <Content Include="Content\img\historial\solicitado.svg" />
+    <Content Include="Content\img\historial\aprobado.svg" />
+    <Content Include="Content\img\historial\fuegos-artificiales.svg" />
+    <Content Include="Content\img\historial\globos %281%29.svg" />
+    <Content Include="Content\img\historial\globos.svg" />
+    <Content Include="Content\img\historial\observado.svg" />
+    <Content Include="Content\img\historial\rechazado.svg" />
     <Content Include="Content\img\logoiiap.png" />
     <Content Include="Content\js\base\buscarPersona-1.0.0.js" />
     <Content Include="Content\js\base\buscarProducto-1.0.0.js" />
@@ -220,6 +229,7 @@
     <Content Include="Content\js\bootstrap\bootstrap.js" />
     <Content Include="Content\js\dataTables\dataTables.bootstrap.js" />
     <Content Include="Content\js\dataTables\jquery.dataTables.min.js" />
+    <Content Include="Content\js\historial\historial.js" />
     <Content Include="Content\js\main.js" />
     <Content Include="Content\js\ol\v4.6.5\ol.js" />
     <Content Include="Content\js\ol\v6.0.1\ol.js" />
@@ -376,6 +386,7 @@
     <Content Include="Views\Inicio\IndexAnt.cshtml" />
     <Content Include="Views\Join\Index.cshtml" />
     <Content Include="Views\Reset\Index.cshtml" />
+    <Content Include="Views\Historial\Publicaciones.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ADPostgres\ADPostgres.csproj">

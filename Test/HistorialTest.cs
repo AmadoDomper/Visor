@@ -15,7 +15,7 @@ namespace Test
         {
             HistorialLN oHistorialLN = new HistorialLN();
             Historial oHistorial = new Historial();
-            oHistorial.nRefId = 2;
+            oHistorial.nRefId = 797;
             oHistorial.nTipoReferencia = 1;
             oHistorial.dFechaCreacion = DateTime.Now;
             oHistorial.nEstado = 1;
@@ -29,11 +29,21 @@ namespace Test
         public void Test_GetRecordIdByPublicationId()
         {
             HistorialLN oHistorialLN = new HistorialLN();
+
+            var nHistId = oHistorialLN.GetRecordUniqueIdByReferenciaId(1, TipoReferencia.Publicaciones);
+
+            Assert.IsTrue(nHistId != "", "Resultado no es diferente a vacío");
+        }
+
+        [TestMethod]
+        public void Test_GetHistorialByPublicationId()
+        {
+            HistorialLN oHistorialLN = new HistorialLN();
             Historial oHistorial = new Historial();
 
-            var nHistId = oHistorialLN.GetRecordIdByReferenciaId(1, TipoReferencia.Publicaciones);
+            oHistorial = oHistorialLN.GetHistorialByReferenciaId(1, TipoReferencia.Publicaciones);
 
-            Assert.IsTrue(nHistId > 0, "Resultado no es mayor que 0");
+            Assert.IsTrue(oHistorial != null, "Resultado no es diferente a vacío");
         }
 
     }

@@ -50,11 +50,13 @@
         m.check = m.check || false;
         m.checkHead = m.checkHead || false;
         m.editEvent = m.editEvent || function () { };
+        m.histEvent = m.histEvent || function () { };
         m.checkEvent = m.checkEvent || function () { };
         m.checkHeadEvent = m.checkHeadEvent || function () { };
         m.searchEvent = m.searchEvent || function () { };
         m.click = m.click || false;
         m.elim = m.elim || false;
+        m.hist = m.hist || false;
         m.elimEvent = m.elimEvent || function () { };
 
         var col = m.cabecera.split(",");
@@ -87,6 +89,7 @@
         if (m.edit) { html += '<th>Edit.</th>'; }
         if (m.search) { html += '<th>Det.</th>'; }
         if (m.elim) { html += '<th>Elim.</th>'; }
+        if (m.hist) { html += '<th>Hist.</th>'; }
         html += '</tr></thead>';
 
         //Cuerpo
@@ -136,6 +139,10 @@
                 if (m.elim) {
                     html += '<td class="elim" style="cursor: pointer;text-align: center;vertical-align: middle;"><span style="color: #C73C3C;font-size:15px;" class="glyphicon glyphicon-trash" aria-hidden="true"></span></td>';
                 }
+                if (m.hist) {
+                    html += '<td class="hist" style="cursor: pointer;text-align: center;vertical-align: middle;"><span style="color: #e88c0a;font-size:15px;" class="glyphicon glyphicon-time" aria-hidden="true"></span></td>';
+                }
+
 
             }
             else {
@@ -262,6 +269,12 @@
                         m["elimEvent"](fila, nPage);
                     }
                 });
+            });
+        }
+
+        if (m.hist) {
+            $("#" + m.tblId + " tbody tr .hist").bind("click", function () {
+                m["histEvent"]($(this).parent());
             });
         }
 

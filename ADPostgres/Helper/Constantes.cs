@@ -112,11 +112,13 @@ namespace ADPostgres.Helper
 
         public const string usp_crear_historial = "usp_crear_historial";
         public const string usp_get_recordid_by_refid = "usp_get_recordid_by_refid";
+        public const string usp_get_historial_by_refid = "usp_get_historial_by_refid";
 
 
         /* HISTORIAL DETALLE */
 
         public const string usp_registrar_detalle_historial = "usp_registrar_detalle_historial";
+        public const string usp_get_historial_det = "usp_get_historial_det";
 
     }
 }

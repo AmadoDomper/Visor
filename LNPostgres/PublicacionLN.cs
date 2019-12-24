@@ -18,9 +18,9 @@ namespace LNPostgres
             oPublicacionAD = new PublicacionAD();
         }
 
-        public ListaPaginada ListarMisPublicaciones(int nPubEst, int nPage = 1, int nSize = 10, int nPubId = -1, string cPubTitulo = "", string cDni = "", string cInst = "")
+        public ListaPaginada ListarMisPublicaciones(int nPubEst, int nUsuId, int nPage = 1, int nSize = 10, int nPubId = -1, string cPubTitulo = "", string cInst = "")
         {
-            return oPublicacionAD.ListarMisPublicacionesPag(nPubEst, nPage, nSize, nPubId, cPubTitulo, cDni, cInst);
+            return oPublicacionAD.ListarMisPublicacionesPag(nPubEst, nUsuId, nPage, nSize, nPubId, cPubTitulo, cInst);
         }
 
         public ListaPaginada ListarRevPublicaciones(int nPubEst, int nPage = 1, int nSize = 10, int nPubId = -1, string cPubTitulo = "", string cDni = "", string cInst = "", string cNom = "")

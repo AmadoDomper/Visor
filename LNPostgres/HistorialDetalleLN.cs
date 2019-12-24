@@ -20,5 +20,10 @@ namespace LNPostgres
             return oHistoriaDetlAD.RegistrarHistorialDetalle(oHistDet);
         }
 
+        public Object GetHistorialDetalleJSON(string cId)
+        {
+            return oHistoriaDetlAD.GetHistorialDetalleJSON(cId);
+        }
+
     }
 }

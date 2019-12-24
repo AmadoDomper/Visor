@@ -16,6 +16,7 @@ namespace EPostgres
         private DateTime _dFechaActualizacion;
         private string _cFechaActualizacion;
         private int _nEstado;
+        private string _cUniqueId;
 
         private List<HistorialDetalle> _ListHistDet;
 
@@ -73,6 +74,13 @@ namespace EPostgres
         {
             get { return _nEstado; }
             set { _nEstado = value; }
+        }
+
+        [JsonProperty(PropertyName = "UniqueId")]
+        public string cUniqueId
+        {
+            get { return _cUniqueId; }
+            set { _cUniqueId = value; }
         }
 
         [JsonProperty(PropertyName = "ListHistDet")]

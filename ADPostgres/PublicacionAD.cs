@@ -66,20 +66,21 @@ namespace ADPostgres
 
                         while (reader.Read())
                         {
-                            oPub.nPubliId = Int32.Parse(reader[0].ToString());
-                            oPub.cTitulo = reader[1].ToString();
-                            oPub.cEnlace = reader[2].ToString();
+                            oPub.nPubliId = (int)reader["pub_idpublicacion"]; 
+                            oPub.cTitulo = (string)reader["pub_titulo"];
+                            oPub.cEnlace = (string)reader["pub_enlace"]; 
                             oPub.oTipo = new Tipo();
-                            oPub.oTipo.nTipoId = Int32.Parse(reader[3].ToString());
-                            oPub.nPubliAno = Int32.Parse(reader[4].ToString());
-                            oPub.cRefBiblio = reader[5].ToString();
-                            oPub.nEstado = Int32.Parse(reader[6].ToString());
+                            oPub.oTipo.nTipoId = (int)reader["tip_idtipo"];
+                            oPub.nPubliAno = Convert.ToInt32(reader["pub_anopublicacion"].ToString());
+                            oPub.cRefBiblio = (string)reader["pub_referenciabibliografica"];
+                            oPub.nEstado = (int)reader["pub_estado"];
+                            oPub.nUsuId = (int)reader["usu_nusuarioid"];
                         }
                     }
 
                     oPub.ListaTemas = new TemaAD().ObtenerTemasPorPublicacionId(nPubId);
                     oPub.ListaFeatures = obtenerPuntos(nPubId);
-                    oPub.nHistorialId = new HistorialAD().GetRecordIdByReferenciaId(nPubId, TipoReferencia.Publicaciones);
+                    oPub.oHist = new HistorialAD().GetHistorialByReferenciaId(nPubId, TipoReferencia.Publicaciones);
                 }
                 catch (Exception ex)
                 {
@@ -355,7 +356,7 @@ namespace ADPostgres
 
 
         #region MisPublicaciones
-        public ListaPaginada ListarMisPublicacionesPag(int nPubEst, int nPage = 1, int nSize = 10, int nPubId = -1, string cPubTitulo = "", string cDni = "", string cInst = "")
+        public ListaPaginada ListarMisPublicacionesPag(int nPubEst, int nUsuId, int nPage = 1, int nSize = 10, int nPubId = -1, string cPubTitulo = "", string cInst = "")
         {
             var conexion = new ConexionPosgreSQL();
             ListaPaginada ListaPubPag = new ListaPaginada();
@@ -368,7 +369,7 @@ namespace ADPostgres
                     {
                         cmd.Parameters.AddWithValue("_pub_estado", nPubEst);
                         cmd.Parameters.AddWithValue("_pub_titulo", cPubTitulo);
-                        cmd.Parameters.AddWithValue("_usu_cDni", cDni);
+                        cmd.Parameters.AddWithValue("_usu_id", nUsuId);
                         cmd.Parameters.AddWithValue("_pub_nPudId", nPubId);
                         cmd.Parameters.AddWithValue("_usu_cInst", cInst);
                         cmd.Parameters.AddWithValue("_nPage", nPage);
@@ -387,6 +388,8 @@ namespace ADPostgres
                             oPublicacion.oUsuario.cInstitucion = reader[3].ToString();
                             oPublicacion.cFechaRegistro = reader[4].ToString();
                             oPublicacion.cEstado = reader[5].ToString();
+                            oPublicacion.oHist = new Historial();
+                            oPublicacion.oHist.cUniqueId = reader[6].ToString();
 
                             ListaPubPag.oLista.Add(oPublicacion);
                         }
@@ -394,7 +397,7 @@ namespace ADPostgres
 
                     ListaPubPag.nPage = nPage;
                     ListaPubPag.nPageSize = nSize;
-                    ObtenerPaginadoMisPublicaciones(nPubEst, ref ListaPubPag, nSize, nPubId, cPubTitulo, cDni, cInst);
+                    ObtenerPaginadoMisPublicaciones(nPubEst, nUsuId, ref ListaPubPag, nSize, nPubId, cPubTitulo, cInst);
                 }
                 catch (Exception ex)
                 {
@@ -404,7 +407,7 @@ namespace ADPostgres
             return ListaPubPag;
         }
 
-        public void ObtenerPaginadoMisPublicaciones(int nPubEst, ref ListaPaginada oLista, int nSize = 10, int nPubId = -1, string cPubTitulo = "", string cDni = "", string cInst = "")
+        public void ObtenerPaginadoMisPublicaciones(int nPubEst, int nUsuId, ref ListaPaginada oLista, int nSize = 10, int nPubId = -1, string cPubTitulo = "", string cInst = "")
         {
             var conexion = new ConexionPosgreSQL();
 
@@ -416,7 +419,7 @@ namespace ADPostgres
                     {
                         cmd.Parameters.AddWithValue("_pub_estado", nPubEst);
                         cmd.Parameters.AddWithValue("_pub_titulo", cPubTitulo);
-                        cmd.Parameters.AddWithValue("_usu_cDni", cDni);
+                        cmd.Parameters.AddWithValue("_usu_id", nUsuId);
                         cmd.Parameters.AddWithValue("_pub_nPudId", nPubId);
                         cmd.Parameters.AddWithValue("_usu_cInst", cInst);
                         cmd.Parameters.AddWithValue("_nSize", nSize);
@@ -473,6 +476,8 @@ namespace ADPostgres
                             oPublicacion.oUsuario.cInstitucion = reader[3].ToString();
                             oPublicacion.cFechaRegistro = reader[4].ToString();
                             oPublicacion.cEstado = reader[5].ToString();
+                            oPublicacion.oHist = new Historial();
+                            oPublicacion.oHist.cUniqueId = reader[6].ToString();
 
                             ListaPubPag.oLista.Add(oPublicacion);
                         }

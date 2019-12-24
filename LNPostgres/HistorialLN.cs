@@ -21,9 +21,14 @@ namespace LNPostgres
             return oHistorialAD.CrearHistorial(oHistorial);
         }
 
-        public int GetRecordIdByReferenciaId(int nRefId, TipoReferencia nTipoRef)
+        public string GetRecordUniqueIdByReferenciaId(int nRefId, TipoReferencia nTipoRef)
         {
-            return oHistorialAD.GetRecordIdByReferenciaId(nRefId, nTipoRef);
+            return oHistorialAD.GetRecordUniqueIdByReferenciaId(nRefId, nTipoRef);
+        }
+
+        public Historial GetHistorialByReferenciaId(int nRefId, TipoReferencia nTipoRef)
+        {
+            return oHistorialAD.GetHistorialByReferenciaId(nRefId, nTipoRef);
         }
 
     }

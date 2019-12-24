@@ -39,10 +39,10 @@ namespace ADPostgres
             return id;
         }
 
-        public int GetRecordIdByReferenciaId(int nRefId, TipoReferencia nTipoRef)
+        public string GetRecordUniqueIdByReferenciaId(int nRefId, TipoReferencia nTipoRef)
         {
             var conexion = new ConexionPosgreSQL();
-            int id = 0;
+            string id = "";
 
             using (var db = conexion.AbreConexion())
             {
@@ -53,7 +53,7 @@ namespace ADPostgres
                         cmd.Parameters.AddWithValue("_nRefId", nRefId);
                         cmd.Parameters.AddWithValue("_nTipoRef", (int)nTipoRef);
                         
-                        id = (int)cmd.ExecuteScalar();
+                        id = (string)cmd.ExecuteScalar();
                     }
                 }
                 catch (Exception ex)
@@ -62,6 +62,41 @@ namespace ADPostgres
                 }
             }
             return id;
+        }
+
+        public Historial GetHistorialByReferenciaId(int nRefId, TipoReferencia nTipoRef)
+        {
+            var conexion = new ConexionPosgreSQL();
+            var oHist = new Historial();
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_get_historial_by_refid))
+                    {
+                        cmd.Parameters.AddWithValue("_nRefId", nRefId);
+                        cmd.Parameters.AddWithValue("_nTipoRef", (int)nTipoRef);
+
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            oHist.nHistorialId = (int)reader["historialid"];
+                            oHist.nRefId = (int)reader["refid"];
+                            oHist.nTipoReferencia = (int)reader["tiporeferencia"];
+                            oHist.dFechaCreacion = Convert.ToDateTime(reader["fechacreacion"].ToString());
+                            oHist.nEstado = (int)reader["estado"];
+                            oHist.cUniqueId = (string)reader["unique_id"];
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return oHist;
         }
     }
 }

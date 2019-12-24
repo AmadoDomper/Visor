@@ -15,7 +15,9 @@
 <div class="col-lg-11 col-lg-offset-0-5">
     <input id="hdnEstado" type="hidden" />
     <input id="hdnPubId" type="hidden" />
+    <input id="hdnUsuId" type="hidden" />
     <input id="hdnHistId" type="hidden" />
+    <input id="hdnUHistId" type="hidden" />
     <input id="hdnPag" type="hidden" />
     @*<div class="row">*@
     <div id="target1" class="panel move panel-inverse active m-t-5">
@@ -152,10 +154,21 @@
                             </div>
                         </div>
                         <div class="row m-t-5">
-                            <div class="col-md-8"></div>
+                            <div class="col-md-4">
+                                <div class="col-md-6">
+                                    <input type="button" class="btn btn-warning btn-block btn-fill" style="margin-top: 0px;" value="Historial" id="btnHistorial">
+                                </div>
+                            </div>
                             <div class="col-md-2">
-                                <input type="button" class="btn btn-primary btn-block btn-fill" style="display:none;" value="Aceptar" id="btnAceptarMod" name="btnAceptarMod">
-                                <input type="button" class="btn btn-primary btn-block btn-fill" style="margin-top: 0px;" value="Modificar" id="btnModificar">
+                                <button type="button" class="btn btn-block btn-primary" style="margin-top: 0px;" value="Aprobar" id="btnAprobar"><i class="fa fa-check" aria-hidden="true"></i> Aprobar</button>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-success btn-block btn-fill" style="margin-top: 0px;" value="Observar" id="btnObservar"><i class="fa fa-search" aria-hidden="true"></i> Observar</button>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-danger btn-block btn-fill" style="margin-top: 0px;" value="Rechazar" id="btnRechazar"><i class="fa fa-times" aria-hidden="true"></i> Rechazar</button>
+                                @*<input type="button" class="btn btn-primary btn-block btn-fill" style="display:none;" value="Aceptar" id="btnAceptarMod" name="btnAceptarMod">
+                                    <input type="button" class="btn btn-primary btn-block btn-fill" style="margin-top: 0px;" value="Modificar" id="btnModificar">*@
                             </div>
                             <div class="col-md-2">
                                 <input type="button" class="btn btn-default btn-block btn-fill" value="Cancelar" id="btcancelar" name="btcancelar">
@@ -501,18 +514,27 @@
 
                 $("#cntListaPublicaciones").Tabla({
                     tblId: "tblPublicaciones",
-                    cabecera: "#,Título,Investigador,Institución,F. Creación,Estado",
-                    campos: "Id,titulo,usuario.cNom, usuario.cInst, cFeReg,cEstado",
+                    cabecera: "#,Título,Investigador,Institución,F. Creación,Estado,HistId",
+                    campos: "Id,titulo,usuario.cNom, usuario.cInst, cFeReg,cEstado,oHist.UniqueId",
                     scrollVertical: "Si",
                     tipoCampo: ",,,,,",
                     alinear: "C,L,C,C,C,C",
-                    cellLen: "50,200,100,100,80,80,50",
+                    cellLen: "50,200,100,100,80,80,0,50,50",
                     cantRegVertical: 15,
                     pag: true,
                     pagDato: { "nPage": d.nPage, "nPageTot": d.nPageTot, "nPageSize": d.nPageSize, "nRows": d.nRows },
                     pagEvent: ListarRevPub,
                     edit: true,
+                    hist: true,
                     dblClick: true,
+                    histEvent: function (fila) {
+                        let cHistid = fila.find("td").eq(6).html();
+
+                        window.open(
+                            'http://localhost:59423/Historial/Publicaciones/' + cHistid,
+                            '_blank'
+                        );
+                    },           
                     editEvent: function (fila) {
                         var nPubId = fila.find("td").eq(0).html();
                         $("#hdnEstado").val("E");
@@ -526,7 +548,9 @@
                                 var oPub = JSON.parse(data);
 
                                 $('#hdnPubId').val(oPub.Id);
-                                $('#hdnHistId').val(oPub.nHistId);
+                                $('#hdnUsuId').val(oPub.nUsuId);
+                                $('#hdnHistId').val(oPub.oHist.Id);
+                                $('#hdnUHistId').val(oPub.oHist.UniqueId);
                                 $("#hdnPubEst").val(oPub.nEstado);
                                 $('#txtTitulo').val(oPub.titulo);
                                 $('#ddlTipo').val(oPub.tipo.id);
@@ -606,7 +630,7 @@
                                     SetEstadoAnulado();
                                 }*/
                             },
-                            bloqueo: false
+                            bloqueo: true
                         });
                     },
                     datos: d.oLista
@@ -617,7 +641,9 @@
 
     function SetEstadoSolicitado() {
         $("#target2 :input").prop("disabled", true);
+        $("#btnAprobar,#btnObservar,#btnRechazar").prop("disabled", false);
         $("#btcancelar").prop("disabled", false);
+        $("#btnHistorial").prop("disabled", false);
         $("#btnModificar").prop("disabled", false).show();
         $("#btnAceptarMod").hide();
     }
@@ -637,12 +663,103 @@
         ListarRevPub();
     });
 
+    $("#btnHistorial").bind("click", function () {
+        let cHistid = $("#hdnUHistId").val();
+
+        window.open(
+            'http://localhost:59423/Historial/Publicaciones/' + cHistid,
+            '_blank'
+        );
+    });
+
+
+    $("#btnAprobar").bind("click", function () {
+        $.fn.Mensaje({ titulo: "Mensaje", tipo: "AcepCanc", mensaje: "¿Esta seguro de Aprobar la publicación?", funcionAceptar: Aprobar  });
+    });
+
+    $("#btnObservar").bind("click", function () {
+        $.fn.Mensaje({ titulo: "Mensaje", tipo: "AcepCanc", mensaje: "¿Esta seguro de Observar la publicación?", funcionAceptar: Observar });
+    });
+
+    $("#btnRechazar").bind("click", function () {
+        $.fn.Mensaje({ titulo: "Mensaje", tipo: "AcepCanc", mensaje: "¿Esta seguro de Rechazar la publicación?", funcionAceptar: Rechazar });
+    });
+
+    function Aprobar() {
+        alert("Ejecuta proceso A");
+    }
+
+    function Observar() {
+        $.fn.Ventana({
+            id: "vntMotivoObservacion",
+            titulo: "Registre motivo de la Observación",
+            tamano: "md"
+        });
+
+        let html = `
+                    <textarea class="form-control" id="txtObservacion" name="txtObservacion" rows="10" placeholder="Ingrese aquí las observaciones encontradas" value="" minlength="1"></textarea>
+                    <div class="col-sm-12 hr-line-dashed"></div>
+                        <div class="col-sm-12 text-center">
+                        <button id="btnObsAceptar" type="submit" class="btn btn-sm btn-primary m-r-5">Aceptar</button>
+                        <button id="btnObsCancelar" type="submit" data-dismiss="modal" aria-hidden="true" class="btn btn-sm btn-default">Cancelar</button>
+                    </div>`;
+
+        $("#vntMotivoObservacion .panel-body").html(html);
+        $('#vntMotivoObservacion').modal('show');
+
+        $("#btnObsAceptar").bind("click", function () {
+
+            let nPubId = $("#hdnPubId").val();
+            let nHistId = $("#hdnHistId").val();
+            let nUHistId = $("#hdnUHistId").val();
+            let cMensaje = $("#txtObservacion").val();
+            let nUsuId = $('#hdnUsuId').val();
+
+            $.fn.Conexion({
+                direccion: '@Url.Action("RegistrarObservacion", "Publicacion")',
+                datos: { "nPubId": nPubId, "nUsuId": nUsuId , "nHistId": nHistId, "nUHistId": nUHistId, "cMensaje": cMensaje},
+                    terminado: function (data, textStatus, jqXHR) {
+                        $('#vntMotivoObservacion').modal('hide');
+                        $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Observación registrada correctamente." });
+                    },
+                    bloqueo: true
+                });
+        });
+    }
+
+    function Rechazar() {
+        $.fn.Ventana({
+            id: "vntMotivoRechazar",
+            titulo: "Registre motivo del Rechazo",
+            tamano: "md"
+        });
+
+        let html = `
+                    <textarea class="form-control" id="txtRechazo" name="txtRechazo" rows="10" placeholder="Ingrese aquí el motivo del rechazo" value="" minlength="1"></textarea>
+                    <div class="col-sm-12 hr-line-dashed"></div>
+                        <div class="col-sm-12 text-center">
+                        <button id="btnRecAceptar" type="submit" class="btn btn-sm btn-primary m-r-5">Aceptar</button>
+                        <button id="btnRecCancelar" type="submit" data-dismiss="modal" aria-hidden="true" class="btn btn-sm btn-default">Cancelar</button>
+                    </div>`;
+
+        $("#vntMotivoRechazar .panel-body").html(html);
+        $('#vntMotivoRechazar').modal('show');
+
+        $("#btnRecAceptar").bind("click", function () {
+            $('#vntMotivoRechazar').modal('hide');
+            $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Rechazo registrado correctamente." });
+        });
+    }
+
+
     $("#txtValor").keyup(function (e) {
         if (e.which == 13) { ListarRevPub(); }
     });
 
     function Limpiar() {
         $('#frm')[0].reset();
+        $("#hdnUHistId").val("");
+        $("#hdnPubId").val("");
 
         //lsVectorLayers.forEach(function (entry) {
         //    map.removeLayer(entry)

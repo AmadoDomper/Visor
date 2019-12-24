@@ -12,4 +12,12 @@ namespace EPostgres.Helper
             InventarioSuelos = 2,
             InventarioVegetaciones = 3
         }
+
+        public enum EstadoSolicitud
+        {
+            Solicitado = 1,
+            Aprobado = 2,
+            Observado = 3,
+            Rechazado = 4
+        }
 }
