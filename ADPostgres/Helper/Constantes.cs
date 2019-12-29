@@ -24,6 +24,7 @@ namespace ADPostgres.Helper
         /*REVISIÓN PUBLICACIONES*/
         public const string usp_ListarRevPublicacionesPaginado = "usp_ListarRevPublicacionesPaginado";
         public const string usp_ObtenerRevPublicacionesCantPag = "usp_ObtenerRevPublicacionesCantPag";
+        public const string usp_actualiza_publicacion_estado = "usp_actualiza_publicacion_estado";
         /*END REVISIÓN PUBLICACIONES*/
 
         /*CONFIGURACIÓN*/

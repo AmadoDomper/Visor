@@ -74,5 +74,16 @@ namespace LNPostgres
             return oPublicacionAD.GetAllPublicactionsJSON();
         }
 
+        /// <summary>
+        /// Actualiza el estado de una publicación
+        /// </summary>
+        /// <param name="pubId"></param>
+        /// <param name="estado">enum EstadoSolicitud</param>
+        /// <returns></returns>
+        public int ActualizaEstadoPublicacion(int pubId, int estado)
+        {
+            return oPublicacionAD.ActualizaEstadoPublicacion(pubId, estado);
+        }
+
     }
 }

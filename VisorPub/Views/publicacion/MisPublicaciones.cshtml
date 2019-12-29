@@ -36,9 +36,8 @@
                             <select name="status" id="cmbPubEstado" class="form-control">
                                 <option value="1" selected="">Solicitado</option>
                                 <option value="2">Aprobado</option>
-                                <option value="3">Rechazado</option>
-                                <option value="4">Observado</option>
-                                <option value="5">Anulado</option>
+                                <option value="3">Observado</option>
+                                <option value="4">Rechazado</option>
                             </select>
                         </div>
                         <div class="form-group m-r-10">
@@ -152,13 +151,13 @@
                             </div>
                         </div>
                         <div class="row m-t-5">
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <div class="col-md-3">
                                     <input type="button" class="btn btn-warning btn-block btn-fill" style="margin-top: 0px;" value="Historial" id="btnHistorial">
                                 </div>
                             </div>
-                            <div class="col-md-2">
-                                <input type="button" class="btn btn-primary btn-block btn-fill" value="Enviar" id="btenviar" name="btenviar">
+                            <div class="col-md-3">
+                                <input type="button" class="btn btn-primary btn-block btn-fill" value="Enviar Solicitud" id="btenviar" name="btenviar">
                             </div>
                             <div class="col-md-2">
                                 <input type="button" class="btn btn-default btn-block btn-fill" value="Cancelar" id="btcancelar" name="btcancelar">
@@ -188,6 +187,7 @@
             vista($(this).attr('href'));
         });
     });
+
 
     var vista = function ($target) {
         var $target = $($target),
@@ -268,100 +268,7 @@
                     },  
                     editEvent: function (fila) {
                         var nPubId = fila.find("td").eq(0).html();
-                        $("#hdnEstado").val("E");
-                        $('input.target')[0].click();
-
-                        $.fn.Conexion({
-                            direccion: '@Url.Action("CargaDatosPublicacion", "Publicacion")',
-                            datos: { "nPubId": nPubId },
-                            terminado: function (data, textStatus, jqXHR) {
-                                var oPub = JSON.parse(data);
-
-                                $('#hdnPubId').val(oPub.Id);
-                                $('#hdnHistId').val(oPub.nHistId);
-                                $("#hdnPubEst").val(oPub.nEstado);
-                                $('#txtTitulo').val(oPub.titulo);
-                                $('#ddlTipo').val(oPub.tipo.Id);
-                                $('#ddlTema').val(oPub.lsTemas[0].id);
-                                $('#txtAnoPublicacion').val(oPub.ano);
-                                $('#txtEnlace').val(oPub.enlace);
-                                $('#txtReferencia').val(oPub.refBi);
-                                for (var i = 0; i < oPub.lsFeatures.length; i++) {
-                                    var punto = oPub.lsFeatures[i].Info.split(' ');
-                                        indexFeature++;
-
-                                    var info = punto[0] + '|' + punto[1];
-                                    var item = { "n": indexFeature, "Tipo": 1, "Info": info,"Longitud": punto[0], "Latitud": punto[1]};
-                                    $("#jsGrid").jsGrid("insertItem", item);
-
-                                    lsFeatures.push(item);
-                                    map_AgregarPunto(punto,indexFeature);
-
-                                }
-
-                                map.updateSize();
-
-                                if (oPub.nEstado == 1) {
-                                    SetEstadoSolicitado();
-                                }
-
-
-
-
-
-
-
-                                /*$("#hdnPersId").val(oNota.oPers.id);
-                                $("#hdnNotaEst").val(oNota.oNotaEst.id);
-                                $("#txtNotaNombre").val(oNota.oPers.nom);
-                                $("#txtNotaDOI").val(oNota.oPers.doi);
-                                $("#txtNotaDirec").val(oNota.oPers.direc);
-                                $("#txtCodNota").val(oNota.nNotaEntId);
-                                $("#hdnNotaId").val(oNota.nNotaEntId);
-                                $("#txtCom").val(oNota.cNotaCom);
-                                $("#cmbUsuCaj").val(oNota.cNotaUsuAt);
-                                $("#txtDescuento").val(number_format(oNota.nNotaDes, 2));
-                                $("#txtAnticipo").val(number_format(oNota.nNotaAnt, 2));
-                                $('#txtFechaEnt').val(moment(oNota.dFecEnt).format("DD/MM/YYYY hh:mm A"));
-
-                                var lst = oNota.lstNotEntProd;
-                                lstProd = [];
-
-                                for (i in lst) {
-
-                                    var obj = {
-                                        nPrId: lst[i].oProd.nPrId,
-                                        cPrDesc: lst[i].oProd.cPrDesc,
-                                        bPrSerLav: lst[i].oProd.bPrSerLav,
-                                        bPrSerPla: lst[i].oProd.bPrSerPla,
-                                        bPrSerSec: lst[i].oProd.bPrSerSec,
-                                        bProdO: lst[i].oProd.bProdO,
-                                        oPrMed: { id: lst[i].oProd.oPrMed.id, nom: lst[i].oProd.oPrMed.nom },
-                                        nCant: lst[i].nDetCant,
-                                        nPrPrecU: lst[i].nPrPrecU,
-                                        nImp: lst[i].nDetImp
-                                    };
-                                    lstProd = lstProd.concat([obj]);
-                                }
-
-                                lstProd = lstProd;
-
-                                CrearTabla(lstProd);
-                                subTotal(lstProd);
-
-
-                                if (oNota.oNotaEst.id == 1) {
-                                    SetEstadoPendiente();
-                                } else if (oNota.oNotaEst.id == 2) {
-                                    SetEstadoPagado();
-                                } else if (oNota.oNotaEst.id == 3) {
-                                    SetEstadoEntregado();
-                                } else if (oNota.oNotaEst.id == 4) {
-                                    SetEstadoAnulado();
-                                }*/
-                            },
-                            bloqueo: true
-                        });
+                        ShowPublication(nPubId);
                     },
                     datos: d.oLista
                 });
@@ -369,11 +276,76 @@
         });
     }
 
+    function ShowPublication(nPubId) {
+        $("#hdnEstado").val("E");
+        $('input.target')[0].click();
+
+        $.fn.Conexion({
+            direccion: '@Url.Action("CargaDatosPublicacion", "Publicacion")',
+            datos: { "nPubId": nPubId },
+            terminado: function (data, textStatus, jqXHR) {
+                var oPub = JSON.parse(data);
+
+                $('#hdnPubId').val(oPub.Id);
+                $('#hdnHistId').val(oPub.nHistId);
+                $("#hdnPubEst").val(oPub.nEstado);
+                $('#txtTitulo').val(oPub.titulo);
+                $('#ddlTipo').val(oPub.tipo.Id);
+                $('#ddlTema').val(oPub.lsTemas[0].id);
+                $('#txtAnoPublicacion').val(oPub.ano);
+                $('#txtEnlace').val(oPub.enlace);
+                $('#txtReferencia').val(oPub.refBi);
+                for (var i = 0; i < oPub.lsFeatures.length; i++) {
+                    var punto = oPub.lsFeatures[i].Info.split(' ');
+                        indexFeature++;
+
+                    var info = punto[0] + '|' + punto[1];
+                    var item = { "n": indexFeature, "Tipo": 1, "Info": info,"Longitud": punto[0], "Latitud": punto[1]};
+                    $("#jsGrid").jsGrid("insertItem", item);
+
+                    lsFeatures.push(item);
+                    map_AgregarPunto(punto,indexFeature);
+
+                }
+
+                map.updateSize();
+
+                if (oPub.nEstado == 1) {
+                    SetEstadoSolicitado();
+                } else if (oPub.nEstado == 2) {
+                    SetEstadoAprobado();
+                } else if (oPub.nEstado == 3) {
+                    SetEstadoObservado();
+                } else if (oPub.nEstado == 4) {
+                    SetEstadoRechazado();
+                }
+            },
+            bloqueo: true
+        });
+    }
+
     function SetEstadoSolicitado() {
+        $("#btenviar").attr("value", "Enviar Solicitud");
         $("#target2 :input").prop("disabled", true);
         $("#btcancelar").prop("disabled", false);
         $("#btnHistorial").prop("disabled", false);
+        $("#btenviar").attr("disabled", true).show();
     }
+
+    function SetEstadoAprobado() {
+        $("#btenviar").attr("disabled", true).hide();
+    }
+
+    function SetEstadoObservado() {
+        $("#btenviar").attr("value", "Enviar Corrección");
+        $("#btenviar").attr("disabled", true).show();
+    }
+
+    function SetEstadoRechazado() {
+        $("#btenviar").attr("disabled", true).hide();
+    }
+
+
 
     $("#btcancelar").bind("click", function () {
         Limpiar();
@@ -423,6 +395,18 @@
         //DeshabilitarBotones();
     }
 
+    if (window.location.hash !== '') {
+        var hash = window.location.hash.replace('#map=', '').substr(1);
+        var parts = hash.split('/');
 
+
+        console.log("sooner or later");
+        console.log(hash);
+        console.log(parts);
+        if (parts[3] != undefined) {
+            console.log("Ingreso");
+            ShowPublication(parts[3]);
+        }
+    }
 
 </script>

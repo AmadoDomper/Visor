@@ -37,9 +37,8 @@
                             <select name="status" id="cmbPubEstado" class="form-control">
                                 <option value="1" selected="">Solicitado</option>
                                 <option value="2">Aprobado</option>
-                                <option value="3">Rechazado</option>
-                                <option value="4">Observado</option>
-                                <option value="5">Anulado</option>
+                                <option value="3">Observado</option>
+                                <option value="4">Rechazado</option>
                             </select>
                         </div>
                         <div class="form-group m-r-10">
@@ -579,56 +578,13 @@
 
                                 if (oPub.nEstado == 1) {
                                     SetEstadoSolicitado();
+                                } else if (oPub.nEstado == 2) {
+                                    SetEstadoAprobado();
+                                } else if (oPub.nEstado == 3) {
+                                    SetEstadoObservado();
+                                } else if (oPub.nEstado == 4) {
+                                    SetEstadoRechazado();
                                 }
-
-                                /*$("#hdnPersId").val(oNota.oPers.id);
-                                $("#hdnNotaEst").val(oNota.oNotaEst.id);
-                                $("#txtNotaNombre").val(oNota.oPers.nom);
-                                $("#txtNotaDOI").val(oNota.oPers.doi);
-                                $("#txtNotaDirec").val(oNota.oPers.direc);
-                                $("#txtCodNota").val(oNota.nNotaEntId);
-                                $("#hdnNotaId").val(oNota.nNotaEntId);
-                                $("#txtCom").val(oNota.cNotaCom);
-                                $("#cmbUsuCaj").val(oNota.cNotaUsuAt);
-                                $("#txtDescuento").val(number_format(oNota.nNotaDes, 2));
-                                $("#txtAnticipo").val(number_format(oNota.nNotaAnt, 2));
-                                $('#txtFechaEnt').val(moment(oNota.dFecEnt).format("DD/MM/YYYY hh:mm A"));
-
-                                var lst = oNota.lstNotEntProd;
-                                lstProd = [];
-
-                                for (i in lst) {
-
-                                    var obj = {
-                                        nPrId: lst[i].oProd.nPrId,
-                                        cPrDesc: lst[i].oProd.cPrDesc,
-                                        bPrSerLav: lst[i].oProd.bPrSerLav,
-                                        bPrSerPla: lst[i].oProd.bPrSerPla,
-                                        bPrSerSec: lst[i].oProd.bPrSerSec,
-                                        bProdO: lst[i].oProd.bProdO,
-                                        oPrMed: { id: lst[i].oProd.oPrMed.id, nom: lst[i].oProd.oPrMed.nom },
-                                        nCant: lst[i].nDetCant,
-                                        nPrPrecU: lst[i].nPrPrecU,
-                                        nImp: lst[i].nDetImp
-                                    };
-                                    lstProd = lstProd.concat([obj]);
-                                }
-
-                                lstProd = lstProd;
-
-                                CrearTabla(lstProd);
-                                subTotal(lstProd);
-
-
-                                if (oNota.oNotaEst.id == 1) {
-                                    SetEstadoPendiente();
-                                } else if (oNota.oNotaEst.id == 2) {
-                                    SetEstadoPagado();
-                                } else if (oNota.oNotaEst.id == 3) {
-                                    SetEstadoEntregado();
-                                } else if (oNota.oNotaEst.id == 4) {
-                                    SetEstadoAnulado();
-                                }*/
                             },
                             bloqueo: true
                         });
@@ -646,6 +602,18 @@
         $("#btnHistorial").prop("disabled", false);
         $("#btnModificar").prop("disabled", false).show();
         $("#btnAceptarMod").hide();
+    }
+
+    function SetEstadoAprobado() {
+        $("#btnAprobar,#btnObservar,#btnRechazar").attr("disabled", true);
+    }
+
+    function SetEstadoObservado() {
+        $("#btnAprobar,#btnObservar,#btnRechazar").attr("disabled", true);
+    }
+
+    function SetEstadoRechazado() {
+        $("#btnAprobar,#btnObservar,#btnRechazar").attr("disabled", true);
     }
 
     $("#btnModificar").bind("click",function (){
@@ -686,7 +654,19 @@
     });
 
     function Aprobar() {
-        alert("Ejecuta proceso A");
+            let nPubId = $("#hdnPubId").val();
+            let nHistId = $("#hdnHistId").val();
+            let nUHistId = $("#hdnUHistId").val();
+            let nUsuId = $('#hdnUsuId').val();
+
+            $.fn.Conexion({
+                direccion: '@Url.Action("RegistrarAprobacion", "Publicacion")',
+                datos: { "nPubId": nPubId, "nUsuId": nUsuId , "nHistId": nHistId, "nUHistId": nUHistId},
+                    terminado: function (data, textStatus, jqXHR) {
+                        $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Aprobación registrada correctamente." });
+                    },
+                    bloqueo: true
+            });
     }
 
     function Observar() {
@@ -717,9 +697,11 @@
 
             $.fn.Conexion({
                 direccion: '@Url.Action("RegistrarObservacion", "Publicacion")',
+                durante: function () {
+                    $('#vntMotivoObservacion').modal('hide');
+                },
                 datos: { "nPubId": nPubId, "nUsuId": nUsuId , "nHistId": nHistId, "nUHistId": nUHistId, "cMensaje": cMensaje},
                     terminado: function (data, textStatus, jqXHR) {
-                        $('#vntMotivoObservacion').modal('hide');
                         $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Observación registrada correctamente." });
                     },
                     bloqueo: true
@@ -746,8 +728,23 @@
         $('#vntMotivoRechazar').modal('show');
 
         $("#btnRecAceptar").bind("click", function () {
-            $('#vntMotivoRechazar').modal('hide');
-            $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Rechazo registrado correctamente." });
+            let nPubId = $("#hdnPubId").val();
+            let nHistId = $("#hdnHistId").val();
+            let nUHistId = $("#hdnUHistId").val();
+            let cMensaje = $("#txtRechazo").val();
+            let nUsuId = $('#hdnUsuId').val();
+
+            $.fn.Conexion({
+                direccion: '@Url.Action("RegistrarRechazo", "Publicacion")',
+                datos: { "nPubId": nPubId, "nUsuId": nUsuId, "nHistId": nHistId, "nUHistId": nUHistId, "cMensaje": cMensaje },
+                durante: function () {
+                    $('#vntMotivoRechazar').modal('hide');
+                },
+                terminado: function (data, textStatus, jqXHR) {
+                    $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Rechazo registrado correctamente." });
+                },
+                    bloqueo: true
+                });
         });
     }
 

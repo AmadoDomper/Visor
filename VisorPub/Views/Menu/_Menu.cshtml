@@ -18,7 +18,8 @@
             else
             {
                 <li>
-                    @{string des = "#" + @m.cMenuDesc;}
+                    @*@{string des = "/Gestion/#" + @m.cMenuUrl.Substring(@m.cMenuUrl.LastIndexOf("/"));}*@
+                    @{string des = "/Gestion/#" + @m.cMenuUrl;}
                     <a href="@des" data-url="@m.cMenuUrl"><i class="@m.cMenuIcono"></i> @m.cMenuDesc @*<span class="fa arrow"></span>*@</a>
                 </li>}
             }

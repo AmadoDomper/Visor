@@ -16,7 +16,7 @@ namespace Seguridad.filters
         {
             if ((!filterContext.HttpContext.Request.IsAuthenticated) || (HttpContext.Current.Session["Datos"] == null))
             {
-                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Login", action = "Login" }));
+                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Login", action = "Index" }));
             }
             else if (HttpContext.Current.Session[CodigoOpcion] == null)
                 filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Inicio", action = "Index" }));

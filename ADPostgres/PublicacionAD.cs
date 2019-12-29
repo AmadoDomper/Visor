@@ -90,9 +90,6 @@ namespace ADPostgres
             return oPub;
         }
 
-
-
-
         public List<Feature> obtenerPuntos(int pub_idpublicacion)
         {
             var conexion = new ConexionPosgreSQL();
@@ -822,5 +819,37 @@ namespace ADPostgres
             }
             return json;
         }
+
+        /// <summary>
+        /// Actualiza el estado de una publicación
+        /// </summary>
+        /// <param name="pubId"></param>
+        /// <param name="estado">enum EstadoSolicitud</param>
+        /// <returns></returns>
+        public int ActualizaEstadoPublicacion(int pubId, int estado)
+        {
+            var conexion = new ConexionPosgreSQL();
+            int id = 0;
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_actualiza_publicacion_estado))
+                    {
+                        cmd.Parameters.AddWithValue("_pub_idpublicacion", pubId);
+                        cmd.Parameters.AddWithValue("_pub_estado", estado);
+
+                        id = (int)cmd.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return id;
+        }
+
     }
 }

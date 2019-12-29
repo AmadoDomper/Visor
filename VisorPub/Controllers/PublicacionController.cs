@@ -163,7 +163,8 @@ namespace VisorPub.Controllers
             Usuario oUsuarioReg = ((Usuario)Session["Datos"]);
 
             //Cambiar estado publicación
-
+            PublicacionLN oPubLN = new PublicacionLN();
+            oPubLN.ActualizaEstadoPublicacion(nPubId, (int)EstadoSolicitud.Observado);
 
             //Obtener datos usuario de la publicación
 
@@ -189,13 +190,18 @@ namespace VisorPub.Controllers
             return Json(JsonConvert.SerializeObject(nHisDet));
         }
 
-        public async Task<JsonResult> RegistrarRechazo(int nPubId, int nHistId, string cMensaje)
+        public async Task<JsonResult> RegistrarRechazo(int nPubId, int nUsuId, int nHistId, string nUHistId, string cMensaje)
         {
             Usuario oUsuarioReg = ((Usuario)Session["Datos"]);
 
             //Cambiar estado publicación
+            PublicacionLN oPubLN = new PublicacionLN();
+            oPubLN.ActualizaEstadoPublicacion(nPubId, (int)EstadoSolicitud.Rechazado);
 
+            //Obtener datos usuario de la publicación
 
+            UsuarioLN oUsuarioLN = new UsuarioLN();
+            var oUsuarioPub = oUsuarioLN.CargarDatosUsuario(nUsuId);
 
             // Registra historial - Rechazado
             HistorialDetalleLN oHistDetLN = new HistorialDetalleLN();
@@ -212,7 +218,39 @@ namespace VisorPub.Controllers
             HistorialLN oHistorialLN = new HistorialLN();
             var cHistUniqueId = oHistorialLN.GetRecordUniqueIdByReferenciaId(nPubId, TipoReferencia.Publicaciones);
             //Supervisor envia correo a usuario registro
-            await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, "Publicación Rechazada - Visor IIAP", "<p>Estimado/a " + oUsuarioReg.cNombres + "</p><p>Agradecemos su colaboración, sin embargo, se ha rechazado su solicitud. Agradeceremos ponerse en contacto con nosotros de existir algún mal entendido. Muchas gracias. </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Ver Detalle </a>", "");
+            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, "Publicación Rechazada - Visor IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + "</p><p>Agradecemos su colaboración, sin embargo, se ha rechazado su solicitud. Agradeceremos ponerse en contacto con nosotros de existir algún mal entendido. Muchas gracias. </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Ver Detalle </a>", "");
+
+            return Json(JsonConvert.SerializeObject(nHisDet));
+        }
+
+        public async Task<JsonResult> RegistrarAprobacion(int nPubId, int nUsuId, int nHistId, string nUHistId)
+        {
+            Usuario oUsuarioReg = ((Usuario)Session["Datos"]);
+
+            //Cambiar estado publicación
+            PublicacionLN oPubLN = new PublicacionLN();
+            oPubLN.ActualizaEstadoPublicacion(nPubId, (int)EstadoSolicitud.Aprobado);
+
+            //Obtener datos usuario de la publicación
+
+            UsuarioLN oUsuarioLN = new UsuarioLN();
+            var oUsuarioPub = oUsuarioLN.CargarDatosUsuario(nUsuId);
+
+            // Registra historial - Aprobado
+            HistorialDetalleLN oHistDetLN = new HistorialDetalleLN();
+            HistorialDetalle oHistDet = new HistorialDetalle
+            {
+                nHistorialId = nHistId,
+                nUsuarioRegistra = oUsuarioReg.nUsuarioId,
+                Estado = (int)EstadoSolicitud.Aprobado
+            };
+
+            var nHisDet = oHistDetLN.RegistrarHistorialDetalle(oHistDet);
+
+            HistorialLN oHistorialLN = new HistorialLN();
+            var cHistUniqueId = oHistorialLN.GetRecordUniqueIdByReferenciaId(nPubId, TipoReferencia.Publicaciones);
+            //Supervisor envia correo a usuario registro
+            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, "Publicación Aprobada - Visor IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + "</p><p>Su solicitud ha sido aprobada. Muchas gracias por su colaboración. </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Ver Detalle </a>", "");
 
             return Json(JsonConvert.SerializeObject(nHisDet));
         }
