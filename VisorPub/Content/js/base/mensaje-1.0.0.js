@@ -15,16 +15,40 @@
 		m.focusClose = m.focusClose || "";
 
 		var html = '<div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><h4 class="text-center">' + m.mensaje + '</h4></div></div>';
-		var btnId;
+
 		switch (m.tipo) {
 			case "Aceptar":
-				html = html + '<div class="row"> <div class="col-xs-3 col-sm-4 col-md-4 col-lg-4"></div> <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4"> <button type="button" id="btnAceptarMen" class="btn btn-sm btn-primary btn-block">Aceptar</button> </div> <div class="col-xs-3  col-sm-4 col-md-4 col-lg-4"></div> </div>';
+                html = html + `<div class="row">
+                                    <div class="col-xs-3 col-sm-4 col-md-4 col-lg-4"></div>
+                                    <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+                                        <button type="button" id="btnAceptarMen" class="btn btn-sm btn-primary btn-block">Aceptar</button>
+                                    </div>
+                                    <div class="col-xs-3 col-sm-4 col-md-4 col-lg-4"></div>
+                                </div>`;
 				break;
 			case "SiNo":
-				html = html + '<div class="row"> <div class="hidden-xs col-sm-3 col-md-3 col-lg-3"></div> <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3"> <button type="button" id="btnAceptarMen" class="btn btn-sm btn-primary btn-block">Si</button> </div> <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3"> <button type="button" id="btnCancMen" class="btn btn-sm btn-default btn-block">No</button> </div> <div class="hidden-xs col-sm-3 col-md-3 col-lg-3"></div> </div>';
+                html = html + `<div class="row">
+                                    <div class="hidden-xs col-sm-3 col-md-3 col-lg-3"></div>
+                                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3">
+                                        <button type="button" id="btnAceptarMen" class="btn btn-sm btn-primary btn-block">Si</button>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3">
+                                        <button type="button" id="btnCancMen" class="btn btn-sm btn-default btn-block">No</button>
+                                    </div>
+                                    <div class="hidden-xs col-sm-3 col-md-3 col-lg-3"></div>
+                               </div>`;
 				break;
 			case "AcepCanc":
-				html = html + '<div class="row"> <div class="hidden-xs col-sm-3 col-md-3 col-lg-3"></div> <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3"> <button type="button" id="btnAceptarMen" class="btn btn-sm btn-primary btn-block">Aceptar</button> </div> <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3"> <button type="button" id="btnNoMen" class="btn btn-sm btn-default btn-block">Cancelar</button> </div> <div class="hidden-xs col-sm-3 col-md-3 col-lg-3"></div> </div>';
+                html = html + `<div class="row">
+                                    <div class="hidden-xs col-sm-3 col-md-3 col-lg-3"></div>
+                                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3">
+                                        <button type="button" id="btnAceptarMen" class="btn btn-sm btn-primary btn-block">Aceptar</button>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3">
+                                        <button type="button" id="btnCancMen" class="btn btn-sm btn-default btn-block">Cancelar</button>
+                                    </div>
+                                    <div class="hidden-xs col-sm-3 col-md-3 col-lg-3"></div>
+                               </div>`;
 				break;
 		}
 
@@ -50,22 +74,6 @@
 			$("#vntMensaje").modal('hide');
 		});
 
-		//$("#btnSiMen").bind("click", function () {
-		//    $("#vntMensaje").modal('hide');
-		//    $('#vntMensaje').on('hidden.bs.modal', function (e) {
-		//        m.funcionSi(m.indice);
-		//    });
-		//});
-
-
-
-		//$('#vntMensaje').on('shown.bs.modal', function () {
-		//    $('#btnSiMen').focus();
-		//});
-
-		$('#vntMensaje').modal('show')
-
-
-
+        $('#vntMensaje').modal('show');
 	}
 })(jQuery);

@@ -153,7 +153,81 @@ namespace VisorPub.Controllers
                 //Enviar correo usuarios perfil supervisor
                 RolLN oRol = new RolLN();
                 var cSupervisorEmails = oRol.GetSupervisorEmails();
-                await GmailClient.SendEmailAsync(cSupervisorEmails, "Registro de Publicación - VISOR IIAP", "<p> Se ha registrado una nueva solicitud de Publicación con código 000, favor de ingresar a la intranet para proceder con su validación. </p>", "");
+                await GmailClient.SendEmailAsync(cSupervisorEmails, "Registro de Publicación - VISOR IIAP", "<p> Se ha registrado una nueva solicitud de Publicación con código 000, favor de ingresar a la intranet para proceder con su validación. </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
+            }
+            return Json(JsonConvert.SerializeObject(respuesta));
+        }
+
+        public async Task<JsonResult> RegistrarCorreccion(int nPubId, int nUsuId, int nHistId, string nUHistId, int pub_anopublicacion, string pub_referenciabibliografica, string pub_enlace, int tip_idtipo, string ls_tem_idtema, string features, string pub_titulo)
+        {
+
+            RespuestaViewModel respuesta = new RespuestaViewModel();
+            List<Feature> lsFeatures = new List<Feature>();
+            JsonConvert.PopulateObject(features, lsFeatures);
+            foreach (Feature itemF in lsFeatures)
+            {
+                itemF.Info = itemF.Info.Replace('|', ' ');
+                if (itemF.Tipo == 3)
+                {
+                    itemF.Info = itemF.Info + "," + itemF.Info.Substring(0, itemF.Info.IndexOf(','));
+                }
+            }
+
+            string[] ls_tem_idtemaArr = ls_tem_idtema.Split(',');
+
+            Publicacion oPubli = new Publicacion();
+            oPubli.oTipo = new Tipo();
+            oPubli.ListaTemas = new List<Tema>();
+
+            oPubli.nPubliId = nPubId;
+            oPubli.nPubliAno = pub_anopublicacion;
+            oPubli.cRefBiblio = pub_referenciabibliografica;
+            oPubli.cEnlace = pub_enlace;
+            oPubli.oTipo.nTipoId = tip_idtipo;
+            oPubli.ListaFeatures = lsFeatures;
+            oPubli.cTitulo = pub_titulo;
+
+            foreach (string itemTema in ls_tem_idtemaArr)
+            {
+                Tema itemTemaO = new Tema();
+                itemTemaO.nTemaId = Int32.Parse(itemTema);
+                oPubli.ListaTemas.Add(itemTemaO);
+            }
+
+            PublicacionLN oPubliLN = new PublicacionLN();
+            oPubli = oPubliLN.EditarPublicacion(oPubli);
+
+            if (oPubli.nPubliId != 0)
+            {
+                //Cambiar estado publicación
+                PublicacionLN oPubLN = new PublicacionLN();
+                oPubLN.ActualizaEstadoPublicacion(nPubId, (int)EstadoSolicitud.Solicitado);
+
+                //Obtener datos usuario de la publicación
+
+                Usuario oUsuarioReg = ((Usuario)Session["Datos"]);
+
+                // Registra historial - Rechazado
+                HistorialDetalleLN oHistDetLN = new HistorialDetalleLN();
+                HistorialDetalle oHistDet = new HistorialDetalle
+                {
+                    nHistorialId = nHistId,
+                    nUsuarioRegistra = oUsuarioReg.nUsuarioId,
+                    Estado = (int)EstadoSolicitud.Solicitado
+                };
+
+                var nHisDet = oHistDetLN.RegistrarHistorialDetalle(oHistDet);
+
+                //Enviar correo usuario registra
+                await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, "Correción de Publicación - VISOR IIAP", "<p>Estimado/a " + oUsuarioReg.cNombres + "</p><p> Se ha registrado su solicitud y estará en proceso de evaluación. Muchas Gracias </p><a href='http://localhost:59423/Historial/Publicaciones/" + nUHistId + "' target='_blank'> Revisar Historial </a>", "");
+                //Enviar correo usuarios perfil supervisor
+                RolLN oRol = new RolLN();
+                var cSupervisorEmails = oRol.GetSupervisorEmails();
+                await GmailClient.SendEmailAsync(cSupervisorEmails, "Correción de Publicación - VISOR IIAP", "<p> Se ha registrado la correción de una solicitud de Publicación con código " + oPubli.nPubliId  + ", favor de ingresar a la intranet para proceder con su validación. </p><a href='http://localhost:59423/Historial/Publicaciones/" + nUHistId + "' target='_blank'> Revisar Historial </a>", "");
+
+                respuesta.estado = (int)EstadoSolicitud.Solicitado;
+                respuesta.mensaje = "Se ha enviado las correcciones realizadas.";
+
             }
             return Json(JsonConvert.SerializeObject(respuesta));
         }
@@ -321,6 +395,7 @@ namespace VisorPub.Controllers
             string[] ls_tem_idtemaArr = ls_tem_idtema.Split(',');
             Publicacion item = new Publicacion();
             PublicacionAD hand = new PublicacionAD();
+
             item.nPubliId = pub_idpublicacion;
             item.nPubliAno = pub_anopublicacion;
             item.cRefBiblio = pub_referenciabibliografica;
@@ -336,7 +411,7 @@ namespace VisorPub.Controllers
                 itemTemaO.nTemaId = Int32.Parse(itemTema);
                 item.ListaTemas.Add(itemTemaO);
             }
-            item = hand.editar(item);
+            item = hand.EditarPublicacion(item);
             if (item.nPubliId != 0)
             {
                 respuesta.estado = 1;

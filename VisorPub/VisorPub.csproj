@@ -215,9 +215,6 @@
     <Content Include="Content\img\favicon.ico" />
     <Content Include="Content\img\historial\solicitado.svg" />
     <Content Include="Content\img\historial\aprobado.svg" />
-    <Content Include="Content\img\historial\fuegos-artificiales.svg" />
-    <Content Include="Content\img\historial\globos %281%29.svg" />
-    <Content Include="Content\img\historial\globos.svg" />
     <Content Include="Content\img\historial\observado.svg" />
     <Content Include="Content\img\historial\rechazado.svg" />
     <Content Include="Content\img\logoiiap.png" />
@@ -387,6 +384,7 @@
     <Content Include="Views\Join\Index.cshtml" />
     <Content Include="Views\Reset\Index.cshtml" />
     <Content Include="Views\Historial\Publicaciones.cshtml" />
+    <Content Include="Views\publicacion\Prueba.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ADPostgres\ADPostgres.csproj">

@@ -781,6 +781,10 @@ table > thead > tr > th {
   animation-delay: -0.8s;
 }
 
+.center{
+    display:contents;
+}
+
 .sum {
     color: #26a011;
 }

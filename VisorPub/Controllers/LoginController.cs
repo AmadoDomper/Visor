@@ -47,10 +47,10 @@ namespace VisorPub.Controllers
                     Usuario oUsuario = new Usuario();
                     oUsuario = (Usuario)Session["Datos"];
 
-                    return RedirectToAction("Index", "Gestion");
+                    return RedirectToAction("/", "Gestion");
                 }
                 // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
-                return RedirectToAction("Login", "Login");
+                return RedirectToAction("Index", "Login");
             }
             catch (Exception ex)
             {

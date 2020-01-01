@@ -30,7 +30,7 @@
                 </div>*@
             @*<div class="hr-line-dashed"></div>*@
             <div class="row m-b-10">
-                <div class="col-sm-11">
+                <div class="col-sm-12">
                     <div class="form-inline">
                         <div class="form-group m-r-40">
                             <label class="control-label m-r-5" for="status">Mostrar publicación estado:</label>
@@ -474,7 +474,7 @@
 
     ListarRevPub();
 
-    function ListarRevPub(nPage, nSize) {
+    function ListarRevPub(nPage, nSize, blo) {
         var nPubId,cPubTitulo,cNom,cInst;
         var nPubEst = $("#cmbPubEstado").val();
         var tpoBsq = $("#cmbTpoBsq").val();
@@ -507,7 +507,7 @@
         $.fn.Conexion({
             direccion: '@Url.Action("ListarRevPublicaciones", "Publicacion")',
             datos: { "nPubEst": nPubEst, "nPage": nPage, "nSize": nSize, "nPubId": nPubId, "cPubTitulo": cPubTitulo, "cInst": cInst, "cNom": cNom },
-            bloqueo: true,
+            bloqueo: blo == false ? false : true,
             terminado: function (data) {
                 var d = JSON.parse(data);
 
@@ -662,8 +662,10 @@
             $.fn.Conexion({
                 direccion: '@Url.Action("RegistrarAprobacion", "Publicacion")',
                 datos: { "nPubId": nPubId, "nUsuId": nUsuId , "nHistId": nHistId, "nUHistId": nUHistId},
-                    terminado: function (data, textStatus, jqXHR) {
-                        $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Aprobación registrada correctamente." });
+                terminado: function (data, textStatus, jqXHR) {
+                        SetEstadoAprobado();
+                    $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Aprobación registrada correctamente." });
+                    ListarRevPub(null, null, false);
                     },
                     bloqueo: true
             });
@@ -678,11 +680,19 @@
 
         let html = `
                     <textarea class="form-control" id="txtObservacion" name="txtObservacion" rows="10" placeholder="Ingrese aquí las observaciones encontradas" value="" minlength="1"></textarea>
+                    <div id="msgObservacion"></div>                 
                     <div class="col-sm-12 hr-line-dashed"></div>
                         <div class="col-sm-12 text-center">
                         <button id="btnObsAceptar" type="submit" class="btn btn-sm btn-primary m-r-5">Aceptar</button>
                         <button id="btnObsCancelar" type="submit" data-dismiss="modal" aria-hidden="true" class="btn btn-sm btn-default">Cancelar</button>
                     </div>`;
+
+        let msgObs = `<div class="alert alert-danger alert-dismissible text-center m-t-5 m-b-5" role="alert" style="margin-bottom: 10px;">
+                        <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">x</span>
+                        <span class="sr-only">Close</span>
+                        </button>El campo observación no puede estar vacío.
+                      </div>`;
 
         $("#vntMotivoObservacion .panel-body").html(html);
         $('#vntMotivoObservacion').modal('show');
@@ -695,18 +705,26 @@
             let cMensaje = $("#txtObservacion").val();
             let nUsuId = $('#hdnUsuId').val();
 
-            $.fn.Conexion({
-                direccion: '@Url.Action("RegistrarObservacion", "Publicacion")',
-                durante: function () {
-                    $('#vntMotivoObservacion').modal('hide');
-                },
-                datos: { "nPubId": nPubId, "nUsuId": nUsuId , "nHistId": nHistId, "nUHistId": nUHistId, "cMensaje": cMensaje},
+            if (cMensaje != "") {
+                $.fn.Conexion({
+                    direccion: '@Url.Action("RegistrarObservacion", "Publicacion")',
+                    durante: function () {
+                        $('#vntMotivoObservacion').modal('hide');
+                    },
+                    datos: { "nPubId": nPubId, "nUsuId": nUsuId, "nHistId": nHistId, "nUHistId": nUHistId, "cMensaje": cMensaje },
                     terminado: function (data, textStatus, jqXHR) {
+                        SetEstadoObservado();
                         $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Observación registrada correctamente." });
+                        ListarRevPub(null, null, false);
                     },
                     bloqueo: true
                 });
-        });
+            } else {
+                $("#msgObservacion").html(msgObs);
+                $("#txtObservacion").focus();
+            }
+       });
+
     }
 
     function Rechazar() {
@@ -741,7 +759,9 @@
                     $('#vntMotivoRechazar').modal('hide');
                 },
                 terminado: function (data, textStatus, jqXHR) {
+                    SetEstadoRechazado();
                     $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Rechazo registrado correctamente." });
+                    ListarRevPub(null, null, false);
                 },
                     bloqueo: true
                 });

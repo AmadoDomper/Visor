@@ -245,71 +245,71 @@ namespace ADPostgres
         }
 
 
-
-        public Publicacion editar(Publicacion item)
+        public Publicacion EditarPublicacion(Publicacion oPub)
         {
             var conexion = new ConexionPosgreSQL();
-            item.dFechaRegistro = DateTime.Now;
+            oPub.dFechaRegistro = DateTime.Now;
 
             using (var db = conexion.AbreConexion())
             {
                 try
                 {
 
-                    string sql = String.Format("UPDATE publicacion SET pub_anopublicacion={0}, pub_referenciabibliografica='{1}', pub_enlace='{2}', tip_idtipo={3},pub_titulo='{4}' WHERE pub_idpublicacion={5};"
-                                                , item.nPubliAno,
-                                                item.cRefBiblio,
-                                                item.cEnlace,
-                                                item.oTipo.nTipoId,
-                                                item.cTitulo,
-                                                item.nPubliId
-                                              );
+                    string sql = $"UPDATE publicacion SET pub_anopublicacion={oPub.nPubliAno}, " +
+                                 $"pub_referenciabibliografica='{oPub.cRefBiblio}', " +
+                                 $"pub_enlace='{oPub.cEnlace}', " +
+                                 $"tip_idtipo={oPub.oTipo.nTipoId}," +
+                                 $"pub_titulo='{oPub.cTitulo}' " +
+                                 $"WHERE pub_idpublicacion={oPub.nPubliId};";
+ 
                     DataSet datos = ConexionPosgreSQL.ejecutar(sql);
-                    //eliminar los temas
+
+                    //Elimina los temas
                     sql = "";
-                    sql = String.Format("DELETE from publicacion_tema where pub_idpublicacion={0}", item.nPubliId);
+                    sql = String.Format("DELETE from publicacion_tema where pub_idpublicacion={0}", oPub.nPubliId);
                     datos = ConexionPosgreSQL.ejecutar(sql);
-                    //regitrar los temas
+
+                    //Registra los temas
                     sql = "";
-                    foreach (Tema itemTema in item.ListaTemas)
+                    foreach (Tema oPubTema in oPub.ListaTemas)
                     {
                         sql += "INSERT INTO publicacion_tema(pub_idpublicacion,tem_idtema)";
                         sql += String.Format
                         (
                         "VALUES ({0},{1});",
-                        item.nPubliId,
-                        itemTema.nTemaId
+                            oPub.nPubliId,
+                            oPubTema.nTemaId
                         );
                     }
                     datos = ConexionPosgreSQL.ejecutar(sql);
 
-                    //eliminamos los features
+                    //Elimina los features
                     sql = "";
-                    sql = String.Format("DELETE from punto where pub_idpublicacion={0}", item.nPubliId);
+                    sql = String.Format("DELETE from punto where pub_idpublicacion={0}", oPub.nPubliId);
                     datos = ConexionPosgreSQL.ejecutar(sql);
                     //insertar los features
                     sql = "";
-                    foreach (Feature itemF in item.ListaFeatures)
+                    foreach (Feature oPubF in oPub.ListaFeatures)
                     {
 
-                        if (itemF.Tipo == 1)// es un punto
+                        if (oPubF.Tipo == 1)// es un punto
                         {
                             sql += "INSERT INTO punto(pub_idpublicacion,wkb)";
                             sql += String.Format
                             (
                                 "VALUES ({0},{1});",
-                                item.nPubliId,
-                                "ST_GeomFromText('POINT(" + itemF.Info + ")', 4326)"
+                                oPub.nPubliId,
+                                "ST_GeomFromText('POINT(" + oPubF.Info + ")', 4326)"
                             );
                         }
-                        else if (itemF.Tipo == 3)// es un poligono
+                        else if (oPubF.Tipo == 3)// es un poligono
                         {
                             sql += "INSERT INTO poligono(pub_idpublicacion,wkb)";
                             sql += String.Format
                             (
                                 "VALUES ({0},{1});",
-                                item.nPubliId,
-                                "ST_GeomFromText('POLYGON((" + itemF.Info + "))', 4326)"
+                                oPub.nPubliId,
+                                "ST_GeomFromText('POLYGON((" + oPubF.Info + "))', 4326)"
                             );
                         }
                     }
@@ -320,7 +320,7 @@ namespace ADPostgres
                     throw ex;
                 }
             }
-            return item;
+            return oPub;
         }
 
         //public List<Publicacion> ListarPublicaciones()

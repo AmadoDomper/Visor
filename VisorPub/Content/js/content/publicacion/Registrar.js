@@ -266,7 +266,7 @@ $(document).ready(function () {
                     "pub_referenciabibliografica": $('#txtReferencia').val(),
                     "pub_enlace": $('#txtEnlace').val(),
                     "tip_idtipo": $('#ddlTipo').val(),
-                    "ls_tem_idtema": $('#ddlTema').val() /* $('#ddlTema').val().join(',')*/,
+                    "ls_tem_idtema": $('#ddlTema').val(),
                     "features": JSON.stringify(lsFeatures),
                     "pub_titulo": $('#txtTitulo').val()
                 },
@@ -275,6 +275,38 @@ $(document).ready(function () {
                     $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación se realizó correctamente." });
                     Limpiar();
                     ListarMisPub(null,null,false);
+                    vista("#target1");
+                }
+            });
+        }
+
+
+    });
+
+    $('#btenviarCorrecion').click(function () {
+
+        if ($('#frm').smkValidate()) {
+            $.fn.Conexion({
+                direccion: '../Publicacion/RegistrarCorreccion',
+                bloqueo: true,
+                datos: {
+                    "nPubId": $("#hdnPubId").val(),
+                    "nUsuId": $('#hdnUsuId').val(),
+                    "nHistId": $("#hdnHistId").val(),
+                    "nUHistId": $("#hdnUHistId").val(),
+                    "pub_anopublicacion": $('#txtAnoPublicacion').val(),
+                    "pub_referenciabibliografica": $('#txtReferencia').val(),
+                    "pub_enlace": $('#txtEnlace').val(),
+                    "tip_idtipo": $('#ddlTipo').val(),
+                    "ls_tem_idtema": $('#ddlTema').val(),
+                    "features": JSON.stringify(lsFeatures),
+                    "pub_titulo": $('#txtTitulo').val()
+                },
+                terminado: function (data) {
+                    data = JSON.parse(data);
+                    $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación se realizó correctamente." });
+                    Limpiar();
+                    ListarMisPub(null, null, false);
                     vista("#target1");
                 }
             });

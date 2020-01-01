@@ -39,6 +39,11 @@ namespace LNPostgres
             return oPublicacionAD.registrar(oPublicacion);
         }
 
+        public Publicacion EditarPublicacion(Publicacion oPublicacion)
+        {
+            return oPublicacionAD.EditarPublicacion(oPublicacion);
+        }
+
         public Publicacion CargaDatosPublicacion(int nPubId)
         {
             return oPublicacionAD.CargaDatosPublicacion(nPubId);

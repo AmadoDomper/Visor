@@ -14,7 +14,9 @@
 
 <div class="col-lg-11 col-lg-offset-0-5">
     <input id="hdnPubId" type="hidden" />
+    <input id="hdnUsuId" type="hidden" />
     <input id="hdnHistId" type="hidden" />
+    <input id="hdnUHistId" type="hidden" />
     <input id="hdnEstado" type="hidden" />
     <input id="hdnPubEst" type="hidden" />
     <input id="hdnPag" type="hidden" />
@@ -29,7 +31,7 @@
             </div>
             <div class="hr-line-dashed"></div>
             <div class="row m-b-10 m-t-10">
-                <div class="col-sm-11">
+                <div class="col-sm-12">
                     <div class="form-inline">
                         <div class="form-group m-r-40">
                             <label class="control-label m-r-5" for="status">Mostrar publicación estado:</label>
@@ -157,7 +159,8 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <input type="button" class="btn btn-primary btn-block btn-fill" value="Enviar Solicitud" id="btenviar" name="btenviar">
+                                <input type="button" style="display:none;" class="btn btn-primary btn-block btn-fill" value="Enviar Solicitud" id="btenviar" name="btenviar">
+                                <input type="button" style="display:none;" class="btn btn-primary btn-block btn-fill" value="Enviar Corrección" id="btenviarCorrecion" name="btenviarCorrecion">
                             </div>
                             <div class="col-md-2">
                                 <input type="button" class="btn btn-default btn-block btn-fill" value="Cancelar" id="btcancelar" name="btcancelar">
@@ -287,10 +290,12 @@
                 var oPub = JSON.parse(data);
 
                 $('#hdnPubId').val(oPub.Id);
-                $('#hdnHistId').val(oPub.nHistId);
+                $('#hdnUsuId').val(oPub.nUsuId);
+                $('#hdnHistId').val(oPub.oHist.Id);
+                $('#hdnUHistId').val(oPub.oHist.UniqueId);
                 $("#hdnPubEst").val(oPub.nEstado);
                 $('#txtTitulo').val(oPub.titulo);
-                $('#ddlTipo').val(oPub.tipo.Id);
+                $('#ddlTipo').val(oPub.tipo.id);
                 $('#ddlTema').val(oPub.lsTemas[0].id);
                 $('#txtAnoPublicacion').val(oPub.ano);
                 $('#txtEnlace').val(oPub.enlace);
@@ -329,20 +334,22 @@
         $("#target2 :input").prop("disabled", true);
         $("#btcancelar").prop("disabled", false);
         $("#btnHistorial").prop("disabled", false);
-        $("#btenviar").attr("disabled", true).show();
+        $("#btenviar").attr("disabled", true).hide();
     }
 
     function SetEstadoAprobado() {
         $("#btenviar").attr("disabled", true).hide();
+        $("#btenviarCorrecion").attr("disabled", true).hide();
     }
 
     function SetEstadoObservado() {
-        $("#btenviar").attr("value", "Enviar Corrección");
-        $("#btenviar").attr("disabled", true).show();
+        $("#btenviar").attr("disabled", true).hide();
+        $("#btenviarCorrecion").attr("disabled", false).show();
     }
 
     function SetEstadoRechazado() {
         $("#btenviar").attr("disabled", true).hide();
+        $("#btenviarCorrecion").attr("disabled", true).hide();
     }
 
 
@@ -354,6 +361,7 @@
     });
 
     $("#btnNuevaPublicacion").bind("click", function () {
+        $("#btenviar").attr("disabled", false).show();
         map.updateSize();
     });
 
@@ -362,7 +370,7 @@
     });
 
     $("#btnHistorial").bind("click", function () {
-        let cHistid = $("#hdnHistId").val();
+        let cHistid = $("#hdnUHistId").val();
 
         window.open(
             'http://localhost:59423/Historial/Publicaciones/' + cHistid,
@@ -377,7 +385,7 @@
     function Limpiar() {
         $('#frm')[0].reset();
         $("#target2 :input").prop("disabled", false);
-        $("#hdnHistId").val("");
+        $("#hdnUsuId").val("");
         $("#hdnPubId").val("");
 
         map.getLayers().getArray()[1].getSource().clear();

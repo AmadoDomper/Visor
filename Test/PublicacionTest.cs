@@ -14,7 +14,7 @@ namespace Test
     {
 
         [TestMethod]
-        public void Test_Registrainventariosuelos()
+        public void Test_GetAllPublicationPoints()
         {
             PublicacionLN oPubli = new PublicacionLN();
             object json;
@@ -37,6 +37,7 @@ namespace Test
 
             Assert.IsTrue(result > 0, "Resultado no es mayor que 0");
         }
+
 
     }
 }
