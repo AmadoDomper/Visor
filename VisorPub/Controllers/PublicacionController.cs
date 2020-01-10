@@ -138,22 +138,28 @@ namespace VisorPub.Controllers
                 var nHistId = oHistorialLN.CrearHistorial(oHistorial);
 
                 // Registra historial - Solicitud Registrada
-                HistorialDetalleLN oHistDetLN = new HistorialDetalleLN();
-                HistorialDetalle oHistDet = new HistorialDetalle {
-                    nHistorialId = nHistId,
-                    nUsuarioRegistra = oUsuarioReg.nUsuarioId,
-                    Estado = (int)EstadoSolicitud.Solicitado
-                };
+                RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Solicitado);
 
-                var nHisDet = oHistDetLN.RegistrarHistorialDetalle(oHistDet);
+                //Obtener Unique Historial
                 var cHistUniqueId = oHistorialLN.GetRecordUniqueIdByReferenciaId(oPubli.nPubliId, TipoReferencia.Publicaciones);
 
                 //Enviar correo usuario registra
-                await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, "Registro de Publicación - VISOR IIAP", "<p>Estimado/a " + oUsuarioReg.cNombres + "</p><p> Se ha registrado su solicitud y estará en proceso de evaluación. Muchas Gracias </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
-                //Enviar correo usuarios perfil supervisor
+                await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, $"Solicitud de Publicación N° {oPubli.nPubliId} - Nueva Solicitud | VISOR IIAP", "<p>Estimado/a " + oUsuarioReg.cNombres + $"</p><p> Se ha registrado su solicitud de Publicación N° {oPubli.nPubliId} y estará en proceso de evaluación. Muchas Gracias </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
+
+                //Enviar alerta a los supervisores
                 RolLN oRol = new RolLN();
-                var cSupervisorEmails = oRol.GetSupervisorEmails();
-                await GmailClient.SendEmailAsync(cSupervisorEmails, "Registro de Publicación - VISOR IIAP", "<p> Se ha registrado una nueva solicitud de Publicación con código 000, favor de ingresar a la intranet para proceder con su validación. </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
+                var oSupervisores = oRol.CargarUsuariosPorRol(RolId.Supervisor);
+
+                if(oSupervisores.Count() > 0) { 
+                    foreach (Usuario u in oSupervisores)
+                    {
+                        RegistrarAlerta(u.nUsuarioId, $"Solicitud de Publicación N° {oPubli.nPubliId} - Nueva Solicitud", "Se ha registrado una nueva solicitud para su revisión.", $"/Publicacion/RevisionDeSolicitudes/{oPubli.nPubliId}", AlertIcon.Solicitado, AlertColor.Solicitado);
+                    }
+
+                    //Enviar correo usuarios perfil supervisor
+                    var cSupervisorEmails = String.Join(", ", oSupervisores.Select(u => u.cEmail).ToArray());
+                    await GmailClient.SendEmailAsync(cSupervisorEmails, $"Solicitud de Publicación N° {oPubli.nPubliId} - Nueva Solicitud | VISOR IIAP", "<p> Se ha registrado una nueva solicitud de Publicación con código  " + oPubli.nPubliId + ", favor de ingresar a la intranet para proceder con su validación. </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
+                }
             }
             return Json(JsonConvert.SerializeObject(respuesta));
         }
@@ -204,26 +210,29 @@ namespace VisorPub.Controllers
                 oPubLN.ActualizaEstadoPublicacion(nPubId, (int)EstadoSolicitud.Solicitado);
 
                 //Obtener datos usuario de la publicación
-
                 Usuario oUsuarioReg = ((Usuario)Session["Datos"]);
 
                 // Registra historial - Rechazado
-                HistorialDetalleLN oHistDetLN = new HistorialDetalleLN();
-                HistorialDetalle oHistDet = new HistorialDetalle
-                {
-                    nHistorialId = nHistId,
-                    nUsuarioRegistra = oUsuarioReg.nUsuarioId,
-                    Estado = (int)EstadoSolicitud.Solicitado
-                };
-
-                var nHisDet = oHistDetLN.RegistrarHistorialDetalle(oHistDet);
+                RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Solicitado);
 
                 //Enviar correo usuario registra
-                await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, "Correción de Publicación - VISOR IIAP", "<p>Estimado/a " + oUsuarioReg.cNombres + "</p><p> Se ha registrado su solicitud y estará en proceso de evaluación. Muchas Gracias </p><a href='http://localhost:59423/Historial/Publicaciones/" + nUHistId + "' target='_blank'> Revisar Historial </a>", "");
-                //Enviar correo usuarios perfil supervisor
+                await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, $"Solicitud de Publicación N° {oPubli.nPubliId} - Corregida | VISOR IIAP", "<p>Estimado/a " + oUsuarioReg.cNombres + $"</p><p> Se ha registrado su solicitud de Publicación N° {oPubli.nPubliId} y estará en proceso de evaluación. Muchas Gracias </p><a href='http://localhost:59423/Historial/Publicaciones/" + nUHistId + "' target='_blank'> Revisar Historial </a>", "");
+
+                //Enviar alerta a los supervisores
                 RolLN oRol = new RolLN();
-                var cSupervisorEmails = oRol.GetSupervisorEmails();
-                await GmailClient.SendEmailAsync(cSupervisorEmails, "Correción de Publicación - VISOR IIAP", "<p> Se ha registrado la correción de una solicitud de Publicación con código " + oPubli.nPubliId  + ", favor de ingresar a la intranet para proceder con su validación. </p><a href='http://localhost:59423/Historial/Publicaciones/" + nUHistId + "' target='_blank'> Revisar Historial </a>", "");
+                var oSupervisores = oRol.CargarUsuariosPorRol(RolId.Supervisor);
+
+                if (oSupervisores.Count() > 0)
+                {
+                    foreach (Usuario u in oSupervisores)
+                    {
+                        RegistrarAlerta(u.nUsuarioId, $"Solicitud de Publicación N° {oPubli.nPubliId} - Corregida", "Se ha registrado una nueva solicitud para su revisión.", $"/Publicacion/RevisionDeSolicitudes/{oPubli.nPubliId}", AlertIcon.Solicitado, AlertColor.Solicitado);
+                    }
+
+                    //Enviar correo usuarios perfil supervisor
+                    var cSupervisorEmails = String.Join(", ", oSupervisores.Select(u => u.cEmail).ToArray());
+                    await GmailClient.SendEmailAsync(cSupervisorEmails, $"Solicitud de Publicación N° {oPubli.nPubliId} - Corregida | VISOR IIAP", "<p> Se ha registrado la correción de una solicitud de Publicación con código " + oPubli.nPubliId + ", favor de ingresar a la intranet para proceder con su validación. </p><a href='http://localhost:59423/Historial/Publicaciones/" + nUHistId + "' target='_blank'> Revisar Historial </a>", "");
+                }
 
                 respuesta.estado = (int)EstadoSolicitud.Solicitado;
                 respuesta.mensaje = "Se ha enviado las correcciones realizadas.";
@@ -246,20 +255,14 @@ namespace VisorPub.Controllers
             var oUsuarioPub = oUsuarioLN.CargarDatosUsuario(nUsuId);
 
             // Registra historial - Observación
-            HistorialDetalleLN oHistDetLN = new HistorialDetalleLN();
-            HistorialDetalle oHistDet = new HistorialDetalle
-            {
-                nHistorialId = nHistId,
-                nUsuarioRegistra = oUsuarioReg.nUsuarioId,
-                cDescripcion = cMensaje,
-                Estado = (int)EstadoSolicitud.Observado
-            };
+            var nHisDet = RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Observado, cMensaje);
 
-            var nHisDet = oHistDetLN.RegistrarHistorialDetalle(oHistDet);
+            //Registrar alerta para el usuario
+            RegistrarAlerta(oUsuarioPub.nUsuarioId, $"Solicitud de Publicación N° {nPubId} - Observada", "Se ha encontrado observaciones en su solicitud. Favor de revisar los detalles en el historial.", $"/Publicacion/MisPublicaciones/{nPubId}", AlertIcon.Observado, AlertColor.Observado);
 
             HistorialLN oHistorialLN = new HistorialLN();
             //Supervisor envia correo a usuario registro
-            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, "Observaciones encontradas - Visor IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + "</p><p> Se ha encontrado observaciones a la solicitud realizada. Agradeceremos levantar las observaciones para proceder a su aprobación. </p><a href='http://localhost:59423/Historial/Publicaciones/" + nUHistId + "' target='_blank'> Ver Detalle </a>", "");
+            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, $"Solicitud de Publicación N° {nPubId} - Observada | VISOR IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + "</p><p> Se ha encontrado observaciones a la solicitud realizada. Agradeceremos levantar las observaciones para proceder a su aprobación. </p><a href='http://localhost:59423/Historial/Publicaciones/" + nUHistId + "' target='_blank'> Ver Detalle </a>", "");
 
             return Json(JsonConvert.SerializeObject(nHisDet));
         }
@@ -278,21 +281,15 @@ namespace VisorPub.Controllers
             var oUsuarioPub = oUsuarioLN.CargarDatosUsuario(nUsuId);
 
             // Registra historial - Rechazado
-            HistorialDetalleLN oHistDetLN = new HistorialDetalleLN();
-            HistorialDetalle oHistDet = new HistorialDetalle
-            {
-                nHistorialId = nHistId,
-                nUsuarioRegistra = oUsuarioReg.nUsuarioId,
-                cDescripcion = cMensaje,
-                Estado = (int)EstadoSolicitud.Rechazado
-            };
+            var nHisDet = RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Rechazado, cMensaje);
 
-            var nHisDet = oHistDetLN.RegistrarHistorialDetalle(oHistDet);
+            //Registrar alerta para el usuario
+            RegistrarAlerta(oUsuarioPub.nUsuarioId, $"Solicitud de Publicación N° {nPubId} - Rechazada", "Se ha rechazado su solicitud. Por favor de revisar los comentarios en el historial.", $"/Publicacion/MisPublicaciones/{nPubId}", AlertIcon.Rechazado, AlertColor.Rechazado);
 
             HistorialLN oHistorialLN = new HistorialLN();
             var cHistUniqueId = oHistorialLN.GetRecordUniqueIdByReferenciaId(nPubId, TipoReferencia.Publicaciones);
             //Supervisor envia correo a usuario registro
-            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, "Publicación Rechazada - Visor IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + "</p><p>Agradecemos su colaboración, sin embargo, se ha rechazado su solicitud. Agradeceremos ponerse en contacto con nosotros de existir algún mal entendido. Muchas gracias. </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Ver Detalle </a>", "");
+            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, $"Solicitud de Publicación N° {nPubId} - Rechazada | VISOR IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + "</p><p>Agradecemos su colaboración, sin embargo, se ha rechazado su solicitud. Agradeceremos ponerse en contacto con nosotros de existir algún mal entendido. Muchas gracias. </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Ver Detalle </a>", "");
 
             return Json(JsonConvert.SerializeObject(nHisDet));
         }
@@ -311,20 +308,15 @@ namespace VisorPub.Controllers
             var oUsuarioPub = oUsuarioLN.CargarDatosUsuario(nUsuId);
 
             // Registra historial - Aprobado
-            HistorialDetalleLN oHistDetLN = new HistorialDetalleLN();
-            HistorialDetalle oHistDet = new HistorialDetalle
-            {
-                nHistorialId = nHistId,
-                nUsuarioRegistra = oUsuarioReg.nUsuarioId,
-                Estado = (int)EstadoSolicitud.Aprobado
-            };
+            var nHisDet = RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Aprobado);
 
-            var nHisDet = oHistDetLN.RegistrarHistorialDetalle(oHistDet);
+            //Registrar alerta para el usuario
+            RegistrarAlerta(oUsuarioPub.nUsuarioId, $"Solicitud de Publicación N° {nPubId} - ¡Aprobada!", "Se ha aprobado su solicitud. Muchas gracias por su gran trabajo.", $"/Publicacion/MisPublicaciones/{nPubId}", AlertIcon.Aprobado, AlertColor.Aprobado);
 
             HistorialLN oHistorialLN = new HistorialLN();
             var cHistUniqueId = oHistorialLN.GetRecordUniqueIdByReferenciaId(nPubId, TipoReferencia.Publicaciones);
             //Supervisor envia correo a usuario registro
-            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, "Publicación Aprobada - Visor IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + "</p><p>Su solicitud ha sido aprobada. Muchas gracias por su colaboración. </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Ver Detalle </a>", "");
+            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, $"Solicitud de Publicación N° {nPubId} - ¡Aprobada! | VISOR IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + $"</p><p>Su solicitud de Publicación N° {nPubId} ha sido aprobada. Muchas gracias por su colaboración. </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Ver Detalle </a>", "");
 
             return Json(JsonConvert.SerializeObject(nHisDet));
         }
@@ -341,19 +333,6 @@ namespace VisorPub.Controllers
             modelo.lsPublicaciones = handPub.listar();
             return View(modelo);
         }
-        //[RequiresAuthenticationAttribute]
-        //public ActionResult Editar() //Eliminar --no se usara
-        //{
-        //    int pub_idpublicacion = Int32.Parse(Request["idpub"]);
-        //    TipoAD handTipo = new TipoAD();
-        //    TemaAD handTema = new TemaAD();
-        //    PublicacionAD handPub = new PublicacionAD();
-        //    RegistrarViewModel modelo = new RegistrarViewModel();
-        //    modelo.lsTipos = handTipo.obtener();
-        //    modelo.lsTemas = handTema.ObtenerTema();
-        //    modelo.publicacion = handPub.obtener(pub_idpublicacion);
-        //    return View(modelo);
-        //}
 
         public string CargaDatosPublicacion(int nPubId)
         {
@@ -420,6 +399,37 @@ namespace VisorPub.Controllers
             return Json(JsonConvert.SerializeObject(respuesta));
         }
 
+        public void RegistrarAlerta(int nUsuarioId, string cTitulo, string cMensaje, string cUrl, string AlertaIcono, string cAlertaColor)
+        {
+            AlertaLN oAlertaLN = new AlertaLN();
+            Alerta oAlerta = new Alerta();
+
+            oAlerta.nUsuarioId = nUsuarioId;
+            oAlerta.cTitulo = cTitulo;
+            oAlerta.cMensaje = cMensaje;
+            oAlerta.cUrl = cUrl;
+            oAlerta.cAlertaIcono = AlertaIcono;
+            oAlerta.cAlertaColor = cAlertaColor;
+            oAlerta.nEstado = 1;
+
+            var nAlertaId = oAlertaLN.RegistrarAlerta(oAlerta);
+        }
+
+        public int RegistrarHistorial(int nHistId, int nUsuarioId, EstadoSolicitud nEstado, string cMensaje = "") { 
+
+        // Registra historial - Rechazado
+        HistorialDetalleLN oHistDetLN = new HistorialDetalleLN();
+        HistorialDetalle oHistDet = new HistorialDetalle
+        {
+            nHistorialId = nHistId,
+            nUsuarioRegistra = nUsuarioId,
+            cDescripcion = cMensaje,
+            Estado = (int)nEstado
+        };
+
+            var nHisDet = oHistDetLN.RegistrarHistorialDetalle(oHistDet);
+            return nHisDet;
+        }
     }
 
 

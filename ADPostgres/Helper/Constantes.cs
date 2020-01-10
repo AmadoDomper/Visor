@@ -39,6 +39,7 @@ namespace ADPostgres.Helper
         public const string usp_ListarRoles = "usp_ListarRoles";
         public const string usp_ValidarPermiso = "usp_ValidarPermiso";
         public const string usp_getSupervisorEmails = "usp_getSupervisorEmails";
+        public const string usp_cargar_usuarios_por_rol = "usp_cargar_usuarios_por_rol";
         /*END ROL*/
 
 
@@ -120,6 +121,13 @@ namespace ADPostgres.Helper
 
         public const string usp_registrar_detalle_historial = "usp_registrar_detalle_historial";
         public const string usp_get_historial_det = "usp_get_historial_det";
+
+        /* ALERTA */
+
+        public const string usp_registrar_alerta = "usp_registrar_alerta";
+        public const string usp_actualiza_alerta_visto = "usp_actualiza_alerta_visto";
+        public const string usp_actualiza_alerta_revisado = "usp_actualiza_alerta_revisado";
+        public const string usp_get_alertas = "usp_get_alertas";
 
     }
 }

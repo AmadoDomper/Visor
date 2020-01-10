@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EPostgres;
+using EPostgres.Helper;
 using ADPostgres;
 
 namespace LNPostgres
@@ -36,6 +37,11 @@ namespace LNPostgres
         public string GetSupervisorEmails()
         {
             return oRolAD.GetSupervisorEmails();
+        }
+
+        public List<Usuario> CargarUsuariosPorRol(RolId nRolId)
+        {
+            return oRolAD.CargarUsuariosPorRol(nRolId);
         }
 
     }

@@ -536,62 +536,67 @@
                     },           
                     editEvent: function (fila) {
                         var nPubId = fila.find("td").eq(0).html();
-                        $("#hdnEstado").val("E");
-                        //$('input.target')[0].click();
-                        vista("#target2");
+                        ShowPublication(nPubId);
 
-                        $.fn.Conexion({
-                            direccion: '@Url.Action("CargaDatosPublicacion", "Publicacion")',
-                            datos: { "nPubId": nPubId },
-                            terminado: function (data, textStatus, jqXHR) {
-                                var oPub = JSON.parse(data);
 
-                                $('#hdnPubId').val(oPub.Id);
-                                $('#hdnUsuId').val(oPub.nUsuId);
-                                $('#hdnHistId').val(oPub.oHist.Id);
-                                $('#hdnUHistId').val(oPub.oHist.UniqueId);
-                                $("#hdnPubEst").val(oPub.nEstado);
-                                $('#txtTitulo').val(oPub.titulo);
-                                $('#ddlTipo').val(oPub.tipo.id);
-                                $('#ddlTema').val(oPub.lsTemas[0].id);
-                                $('#txtAnoPublicacion').val(oPub.ano);
-                                $('#txtEnlace').val(oPub.enlace);
-                                $('#txtReferencia').val(oPub.refBi);
-
-                                $("#jsGrid").jsGrid('destroy');
-                                IniciaDatos();
-                                CargarGrilla();
-
-                                for (var i = 0; i < oPub.lsFeatures.length; i++) {
-                                    var punto = oPub.lsFeatures[i].Info.split(' ');
-                                    indexFeature++;
-
-                                    var info = punto[0] + '|' + punto[1];
-                                    var item = { "n": indexFeature, "Tipo": 1, "Info": info,"Longitud": punto[0], "Latitud": punto[1]};
-                                    $("#jsGrid").jsGrid("insertItem", item);
-
-                                    lsFeatures.push(item);
-                                    map_AgregarPunto(punto, indexFeature);
-                                }
-
-                                map.updateSize();
-
-                                if (oPub.nEstado == 1) {
-                                    SetEstadoSolicitado();
-                                } else if (oPub.nEstado == 2) {
-                                    SetEstadoAprobado();
-                                } else if (oPub.nEstado == 3) {
-                                    SetEstadoObservado();
-                                } else if (oPub.nEstado == 4) {
-                                    SetEstadoRechazado();
-                                }
-                            },
-                            bloqueo: true
-                        });
                     },
                     datos: d.oLista
                 });
             }
+        });
+    }
+
+    function ShowPublication(nPubId) {
+        $("#hdnEstado").val("E");
+        vista("#target2");
+
+        $.fn.Conexion({
+            direccion: '@Url.Action("CargaDatosPublicacion", "Publicacion")',
+            datos: { "nPubId": nPubId },
+            terminado: function (data, textStatus, jqXHR) {
+                var oPub = JSON.parse(data);
+
+                $('#hdnPubId').val(oPub.Id);
+                $('#hdnUsuId').val(oPub.nUsuId);
+                $('#hdnHistId').val(oPub.oHist.Id);
+                $('#hdnUHistId').val(oPub.oHist.UniqueId);
+                $("#hdnPubEst").val(oPub.nEstado);
+                $('#txtTitulo').val(oPub.titulo);
+                $('#ddlTipo').val(oPub.tipo.id);
+                $('#ddlTema').val(oPub.lsTemas[0].id);
+                $('#txtAnoPublicacion').val(oPub.ano);
+                $('#txtEnlace').val(oPub.enlace);
+                $('#txtReferencia').val(oPub.refBi);
+
+                $("#jsGrid").jsGrid('destroy');
+                IniciaDatos();
+                CargarGrilla();
+
+                for (var i = 0; i < oPub.lsFeatures.length; i++) {
+                    var punto = oPub.lsFeatures[i].Info.split(' ');
+                    indexFeature++;
+
+                    var info = punto[0] + '|' + punto[1];
+                    var item = { "n": indexFeature, "Tipo": 1, "Info": info,"Longitud": punto[0], "Latitud": punto[1]};
+                    $("#jsGrid").jsGrid("insertItem", item);
+
+                    lsFeatures.push(item);
+                    map_AgregarPunto(punto, indexFeature);
+                }
+
+                map.updateSize();
+
+                if (oPub.nEstado == 1) {
+                    SetEstadoSolicitado();
+                } else if (oPub.nEstado == 2) {
+                    SetEstadoAprobado();
+                } else if (oPub.nEstado == 3) {
+                    SetEstadoObservado();
+                } else if (oPub.nEstado == 4) {
+                    SetEstadoRechazado();
+                }
+            },
+            bloqueo: true
         });
     }
 
@@ -793,6 +798,18 @@
         //$("#lblNom,#lblDOI,#lblTel,#tblRegProd tbody").html("");
         //RestablecerElem();
         //DeshabilitarBotones();
+    }
+
+    if (window.location.hash !== '') {
+        var hash = window.location.hash.replace('#map=', '').substr(1);
+        var parts = hash.split('/');
+
+        console.log(hash);
+        console.log(parts);
+        if (parts[3] != undefined) {
+            console.log("Ingreso");
+            ShowPublication(parts[3]);
+        }
     }
 
 

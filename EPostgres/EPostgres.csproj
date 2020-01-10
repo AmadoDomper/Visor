@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Alerta.cs" />
     <Compile Include="BuscadorApi.cs" />
     <Compile Include="Helper\Constantes.cs" />
     <Compile Include="Historial.cs" />

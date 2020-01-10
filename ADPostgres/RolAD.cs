@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using ADPostgres.Helper;
 using EPostgres;
+using EPostgres.Helper;
 using Npgsql;
 
 namespace ADPostgres
@@ -93,6 +94,45 @@ namespace ADPostgres
                 }
             }
             return res;
+        }
+
+
+        public List<Usuario> CargarUsuariosPorRol(RolId nRolId)
+        {
+            var conexion = new ConexionPosgreSQL();
+            var ListUsuario = new List<Usuario>();
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_cargar_usuarios_por_rol))
+                    {
+                        cmd.Parameters.AddWithValue("_nRolId", (int)nRolId);
+
+                        var reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            var oUsu = new Usuario();
+
+                            oUsu.nUsuarioId = (int)reader["usu_nusuarioid"];
+                            oUsu.cNombres = (string)reader["usu_cnombres"];
+                            oUsu.cApellidoPa = (string)reader["usu_capellido_paterno"];
+                            oUsu.cApellidoMa = (string)reader["usu_capellido_materno"];
+                            oUsu.cEmail = (string)reader["usu_cemail"];
+                            oUsu.cDni = (string)reader["usu_cdni"];
+
+                            ListUsuario.Add(oUsu);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return ListUsuario;
         }
 
 

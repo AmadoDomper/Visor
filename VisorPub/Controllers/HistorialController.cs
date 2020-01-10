@@ -13,5 +13,17 @@ namespace VisorPub.Controllers
         {
             return View();
         }
+
+        // GET: Historial
+        public ActionResult InventarioVegetaciones()
+        {
+            return View();
+        }
+
+        // GET: Historial
+        public ActionResult InventarioSuelos()
+        {
+            return View();
+        }
     }
 }

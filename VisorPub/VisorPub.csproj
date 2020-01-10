@@ -279,6 +279,11 @@
     <Content Include="Content\js\smoke.min.js" />
     <Content Include="Content\js\utils.js" />
     <Content Include="Content\js\utils.min.js" />
+    <Content Include="Views\publicacion\Editar.cshtml" />
+    <Content Include="Views\publicacion\Listar.cshtml" />
+    <Content Include="Views\publicacion\MisPublicaciones.cshtml" />
+    <Content Include="Views\publicacion\Registrar.cshtml" />
+    <Content Include="Views\publicacion\RevisionDeSolicitudes.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -365,16 +370,11 @@
     <None Include="GeoJson\regions.json" />
     <Content Include="GeoJson\ubigeo.json" />
     <None Include="Properties\PublishProfiles\Jaox.pubxml" />
-    <Content Include="Views\publicacion\Registrar.cshtml" />
-    <Content Include="Views\publicacion\Listar.cshtml" />
-    <Content Include="Views\publicacion\Editar.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Inicio\Contacto.cshtml" />
     <Content Include="Views\Shared\_LayoutGestion.cshtml" />
     <Content Include="Views\Gestion\Index.cshtml" />
-    <Content Include="Views\publicacion\MisPublicaciones.cshtml" />
     <Content Include="Views\Usuario\NuevoUsuario.cshtml" />
-    <Content Include="Views\publicacion\RevisionDeSolicitudes.cshtml" />
     <Content Include="Views\Config\Config.cshtml" />
     <Content Include="Views\Usuario\GestionarUsuarios.cshtml" />
     <Content Include="Views\Menu\_Menu.cshtml" />
@@ -384,7 +384,7 @@
     <Content Include="Views\Join\Index.cshtml" />
     <Content Include="Views\Reset\Index.cshtml" />
     <Content Include="Views\Historial\Publicaciones.cshtml" />
-    <Content Include="Views\publicacion\Prueba.cshtml" />
+    <Content Include="Views\Historial\InventarioVegetaciones.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ADPostgres\ADPostgres.csproj">

@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlertaLN.cs" />
     <Compile Include="ConfiguracionLN.cs" />
     <Compile Include="HistorialDetalleLN.cs" />
     <Compile Include="HistorialLN.cs" />

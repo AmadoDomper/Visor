@@ -48,7 +48,59 @@
             </div>
             <!-- /.navbar-header -->
 
-            <ul class="nav navbar-top-links navbar-right">
+            <ul class="nav navbar-top-links navbar-right topbar">
+                <li id="dropdown-alert" class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <span class="badge badge-danger" style="display:none;">0</span><i class="fa fa-bell fa-fw"></i>
+                    </a>
+                    <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                        <h6 class="dropdown-header"> ALERTAS </h6>
+                        <div class="alert-content">
+                            <div id="alert-items">
+                                @*<a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-primary">
+                                            <i class="fa fa fa-check text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 12, 2019</div>
+                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-success">
+                                            <i class="fa fa fa-check text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 7, 2019</div>
+                                        $290.29 has been deposited into your account!
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-warning">
+                                            <i class="fa fa fa-check text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 2, 2019</div>
+                                        Spending Alert: We've noticed unusually high spending for your account.
+                                    </div>
+                                </a>*@
+                            </div>
+                        <button id="alert-more" class="dropdown-item text-center small text-gray-500" index="0">Mostrar más alertas</button>
+                        </div>
+                    </div>
+                    @*<ul class="dropdown-menu dropdown-user">
+
+            <li>
+                <a href="/Login/CerrarSession"><i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar Sesión</a>
+            </li>
+        </ul>*@
+                </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle" href="http://visores.iiap.gob.pe/publicaciones/">
                         <i class="fa fa-map-o fa-fw"></i> Ver Mapa
@@ -60,8 +112,8 @@
                     </a>
                     <ul class="dropdown-menu dropdown-user">
                         @*<li>
-                            <a href="#"><i class="fa fa-address-card-o" aria-hidden="true"></i> Mis datos </a>
-                        </li>*@
+                    <a href="#"><i class="fa fa-address-card-o" aria-hidden="true"></i> Mis datos </a>
+                </li>*@
                         <li>
                             <a href="@Url.Action("CerrarSession", "Login")"><i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar Sesión</a>
                         </li>
@@ -140,13 +192,154 @@
         }
 
 
-        $("nav a").click(function () {
+        $("nav a, #alert-items a").click(function () {
             if ($(this).attr("href") != "#" && $(this).attr("disabled") != "disabled") {
                 $("#contenido").load($(this).attr("data-url"));//.substring(1));
             }
         });
 
         @RenderSection("Scripts", required: false)
+
+        function GetAlertas(nPage, nSize) {
+            $.fn.Conexion({
+                direccion: 'http://localhost:59423/Gestion/GetAlertas',
+                datos: { "nPage": nPage, "nSize": nSize },
+                bloqueo: false,
+                terminado: function (data) {
+                    var d = JSON.parse(data);
+                    ShowAlerts(d, nPage);
+                    console.log(d);
+                }
+            });
+        }
+
+        function ActualizarAlertasVisto() {
+            $.fn.Conexion({
+                direccion: 'http://localhost:59423/Gestion/ActualizaAlertaVisto',
+                bloqueo: false,
+                terminado: function (data) {
+                    var d = JSON.parse(data);
+                    console.log(d);
+                    $(".badge-danger").html(0);
+                    $(".badge-danger").hide();
+                }
+            });
+        }
+
+        function ActualizarRevisado(id) {
+            $.fn.Conexion({
+                direccion: 'http://localhost:59423/Gestion/ActualizaAlertaRevisado',
+                datos: { "nAlertaId": id},
+                bloqueo: false,
+                terminado: function (data) {
+                    var d = JSON.parse(data);
+                    console.log(d);
+                }
+            });
+        }
+
+        GetAlertas(1, 5);
+
+        function ShowAlerts(data, nPage) {
+
+            let alerts = data.Alertas;
+
+            if (alerts != undefined) {
+                let alertHtml = "";
+
+                for (let i = 0, j = alerts.length; i < j; i++) {
+
+                    let fecha = alerts[i].fecha.substring(0, 10).split("-");
+                    fecha = fecha[2] + "/" + fecha[1] + "/" + fecha[0];
+
+                    alertHtml += `<a alert-id="${alerts[i].id}" onClick="RevisarItem(${alerts[i].id})" class="dropdown-item d-flex align-items-center ${alerts[i].estado != 3 ? 'alert-new' : ''} " href="/Gestion/#${alerts[i].url}" data-url="${alerts[i].url}">
+                                    <div class="mr-3">
+                                        <div class="icon-circle ${alerts[i].color}">
+                                            <i class="fa ${alerts[i].icon} text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">${fecha + " " + alerts[i].fecha.substring(11, 16)}</div>
+                                        <span class="font-weight-bold">${alerts[i].titulo}</span><br/>
+                                        <span>${alerts[i].mensaje}</span><br/>
+                                    </div>
+                                 </a>`;
+                }
+
+                $("#alert-items").append(alertHtml);
+            }
+
+            if (data.alert_new > 0) {
+                $(".badge-danger").html(data.alert_new).show();
+            } else {
+                $(".badge-danger").html(0);
+                $(".badge-danger").hide();
+            }
+
+            if (data.pages == 0) {
+                $("#alert-more").attr("index", 0);
+                $("#alert-more").html("No tiene alertas registradas");
+            }else if (nPage < data.pages) {
+                $("#alert-more").attr("index", (nPage*1) + 1);
+            } else {
+                $("#alert-more").hide();
+            }
+            
+        }
+
+
+        function GetIcon(e) {
+            switch (e) {
+                case 1:
+                    return "fa-gift";
+                    break;
+                case 2:
+                    return "fa-check";
+                    break;
+                case 3:
+                    return "fa-search";
+                    break;
+                case 4:
+                    return "fa-times-circle";
+                    break;
+            }
+        }
+
+        $("#alert-more").click(function () {
+            let index = $("#alert-more").attr("index");
+
+            if (index > 0) {
+                setTimeout(function () {
+                    $("#dropdown-alert").addClass("open");
+                }, 300);
+
+                GetAlertas(index, 5);
+            }
+        });
+
+        $("#dropdown-alert").click(function () {
+            let index = $(".badge-danger").html();
+
+            if (index > 0) {
+                ActualizarAlertasVisto();
+            } 
+        });
+
+        function RevisarItem(id) {
+            
+            console.log(id);
+
+            let item = $("#alert-items a[alert-id='" + id + "']");
+
+            if (item.hasClass("alert-new")) {
+                item.removeClass("alert-new");
+                ActualizarRevisado(id);
+            }
+
+            if (item.attr("href") != "#" && item.attr("disabled") != "disabled") {
+                $("#contenido").load(item.attr("data-url"));//.substring(1));
+            }
+        };
 
     </script>
 </body>

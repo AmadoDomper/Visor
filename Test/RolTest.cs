@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EPostgres;
+using EPostgres.Helper;
 using LNPostgres;
+using System.Linq;
 
 namespace Test
 {
@@ -31,6 +33,17 @@ namespace Test
             res = oRolLN.GetSupervisorEmails();
 
             Assert.IsNotNull(res);
+        }
+
+        [TestMethod]
+        public void CargarUsuariosPorRol_Test()
+        {
+            RolLN oRolLN = new RolLN();
+            var List = new List<Usuario>();
+
+            List = oRolLN.CargarUsuariosPorRol(RolId.Supervisor);
+
+            Assert.IsNotNull(List);
         }
 
     }

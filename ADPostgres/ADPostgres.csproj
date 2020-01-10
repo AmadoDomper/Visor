@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlertaAD.cs" />
     <Compile Include="Common\FrontUser.cs" />
     <Compile Include="Common\RolesPermisos.cs" />
     <Compile Include="ConfiguracionAD.cs" />
