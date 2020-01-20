@@ -82,7 +82,7 @@ namespace ADPostgres.Helper
         public const string usp_listar_mis_inventarios_vegetacion_paginado = "usp_listar_mis_inventarios_vegetacion_paginado";
         public const string usp_obtener_mis_inventarios_vegetacion_cantpag = "usp_obtener_mis_inventarios_vegetacion_cantpag";
         public const string usp_cargar_datos_inventario_vegetacion = "usp_cargar_datos_inventario_vegetacion";
-
+        public const string usp_actualiza_inventario_vegetacion_estado = "usp_actualiza_inventario_vegetacion_estado";
 
         /*INVENTARIO DE VEGETACIONES - PARCELA*/
 

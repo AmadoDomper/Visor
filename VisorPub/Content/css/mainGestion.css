@@ -83,6 +83,17 @@ fieldset {
     padding: 0.2em 0;
 }
 
+.dataTables_filter input {
+    width: 330px !important;
+}
+
+input#flExcel {
+    display: inline-block;
+}
+
+.dataTables_scroll td {
+    vertical-align: middle !important;
+}
 
 /* ==========================================================================
    Author's custom styles

@@ -7,36 +7,48 @@ using ADPostgres;
 using VisorPub.Models.Publicacion;
 using Newtonsoft.Json;
 using EPostgres;
+using EPostgres.Helper;
 using LNPostgres;
 using VisorPub.Models;
 using Seguridad.filters;
 using System.Data;
 using System.IO;
 using ExcelDataReader;
+using SendEmail;
+using System.Threading.Tasks;
 using VisorPub.Models.Inventario;
 
 namespace VisorPub.Controllers
 {
     public class InventarioController : Controller
     {
+        string cHistorialUrl = @"http://localhost:59423/Historial/InventarioVegetaciones/";
+
         // GET: Inventario
-        public ActionResult MisInventarios()
+        public ActionResult MisInventariosVegetacion()
         {
             return View();
         }
 
         public ActionResult RevisionInventarios()
         {
-            return View("MisInventarios");
+            ViewBag.nTipoForm = (int)FormTipoInventario.RevisionInventarios;
+            return View("MisInventariosVegetacion");
         }
 
-        public string ListarMisInventariosVegetacion(int nInvEst, int nPage = 1, int nSize = 10, string cNombreProy = "", string cAno = "")
+        public string ListarMisInventariosVegetacion(int nInvEst, int nTipoForm, int nPage = 1, int nSize = 10, string cNombreProy = "", string cAno = "")
         {
             InventarioVegetacionLN oInvVeg = new InventarioVegetacionLN();
             Usuario oUsuario = new Usuario();
             oUsuario = (Usuario)Session["Datos"]; //Agregar verificacíon de sessión
+            var nUsuario = oUsuario.nUsuarioId;
+            // Si es supervisor no filtra por usuario
+            if (oUsuario.nRolId == (int)RolId.Supervisor && nTipoForm == (int)FormTipoInventario.RevisionInventarios)
+            {
+                nUsuario = 0;
+            }
 
-            ListaPaginada oLista = oInvVeg.ListarMisInventariosVegetacion(nInvEst, nPage, nSize, cNombreProy, cAno, oUsuario.nUsuarioId);
+            ListaPaginada oLista = oInvVeg.ListarMisInventariosVegetacion(nInvEst, nPage, nSize, cNombreProy, cAno, nUsuario);
 
             return JsonConvert.SerializeObject(oLista, Formatting.None,
             new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
@@ -112,7 +124,175 @@ namespace VisorPub.Controllers
             return id;
         }
 
+        public async Task<JsonResult> EnviarSolicitudInventarioVegetacion(InventarioVegetacion oInvVeg)
+        {
+            InventarioVegetacionLN oInvVegLN = new InventarioVegetacionLN();
 
+            //Actualiza estado inventario de Vegetacion
+            var nAct = oInvVegLN.ActualizaEstadoInventarioVegetacion(oInvVeg.nVegetacionId, (int) EstadoSolicitud.Solicitado);
+
+            if (oInvVeg.nVegetacionId != 0)
+            {
+                //Codificar url historial
+                HistorialLN oHistorialLN = new HistorialLN();
+                Historial oHistorial = new Historial
+                {
+                    nRefId = oInvVeg.nVegetacionId,
+                    nTipoReferencia = (int)TipoReferencia.InventarioVegetaciones,
+                    nEstado = 1
+                };
+
+                var nHistId = oHistorialLN.CrearHistorial(oHistorial);
+
+                Usuario oUsuarioReg = ((Usuario)Session["Datos"]);
+
+                // Registra historial - Solicitud Registrada
+                RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Solicitado);
+
+                //Obtener Unique Historial
+                var cHistUniqueId = oHistorialLN.GetRecordUniqueIdByReferenciaId(oInvVeg.nVegetacionId, TipoReferencia.InventarioVegetaciones);
+
+                //Enviar correo usuario registra
+                await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, $"Solicitud Inventario de Vegetación N° {oInvVeg.nVegetacionId} - Nueva Solicitud | VISOR IIAP", "<p>Estimado/a " + oUsuarioReg.cNombres + $"</p><p> Se ha registrado su solicitud de Inventario de Vegetación N° {oInvVeg.nVegetacionId} y estará en proceso de evaluación. Muchas Gracias </p><a href='{cHistorialUrl}" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
+
+                //Enviar alerta a los supervisores
+                RolLN oRol = new RolLN();
+                var oSupervisores = oRol.CargarUsuariosPorRol(RolId.Supervisor);
+
+                if (oSupervisores.Count() > 0)
+                {
+                    foreach (Usuario u in oSupervisores)
+                    {
+                        RegistrarAlerta(u.nUsuarioId, $"Solicitud Inventario de Vegetación N° {oInvVeg.nVegetacionId} - Nueva Solicitud", "Se ha registrado una nueva solicitud para su revisión.", $"/Inventario/RevisionInventarios/{oInvVeg.nVegetacionId}", AlertIcon.Solicitado, AlertColor.Solicitado);
+                    }
+
+                    //Enviar correo usuarios perfil supervisor
+                    var cSupervisorEmails = String.Join(", ", oSupervisores.Select(u => u.cEmail).ToArray());
+                    await GmailClient.SendEmailAsync(cSupervisorEmails, $"Solicitud Inventario de Vegetación N° {oInvVeg.nVegetacionId} - Nueva Solicitud | VISOR IIAP", "<p> Se ha registrado una nueva solicitud de Publicación con código  " + oInvVeg.nVegetacionId + $", favor de ingresar a la intranet para proceder con su validación. </p><a href='{cHistorialUrl}" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
+                }
+
+            }
+
+            return Json(JsonConvert.SerializeObject(nAct));
+        }
+
+        public async Task<JsonResult> EnviarCorrecionInventarioVegetacion(InventarioVegetacion oInvVeg)
+        {
+            InventarioVegetacionLN oInvVegLN = new InventarioVegetacionLN();
+            var cHistUniqueId = oInvVeg.oHist.cUniqueId;
+
+            //Actualiza estado inventario de Vegetacion
+            var nAct = oInvVegLN.ActualizaEstadoInventarioVegetacion(oInvVeg.nVegetacionId, (int)EstadoSolicitud.Solicitado);
+
+            if (oInvVeg.nVegetacionId != 0)
+            {
+                //Obtener datos usuario de la publicación
+                Usuario oUsuarioReg = ((Usuario)Session["Datos"]);
+
+                // Registra historial - Solicitud Registrada
+                RegistrarHistorial(oInvVeg.oHist.nHistorialId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Solicitado);
+
+                //Enviar correo usuario registra
+                await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, $"Solicitud Inventario de Vegetación N° {oInvVeg.nVegetacionId} - Corregida | VISOR IIAP", "<p>Estimado/a " + oUsuarioReg.cNombres + $"</p><p> Se ha registrado su solicitud de Inventario de Vegetación N° {oInvVeg.nVegetacionId} y estará en proceso de evaluación. Muchas Gracias </p><a href='{cHistorialUrl}" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
+
+                //Enviar alerta a los supervisores
+                RolLN oRol = new RolLN();
+                var oSupervisores = oRol.CargarUsuariosPorRol(RolId.Supervisor);
+
+                if (oSupervisores.Count() > 0)
+                {
+                    foreach (Usuario u in oSupervisores)
+                    {
+                        RegistrarAlerta(u.nUsuarioId, $"Solicitud Inventario de Vegetación N° {oInvVeg.nVegetacionId} - Corregida", "Se ha registrado una nueva solicitud para su revisión.", $"/Inventario/RevisionInventarios/{oInvVeg.nVegetacionId}", AlertIcon.Solicitado, AlertColor.Solicitado);
+                    }
+
+                    //Enviar correo usuarios perfil supervisor
+                    var cSupervisorEmails = String.Join(", ", oSupervisores.Select(u => u.cEmail).ToArray());
+                    await GmailClient.SendEmailAsync(cSupervisorEmails, $"Solicitud Inventario de Vegetación N° {oInvVeg.nVegetacionId} - Nueva Solicitud | VISOR IIAP", "<p> Se ha registrado una nueva solicitud de Publicación con código  " + oInvVeg.nVegetacionId + $", favor de ingresar a la intranet para proceder con su validación. </p><a href='{cHistorialUrl}" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
+                }
+
+            }
+
+            return Json(JsonConvert.SerializeObject(nAct));
+        }
+        
+
+        public async Task<JsonResult> RegistrarObservacionInvVeg(int nInvVegId, int nUsuId, int nHistId, string nUHistId, string cMensaje)
+        {
+            Usuario oUsuarioReg = ((Usuario)Session["Datos"]);
+
+            //Cambiar estado inventario de vegetación
+            InventarioVegetacionLN oInvVeg = new InventarioVegetacionLN();
+            oInvVeg.ActualizaEstadoInventarioVegetacion(nInvVegId, (int)EstadoSolicitud.Observado);
+
+            //Obtener datos usuario del inventario
+
+            UsuarioLN oUsuarioLN = new UsuarioLN();
+            var oUsuarioPub = oUsuarioLN.CargarDatosUsuario(nUsuId);
+
+            // Registra historial - Observación
+            var nHisDet = RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Observado, cMensaje);
+
+            //Registrar alerta para el usuario
+            RegistrarAlerta(oUsuarioPub.nUsuarioId, $"Solicitud Inventario de Vegetación N° {nInvVegId} - Observada", "Se ha encontrado observaciones en su solicitud. Favor de revisar los detalles en el historial.", $"/Inventario/MisInventariosVegetacion/{nInvVegId}", AlertIcon.Observado, AlertColor.Observado);
+
+            HistorialLN oHistorialLN = new HistorialLN();
+            //Supervisor envia correo a usuario registro
+            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, $"Solicitud Inventario de Vegetación N° {nInvVegId} - Observada | VISOR IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + "</p><p> Se ha encontrado observaciones a la solicitud realizada. Agradeceremos levantar las observaciones para proceder a su aprobación. </p>"+ $"<a href='{cHistorialUrl}" + nUHistId + "' target='_blank'> Ver Detalle </a>", "");
+
+            return Json(JsonConvert.SerializeObject(nHisDet));
+        }
+
+        public async Task<JsonResult> RegistrarRechazoInvVeg(int nInvVegId, int nUsuId, int nHistId, string nUHistId, string cMensaje)
+        {
+            Usuario oUsuarioReg = ((Usuario)Session["Datos"]);
+
+            //Cambiar estado inventario de vegetación
+            InventarioVegetacionLN oInvVeg = new InventarioVegetacionLN();
+            oInvVeg.ActualizaEstadoInventarioVegetacion(nInvVegId, (int)EstadoSolicitud.Rechazado);
+
+            //Obtener datos usuario del inventario
+
+            UsuarioLN oUsuarioLN = new UsuarioLN();
+            var oUsuarioPub = oUsuarioLN.CargarDatosUsuario(nUsuId);
+
+            // Registra historial - Rechazado
+            var nHisDet = RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Rechazado, cMensaje);
+
+            //Registrar alerta para el usuario
+            RegistrarAlerta(oUsuarioPub.nUsuarioId, $"Solicitud Inventario de Vegetación N° {nInvVegId} - Rechazada", "Se ha rechazado su solicitud. Por favor de revisar los comentarios en el historial.", $"/Inventario/MisInventariosVegetacion/{nInvVegId}", AlertIcon.Rechazado, AlertColor.Rechazado);
+
+            HistorialLN oHistorialLN = new HistorialLN();
+            //Supervisor envia correo a usuario registro
+            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, $"Solicitud Inventario de Vegetación N° {nInvVegId} - Rechazada | VISOR IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + "</p><p>Agradecemos su colaboración, sin embargo, se ha rechazado su solicitud. Agradeceremos ponerse en contacto con nosotros de existir algún mal entendido. Muchas gracias. </p>"+ $"<a href='{cHistorialUrl}" + nUHistId + "' target='_blank'> Ver Detalle </a>", "");
+
+            return Json(JsonConvert.SerializeObject(nHisDet));
+        }
+
+        public async Task<JsonResult> RegistrarAprobacionInvVeg(int nInvVegId, int nUsuId, int nHistId, string nUHistId)
+        {
+            Usuario oUsuarioReg = ((Usuario)Session["Datos"]);
+
+            //Cambiar estado inventario de vegetación
+            InventarioVegetacionLN oInvVeg = new InventarioVegetacionLN();
+            oInvVeg.ActualizaEstadoInventarioVegetacion(nInvVegId, (int)EstadoSolicitud.Aprobado);
+
+            //Obtener datos usuario de la publicación
+            UsuarioLN oUsuarioLN = new UsuarioLN();
+            var oUsuarioPub = oUsuarioLN.CargarDatosUsuario(nUsuId);
+
+            // Registra historial - Aprobado
+            var nHisDet = RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Aprobado);
+
+            //Registrar alerta para el usuario
+            RegistrarAlerta(oUsuarioPub.nUsuarioId, $"Solicitud Inventario de Vegetación N° {nInvVegId} - ¡Aprobada!", "Se ha aprobado su solicitud. Muchas gracias por su gran trabajo.", $"/Inventario/MisInventariosVegetacion/{nInvVegId}", AlertIcon.Aprobado, AlertColor.Aprobado);
+
+            HistorialLN oHistorialLN = new HistorialLN();
+            //Supervisor envia correo a usuario registro
+            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, $"Solicitud Inventario de Vegetación N° {nInvVegId} - ¡Aprobada! | VISOR IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + $"</p><p>Su solicitud de Publicación N° {nInvVegId} ha sido aprobada. Muchas gracias por su colaboración. </p>"+$"<a href='{cHistorialUrl}" + nUHistId + "' target='_blank'> Ver Detalle </a>", "");
+
+            return Json(JsonConvert.SerializeObject(nHisDet));
+        }
 
         // INVENTARIO DE SUELOS
 
@@ -313,6 +493,36 @@ namespace VisorPub.Controllers
             }
         }
 
+        public void RegistrarAlerta(int nUsuarioId, string cTitulo, string cMensaje, string cUrl, string AlertaIcono, string cAlertaColor)
+        {
+            AlertaLN oAlertaLN = new AlertaLN();
+            Alerta oAlerta = new Alerta();
 
+            oAlerta.nUsuarioId = nUsuarioId;
+            oAlerta.cTitulo = cTitulo;
+            oAlerta.cMensaje = cMensaje;
+            oAlerta.cUrl = cUrl;
+            oAlerta.cAlertaIcono = AlertaIcono;
+            oAlerta.cAlertaColor = cAlertaColor;
+            oAlerta.nEstado = 1;
+
+            var nAlertaId = oAlertaLN.RegistrarAlerta(oAlerta);
+        }
+
+        public int RegistrarHistorial(int nHistId, int nUsuarioId, EstadoSolicitud nEstado, string cMensaje = "")
+        {
+
+            HistorialDetalleLN oHistDetLN = new HistorialDetalleLN();
+            HistorialDetalle oHistDet = new HistorialDetalle
+            {
+                nHistorialId = nHistId,
+                nUsuarioRegistra = nUsuarioId,
+                cDescripcion = cMensaje,
+                Estado = (int)nEstado
+            };
+
+            var nHisDet = oHistDetLN.RegistrarHistorialDetalle(oHistDet);
+            return nHisDet;
+        }
     }
 }

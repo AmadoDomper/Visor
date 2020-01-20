@@ -46,6 +46,7 @@ namespace SendEmail
             }
             catch (Exception ex)
             {
+                Console.Write(ex.Message);
                 //msg = "Invalid emailid or password or internet connection is not available";
             }
         }

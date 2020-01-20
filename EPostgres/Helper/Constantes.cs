@@ -9,8 +9,8 @@ namespace EPostgres.Helper
         public enum TipoReferencia
         {
             Publicaciones = 1,
-            InventarioSuelos = 2,
-            InventarioVegetaciones = 3
+            InventarioVegetaciones = 2,
+            InventarioSuelos = 3
         }
 
         public enum EstadoSolicitud
@@ -21,10 +21,16 @@ namespace EPostgres.Helper
             Rechazado = 4
         }
 
-        /// <summary>
-        /// Devuelve el Id único de acuerdo a su Rol
-        /// </summary>
-        public enum RolId
+        public enum FormTipoInventario
+        {
+            MisInventarios = 1,
+            RevisionInventarios = 2
+        }
+
+    /// <summary>
+    /// Devuelve el Id único de acuerdo a su Rol
+    /// </summary>
+    public enum RolId
         {
    	        Administrador    =  1,
    	        Investigador     =  2,

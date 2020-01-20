@@ -378,7 +378,7 @@
     <Content Include="Views\Config\Config.cshtml" />
     <Content Include="Views\Usuario\GestionarUsuarios.cshtml" />
     <Content Include="Views\Menu\_Menu.cshtml" />
-    <Content Include="Views\Inventario\MisInventarios.cshtml" />
+    <Content Include="Views\Inventario\MisInventariosVegetacion.cshtml" />
     <Content Include="Views\Inventario\MisInventariosSuelos.cshtml" />
     <Content Include="Views\Inicio\IndexAnt.cshtml" />
     <Content Include="Views\Join\Index.cshtml" />

@@ -185,7 +185,7 @@
         if (window.location.hash !== '') {
             var hash = window.location.hash.replace('#map=', '').substr(1);
             var parts = hash.split('/');
-
+            console.log("Gestion");
             console.log(hash);
             console.log(parts);
             $("#contenido").load(hash);

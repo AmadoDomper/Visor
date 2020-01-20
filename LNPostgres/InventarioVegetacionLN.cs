@@ -39,8 +39,12 @@ namespace LNPostgres
             return oInventarioVegetacionAD.ListarMisInventariosVegetacionPag(nInvEst, nPage, nSize, cNombreProy, cAno, nUsuarioId);
         }
 
+        public int ActualizaEstadoInventarioVegetacion(int nVegId, int nEstado)
+        {
+            return oInventarioVegetacionAD.ActualizaEstadoInventarioVegetacion(nVegId, nEstado);
+        }
 
-        
+
 
 
     }

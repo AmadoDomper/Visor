@@ -23,9 +23,9 @@
             beforeSend: function () { durante() },
             error: function (v, status) { fError(v, status) },
             success: function (data) {
-                if (bloqueo) { DesbloquearCarga(); }
                 terminado(data);
                 resultadoajax = data;
+                if (bloqueo) { DesbloquearCarga(); }
             }
         });
     }
@@ -33,19 +33,21 @@
 
 
 function BloquearCarga() {
+    let vntEspera = $("#vntEspera");
 
-    var html = "";
-    html = ('<div id="vntEspera" class="modal fade espera" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="true"> <div class="modal-dialog modal-sm"> <div class="modal-content"> <div class="row"> <div class="center col-xs-3 col-sm-3 col-md-3 col-lg-12"> <div class="spinnerX"><div class="rect1"></div> <div class="rect2"></div> <div class="rect3"></div> <div class="rect4"></div> <div class="rect5"></div> </div></div>  </div> <div class="row"><div class="center col-xs-3 col-sm-3 col-md-3 col-lg-12"> <p style="text-align:center;font-size: 14px;"> Procesando... </p> </div></div></div> </div> </div>');
-    $(html).appendTo('body');
+    if (vntEspera.length == 0) {
+        let html = "";
+        html = ('<div id="vntEspera" class="modal fade espera" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="true"> <div class="modal-dialog modal-sm"> <div class="modal-content"> <div class="row"> <div class="center col-xs-3 col-sm-3 col-md-3 col-lg-12"> <div class="spinnerX"><div class="rect1"></div> <div class="rect2"></div> <div class="rect3"></div> <div class="rect4"></div> <div class="rect5"></div> </div></div>  </div> <div class="row"><div class="center col-xs-3 col-sm-3 col-md-3 col-lg-12"> <p style="text-align:center;font-size: 14px;"> Procesando... </p> </div></div></div> </div> </div>');
+        $(html).appendTo('body');
+    }
+
     $("#vntEspera").modal('show');
 }
 
 function DesbloquearCarga() {
-    $("#vntEspera").modal('hide');
 
     setTimeout(function () {
-        $("div#vntEspera").remove();
-        $(".modal-backdrop").remove();
+        $("#vntEspera").modal('hide');
     }, 1000);
 
 

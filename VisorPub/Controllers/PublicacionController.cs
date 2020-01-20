@@ -212,7 +212,7 @@ namespace VisorPub.Controllers
                 //Obtener datos usuario de la publicación
                 Usuario oUsuarioReg = ((Usuario)Session["Datos"]);
 
-                // Registra historial - Rechazado
+                // Registra historial - Solicitado
                 RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Solicitado);
 
                 //Enviar correo usuario registra
@@ -287,9 +287,8 @@ namespace VisorPub.Controllers
             RegistrarAlerta(oUsuarioPub.nUsuarioId, $"Solicitud de Publicación N° {nPubId} - Rechazada", "Se ha rechazado su solicitud. Por favor de revisar los comentarios en el historial.", $"/Publicacion/MisPublicaciones/{nPubId}", AlertIcon.Rechazado, AlertColor.Rechazado);
 
             HistorialLN oHistorialLN = new HistorialLN();
-            var cHistUniqueId = oHistorialLN.GetRecordUniqueIdByReferenciaId(nPubId, TipoReferencia.Publicaciones);
             //Supervisor envia correo a usuario registro
-            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, $"Solicitud de Publicación N° {nPubId} - Rechazada | VISOR IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + "</p><p>Agradecemos su colaboración, sin embargo, se ha rechazado su solicitud. Agradeceremos ponerse en contacto con nosotros de existir algún mal entendido. Muchas gracias. </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Ver Detalle </a>", "");
+            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, $"Solicitud de Publicación N° {nPubId} - Rechazada | VISOR IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + "</p><p>Agradecemos su colaboración, sin embargo, se ha rechazado su solicitud. Agradeceremos ponerse en contacto con nosotros de existir algún mal entendido. Muchas gracias. </p><a href='http://localhost:59423/Historial/Publicaciones/" + nUHistId + "' target='_blank'> Ver Detalle </a>", "");
 
             return Json(JsonConvert.SerializeObject(nHisDet));
         }
@@ -314,9 +313,8 @@ namespace VisorPub.Controllers
             RegistrarAlerta(oUsuarioPub.nUsuarioId, $"Solicitud de Publicación N° {nPubId} - ¡Aprobada!", "Se ha aprobado su solicitud. Muchas gracias por su gran trabajo.", $"/Publicacion/MisPublicaciones/{nPubId}", AlertIcon.Aprobado, AlertColor.Aprobado);
 
             HistorialLN oHistorialLN = new HistorialLN();
-            var cHistUniqueId = oHistorialLN.GetRecordUniqueIdByReferenciaId(nPubId, TipoReferencia.Publicaciones);
             //Supervisor envia correo a usuario registro
-            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, $"Solicitud de Publicación N° {nPubId} - ¡Aprobada! | VISOR IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + $"</p><p>Su solicitud de Publicación N° {nPubId} ha sido aprobada. Muchas gracias por su colaboración. </p><a href='http://localhost:59423/Historial/Publicaciones/" + cHistUniqueId + "' target='_blank'> Ver Detalle </a>", "");
+            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, $"Solicitud de Publicación N° {nPubId} - ¡Aprobada! | VISOR IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + $"</p><p>Su solicitud de Publicación N° {nPubId} ha sido aprobada. Muchas gracias por su colaboración. </p><a href='http://localhost:59423/Historial/Publicaciones/" + nUHistId + "' target='_blank'> Ver Detalle </a>", "");
 
             return Json(JsonConvert.SerializeObject(nHisDet));
         }

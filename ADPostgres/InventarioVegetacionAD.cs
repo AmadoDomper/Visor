@@ -5,6 +5,7 @@ using System.Data;
 using ADPostgres.Helper;
 using EPostgres;
 using Npgsql;
+using EPostgres.Helper;
 
 namespace ADPostgres
 {
@@ -135,6 +136,7 @@ namespace ADPostgres
                         }
                     }
 
+                    oVeg.oHist = new HistorialAD().GetHistorialByReferenciaId(nVegId, TipoReferencia.InventarioVegetaciones);
                     oVeg.ListaParcelas = new VegetacionParcelaAD().CargaListaInventarioVegetacionParcelas(nVegId);
                 }
                 catch (Exception ex)
@@ -180,7 +182,9 @@ namespace ADPostgres
                             oInvVegetacion.oUsuario.nUsuarioId = (int)reader["usuarioid"];
                             oInvVegetacion.oUsuario.cNombres = (string)reader["usuario_nombres"];
                             oInvVegetacion.oUsuario.cInstitucion = (string)reader["usuario_institucion"];
-                            oInvVegetacion.nEstado = (int)reader["estado"];
+                            oInvVegetacion.cEstado = (string)reader["estado"];
+                            oInvVegetacion.oHist = new Historial();
+                            oInvVegetacion.oHist.cUniqueId = (string)reader["hist_unique_id"];
 
                             ListaInvPag.oLista.Add(oInvVegetacion);
                         }
@@ -228,6 +232,31 @@ namespace ADPostgres
                     throw ex;
                 }
             }
+        }
+
+        public int ActualizaEstadoInventarioVegetacion(int vegId, int estado)
+        {
+            var conexion = new ConexionPosgreSQL();
+            int id = 0;
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_actualiza_inventario_vegetacion_estado))
+                    {
+                        cmd.Parameters.AddWithValue("_vegetacionid", vegId);
+                        cmd.Parameters.AddWithValue("_estado", estado);
+
+                        id = (int)cmd.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return id;
         }
 
 
