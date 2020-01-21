@@ -1,6 +1,9 @@
-﻿
+﻿@using EPostgres;
+@using EPostgres.Helper;
 @{
     Layout = null;
+    Usuario oUsuario = new Usuario();
+    oUsuario = (Usuario)Session["Datos"];
 }
 
 <link href="~/Content/css/dataTables/dataTables.bootstrap.min.css" rel="stylesheet" />
@@ -16,27 +19,32 @@
     <input id="hdnEstado" type="hidden" />
     <input id="hdnPubEst" type="hidden" />
     <input id="hdnPag" type="hidden" />
-    @*<div class="row">*@
+    <input id="hdnUsuId" type="hidden" />
+    <input id="hdnHistId" type="hidden" />
+    <input id="hdnUHistId" type="hidden" />
+
     <div id="target1" class="panel move panel-inverse active m-t-5">
         <div class="panel-heading"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Mis Inventarios de Suelos</div>
         <div class="panel-body">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <input href="#target2" id="btnNuevoInventarioSuelos" type="button" class="btn btn-sm btn-success target" value="Registre su inventario" />
+                    @if (!(oUsuario.nRolId == (int)RolId.Supervisor && ViewBag.nTipoForm == (int)FormTipoInventario.RevisionInventarios))
+                    {
+                        <input href="#target2" id="btnNuevoInventarioSuelos" type="button" class="btn btn-sm btn-success target" value="Registre su inventario" />
+                        <div class="hr-line-dashed m-b-10 "></div>
+                    }
                 </div>
             </div>
-            <div class="hr-line-dashed"></div>
-            <div class="row m-b-10 m-t-10">
+            <div class="row m-b-10">
                 <div class="col-sm-11">
                     <div class="form-inline">
                         <div class="form-group m-r-40">
-                            <label class="control-label m-r-5" for="status">Mostrar inventario estado:</label>
+                            <label class="control-label m-r-5" for="status">Estado:</label>
                             <select name="status" id="cmbInvEstado" class="form-control">
                                 <option value="1" selected="">Solicitado</option>
                                 <option value="2">Aprobado</option>
-                                <option value="3">Rechazado</option>
-                                <option value="4">Observado</option>
-                                <option value="-1">Anulado</option>
+                                <option value="3">Observado</option>
+                                <option value="4">Rechazado</option>
                             </select>
                         </div>
                         <div class="form-group m-r-10">
@@ -45,7 +53,6 @@
                                 <option value="1" selected="">Título del Proyecto</option>
                                 <option value="2">Año</option>
                                 <option value="3">Colector</option>
-                                @*<option value="4">Rango de Fecha</option>*@
                             </select>
                         </div>
                         <div class="form-group">
@@ -76,7 +83,7 @@
         <div class="panel-body" style="display: block;">
             <div class="row">
                 <div class="col-lg-12">
-                    <div id="frm" class="form-horizontal" data-smk-icon="glyphicon-asterisk" autocomplete="off">
+                    <form id="frm" class="form-horizontal" data-smk-icon="glyphicon-asterisk" autocomplete="off">
                         <div class="form-group">
                             <label class="control-label col-xs-12 col-sm-2 col-md-3 col-lg-2" for="email">Código Proyecto</label>
                             <div class="col-xs-5 col-sm-2">
@@ -95,15 +102,19 @@
                             <div class="col-xs-5 col-sm-2 col-md-2">
                                 <input type="text" class="form-control" id="txtAno">
                             </div>
-                            <div class="col-xs-5 col-sm-3 col-md-3">
-                                <button id="btnGuardarInvSue" class="btn btn-sm btn-success m-r-10">
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-9 col-sm-8 col-md-5" style=" padding-top: 1px;text-align: center;">
+                                <button id="btnGuardarInvSue" type="button" class="btn btn-sm btn-success m-r-10">
                                     <span class="fa fa-floppy-o" aria-hidden="true"></span> Guardar
                                 </button>
-                                <button id="btnEliminarInvSue" class="btn btn-sm btn-danger" disabled>
+                                <button id="btnEliminarInvSue" type="button" class="btn btn-sm btn-danger" disabled="">
                                     <span class="fa fa-trash-o" aria-hidden="true"></span> Eliminar
                                 </button>
-                                <input id="flExcel" name="file" type="file" />
-                                <button id="btnGargarExcel" class="btn btn-sm btn-danger">
+                            </div>
+                            <div class="col-xs-9 col-sm-8 col-md-6">
+                                <input id="flExcel" name="file" type="file">
+                                <button id="btnGargarExcel" type="button" class="btn btn-sm btn-danger">
                                     <span class="fa fa-file-excel-o" aria-hidden="true"></span> Cargar Excel
                                 </button>
                             </div>
@@ -114,15 +125,40 @@
                         </div>
 
                         <div class="row m-t-5">
-                            <div class="col-md-8"></div>
-                            <div class="col-md-2">
-                                <input type="button" class="btn btn-primary btn-block btn-fill" value="Enviar" id="btenviar" name="btenviar">
+                            <div class="col-md-4">
+                                <div class="col-md-6">
+                                    <input type="button" class="btn btn-warning btn-block btn-fill" style="margin-top: 0px;" value="Historial" id="btnHistorial">
+                                </div>
                             </div>
+                            @if (oUsuario.nRolId == (int)RolId.Supervisor && ViewBag.nTipoForm == (int)FormTipoInventario.RevisionInventarios)
+                            {
+                                <div id="ctnRevision">
+
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-block btn-primary" style="margin-top: 0px;" value="Aprobar" id="btnAprobar" disabled="disabled"><i class="fa fa-check" aria-hidden="true"></i> Aprobar</button>
+                                    </div><div class="col-md-2">
+                                        <button type="button" class="btn btn-success btn-block btn-fill" style="margin-top: 0px;" value="Observar" id="btnObservar" disabled="disabled"><i class="fa fa-search" aria-hidden="true"></i> Observar</button>
+                                    </div><div class="col-md-2">
+                                        <button type="button" class="btn btn-danger btn-block btn-fill" style="margin-top: 0px;" value="Rechazar" id="btnRechazar" disabled="disabled"><i class="fa fa-times" aria-hidden="true"></i> Rechazar</button>
+
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div id="ctnSolicitud">
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3">
+                                        <input type="button" class="btn btn-primary btn-block btn-fill" value="Enviar Solicitud" id="btenviar" name="btenviar" style="display:none;">
+                                        <input type="button" class="btn btn-primary btn-block btn-fill" value="Enviar Corrección" id="btenviarCorrecion" name="btenviarCorrecion" style="display:none;">
+                                    </div>
+                                </div>
+                            }
                             <div class="col-md-2">
                                 <input type="button" class="btn btn-default btn-block btn-fill" value="Cancelar" id="btcancelar" name="btcancelar">
                             </div>
                         </div>
-                    </div>
+                    </form>
 
                 </div>
             </div>
@@ -238,6 +274,10 @@
 </div>
 
 <script type="text/javascript">
+    let nTipoForm = window.location.hash.replace('#map=', '').substr(1).split("/")[2] == "RevisionInventariosSuelos" ? 2 : 1;
+
+    $("#title").html(nTipoForm == 1 ? "Mis Inventarios de Suelos" : "Revisión de Inventarios de Suelos");
+
     let datos = [];
     let indexSeleccionado = -1;
 
@@ -247,6 +287,9 @@
     let anoColecta = $('#txtAno');
 
     let perfilModalId = $('#hdnPerModId');
+    let usuarioId = $('#hdnUsuId');
+    let historialId = $('#hdnHistId');
+    let UHistId = $('#hdnUHistId');
     let modalPerfilModal = $('#modalPerfilModal');
     let departamento = $("#txtDepartamento");
     let longitud = $("#txtLongitud");
@@ -275,6 +318,7 @@
     $("#btcancelar").click(RegresarListaPrincipal);
     $("#btnNuevoInventarioSuelos").click(NuevoInventarioSuelos);
     $("#btnGargarExcel").click(CargarExcel);
+    $("#btenviar").click(EnviarSolicitud);
 
     jQuery(function ($) {
         $('input.target').click(function () {
@@ -326,31 +370,28 @@
 
         $.fn.Conexion({
             direccion: '@Url.Action("ListarMisInventariosSuelos", "Inventario")',
-            datos: { "nInvEst": nPubEst, "nPage": nPage, "nSize": nSize, "cNombreProy": cNombreProy, "cAno": cAno },
+            datos: { "nInvEst": nPubEst, "nPage": nPage, "nSize": nSize, "cNombreProy": cNombreProy, "cAno": cAno, "nTipoForm": nTipoForm },
             bloqueo: blo == false ? false : true ,
             terminado: function (data) {
                 let d = JSON.parse(data);
 
                 $("#cntListaInvSuelos").Tabla({
                     tblId: "tblInvSuelos",
-                    cabecera: "#,Nombre del Proyecto,Año Colecta,F. Creación,Usuario, Estado",
-                    campos: "nSuelosId,cNombreProyecto,cAnoColecta, cFechaRegistro, oUsuario.cNom, nEstado",
+                    cabecera: "#,Nombre del Proyecto,Año Colecta,F. Creación,Usuario, Estado, HistId",
+                    campos: "nSuelosId,cNombreProyecto,cAnoColecta, cFechaRegistro, oUsuario.cNom, cEstado ,oHist.UniqueId",
                     scrollVertical: "Si",
                     tipoCampo: ",,,,,",
                     alinear: "C,L,C,C,C,C",
-                    cellLen: "50,200,100,100,80,80,50,50",
+                    cellLen: "50,200,100,100,80,80,0,50,50,50",
                     cantRegVertical: 15,
                     pag: true,
+                    hist: true,
                     pagDato: { "nPage": d.nPage, "nPageTot": d.nPageTot, "nPageSize": d.nPageSize, "nRows": d.nRows },
                     pagEvent: ListarMisInvSue,
                     edit: true,
                     dblClick: true,
                     editEvent: function (fila) {
                         let nSueId = fila.find("td").eq(0).html();
-                        $("#hdnEstado").val("E");
-                        $('input.target')[0].click();
-                        $("#btnEliminarInvSue").prop("disabled", false);
-                        console.log(nSueId);
                         ListarPerfilModal(nSueId)
 
                     },
@@ -361,6 +402,14 @@
                         console.log("Se elimino el inventario");
                         ConfirmaEliminarInvSue(nSueId)
                     },
+                    histEvent: function (fila) {
+                        let cHistid = fila.find("td").eq(6).html();
+
+                        window.open(
+                            'http://localhost:59423/Historial/InventarioSuelos/' + cHistid,
+                            '_blank'
+                        );
+                    },
                     datos: d.oLista
                 });
             }
@@ -368,10 +417,19 @@
     }
 
     function NuevoInventarioSuelos() {
-        ListarPerfilModal(0);
+        $("#target2 :input").prop("disabled", false);
+        $("#flExcel,#btnGargarExcel,#btnEliminarInvSue,#txtCodProy").prop("disabled", true);
+        $("#btnGuardarInvSue,#btnEliminarInvSue,#flExcel,#btnGargarExcel,#btnAgregar").show();
+        $("#btenviar").show()
+        CrearTabla({});
     }
 
     function ListarPerfilModal(nSueId) {
+        $("#hdnEstado").val("E");
+        vista("#target2");
+        $("#btnEliminarInvSue").prop("disabled", false);
+        console.log(nSueId);
+
         $.fn.Conexion({
                 direccion: '@Url.Action("CargaDatosInventarioSuelos", "Inventario")',
                 datos: { "nSueId": nSueId },
@@ -385,34 +443,26 @@
                     nombreProyecto.val(oInv.cNombreProyecto);
                     anoColecta.val(oInv.cAnoColecta);
 
+                    usuarioId.val(oInv.nUsuarioId);
+                    historialId.val(oInv.oHist.Id)
+                    UHistId.val(oInv.oHist.UniqueId)
+
                     CrearTabla(oInv.ListaPerfilModal);
                     if (sueId.val() != "") {
                         $("#btnAgregar").prop("disabled", false);
                     }
-                    //$("#hdnPubEst").val(oPub.nEstado);
-                    //$('#ddlTipo').val(oPub.tipo.Id);
-                    //$('#ddlTema').val(oPub.lsTemas[0].id);
-                    //$('#txtAnoPublicacion').val(oPub.ano);
-                    //$('#txtEnlace').val(oPub.enlace);
-                    //$('#txtReferencia').val(oPub.refBi);
-                    //for (var i = 0; i < oPub.lsFeatures.length; i++) {
-                    //    var punto = oPub.lsFeatures[i].Info.split(' ');
-                    //        indexFeature++;
 
-                    //    var info = punto[0] + '|' + punto[1];
-                    //    var item = { "n": indexFeature, "Tipo": 1, "Info": info,"Longitud": punto[0], "Latitud": punto[1]};
-                    //    $("#jsGrid").jsGrid("insertItem", item);
+                    if (oInv.nEstado == 1) {
+                        SetEstadoSolicitado();
+                    } else if (oInv.nEstado == 2) {
+                        SetEstadoAprobado();
+                    } else if (oInv.nEstado == 3) {
+                        SetEstadoObservado();
+                    } else if (oInv.nEstado == 4) {
+                        SetEstadoRechazado();
+                    }
 
-                    //    lsFeatures.push(item);
-                    //    map_AgregarPunto(punto,indexFeature);
 
-                    //}
-
-                    //map.updateSize();
-
-                    //if (oPub.nEstado == 1) {
-                    //    SetEstadoSolicitado();
-                    //}
                 },
                 bloqueo: true
         });
@@ -526,7 +576,7 @@
         $('#tblPerfilModal_wrapper div.row > div.col-sm-6')[0].remove();
         $('#tblPerfilModal_wrapper div.row div.col-sm-6:eq(0)')
             .after(`<div class='col-xs-3 col-sm-3'>
-                                <button id='btnAgregar' class='btn btn-sm btn-success' disabled> Agregar Perfil Modal </button>
+                                <button id='btnAgregar' type='button' class='btn btn-sm btn-success' disabled> Agregar Perfil Modal </button>
                             </div>
                             <div class='col-sm-3'>
                                 <button id='btnCargar' title='Refrescar Lista' style='float: right;' type='button' class='btn btn-sm btn-success' data-toggle='tooltip'>
@@ -622,14 +672,15 @@
             'cFactorLimitante':factorLimitante.val()
         }
 
+        $('#modalPerfilModal').modal('toggle');
+
         $.fn.Conexion({
             direccion: '@Url.Action("InsertaActualizaInventarioSuelosPerfilModal", "Inventario")',
             datos: oPerfilModal,
             terminado: function (data, textStatus, jqXHR) {
                 let id = JSON.parse(data);
                 console.log(data);
-                $('#modalPerfilModal').modal('toggle');
-                ListarPerfilModal(perfilModal.nSuelosId);
+                ListarPerfilModal(oPerfilModal.nSuelosId);
                 perfilModalId.val("");
             },
             bloqueo: true
@@ -690,8 +741,12 @@
 
                 if (id > 0) {
                     $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación se realizó correctamente." });
-                    ListarPerfilModal(id);
-                    $("#btnEliminarInvSue").prop("disabled", false);
+
+                    if (suelosId.val() == "") {
+                        suelosId.val(id);
+                        sueId.val(id);
+                    }
+                    $("#btnEliminarInvSue,#btnGargarExcel,#flExcel,#btnEliminarInvSue,#btnAgregar").prop("disabled", false);
 
                 } else {
                     $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación no se realizó correctamente" });
@@ -792,5 +847,259 @@
             }
         });
     }
+
+    function EnviarSolicitud() {
+
+        let nSueId = $("#hdnSueId").val();
+
+        if (nSueId != "") {
+        let inventario = {
+            'nSuelosId': nSueId
+        }
+
+            $.fn.Conexion({
+                direccion: '@Url.Action("EnviarSolicitudInventarioSuelos", "Inventario")',
+                datos: inventario,
+                terminado: function (data, textStatus, jqXHR) {
+                    let id = JSON.parse(data);
+                    console.log(id);
+
+                    if (id > 0) {
+                        $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación se realizó correctamente." });
+
+                        sueId.val("");
+                        suelosId.val("");
+                        ListarMisInvSue();
+                        RegresarListaPrincipal();
+                    } else {
+                        $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación no se realizó correctamente" });
+                    }
+                },
+                bloqueo: true
+            });
+        } else {
+            $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Es necesario agregar como mínimo una parcela." });
+        }
+    }
+
+    function SetEstadoSolicitado() {
+        $("#target2 :input").prop("disabled", true);
+        $("#btnAprobar,#btnObservar,#btnRechazar").prop("disabled", false);
+        $("#btnGuardarInvSue,#btnEliminarInvSue,#flExcel,#btnGargarExcel,#btnAgregar").show();
+        $("#btcancelar").prop("disabled", false);
+        $("#btnHistorial").prop("disabled", false);
+        $("#btenviar").attr("disabled", true).hide();
+    }
+
+    function SetEstadoAprobado() {
+        $("#btnAprobar,#btnObservar,#btnRechazar").attr("disabled", true);
+        $("#btenviar").attr("disabled", true).hide();
+        $("#btenviarCorrecion").attr("disabled", true).hide();
+        $("#btnGuardarInvSue,#btnEliminarInvSue,#flExcel,#btnGargarExcel,#btnAgregar").hide();
+        $('#tblPerfilModal').DataTable().column(0).visible(false);
+        $('#tblPerfilModal').DataTable().column(1).visible(false);
+    }
+
+    function SetEstadoObservado() {
+        $("#btnAprobar,#btnObservar,#btnRechazar").attr("disabled", true);
+        $("#btenviar").attr("disabled", true).hide();
+        $("#btenviarCorrecion").attr("disabled", false).show();
+    }
+
+    function SetEstadoRechazado() {
+        $("#btnAprobar,#btnObservar,#btnRechazar").attr("disabled", true);
+        $("#btenviar").attr("disabled", true).hide();
+        $("#btenviarCorrecion").attr("disabled", true).hide();
+        $("#btnGuardarInvSue,#btnEliminarInvSue,#flExcel,#btnGargarExcel,#btnAgregar").hide();
+        $('#tblPerfilModal').DataTable().column(0).visible(false);
+        $('#tblPerfilModal').DataTable().column(1).visible(false);
+    }
+
+    $("#btnHistorial").bind("click", function () {
+        let cHistid = $("#hdnUHistId").val();
+
+        window.open(
+            'http://localhost:59423/Historial/InventarioSuelos/' + cHistid,
+            '_blank'
+        );
+    });
+
+    $("#btnAprobar").bind("click", function () {
+        $.fn.Mensaje({ titulo: "Mensaje", tipo: "AcepCanc", mensaje: "¿Esta seguro de Aprobar el Inventario de Suelos?", funcionAceptar: Aprobar });
+    });
+
+    $("#btnObservar").bind("click", function () {
+        $.fn.Mensaje({ titulo: "Mensaje", tipo: "AcepCanc", mensaje: "¿Esta seguro de Observar el Inventario de Suelos?", funcionAceptar: Observar });
+    });
+
+    $("#btnRechazar").bind("click", function () {
+        $.fn.Mensaje({ titulo: "Mensaje", tipo: "AcepCanc", mensaje: "¿Esta seguro de Rechazar el Inventario de Suelos?", funcionAceptar: Rechazar });
+    });
+
+
+    
+    function Aprobar() {
+        let nInvSueId = suelosId.val();
+        let nHistId = historialId.val();
+        let nUHistId = UHistId.val();
+        let nUsuId = usuarioId.val();
+
+            $.fn.Conexion({
+                direccion: '@Url.Action("RegistrarAprobacionInvSue", "Inventario")',
+                datos: { "nInvSueId": nInvSueId, "nUsuId": nUsuId , "nHistId": nHistId, "nUHistId": nUHistId},
+                terminado: function (data, textStatus, jqXHR) {
+                        SetEstadoAprobado();
+                    $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Aprobación registrada correctamente." });
+                    ListarMisInvSue(null, null, false);
+                    },
+                    bloqueo: true
+            });
+    }
+
+    function Observar() {
+        $.fn.Ventana({
+            id: "vntMotivoObservacion",
+            titulo: "Registre motivo de la Observación",
+            tamano: "md"
+        });
+
+        let html = `
+                    <textarea class="form-control" id="txtObservacion" name="txtObservacion" rows="10" placeholder="Ingrese aquí las observaciones encontradas" value="" minlength="1"></textarea>
+                    <div id="msgObservacion"></div>                 
+                    <div class="col-sm-12 hr-line-dashed"></div>
+                        <div class="col-sm-12 text-center">
+                        <button id="btnObsAceptar" type="submit" class="btn btn-sm btn-primary m-r-5">Aceptar</button>
+                        <button id="btnObsCancelar" type="submit" data-dismiss="modal" aria-hidden="true" class="btn btn-sm btn-default">Cancelar</button>
+                    </div>`;
+
+        let msgObs = `<div class="alert alert-danger alert-dismissible text-center m-t-5 m-b-5" role="alert" style="margin-bottom: 10px;">
+                        <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">x</span>
+                        <span class="sr-only">Close</span>
+                        </button>El campo observación no puede estar vacío.
+                      </div>`;
+
+        $("#vntMotivoObservacion .panel-body").html(html);
+        $('#vntMotivoObservacion').modal('show');
+
+        $("#btnObsAceptar").bind("click", function () {
+
+            let nInvSueId = suelosId.val();
+            let nHistId = historialId.val();
+            let nUHistId = UHistId.val();
+            let cMensaje = $("#txtObservacion").val();
+            let nUsuId = usuarioId.val();
+
+            if (cMensaje != "") {
+                $.fn.Conexion({
+                    direccion: '@Url.Action("RegistrarObservacionInvSue", "Inventario")',
+                    durante: function () {
+                        $('#vntMotivoObservacion').modal('hide');
+                    },
+                    datos: { "nInvSueId": nInvSueId, "nUsuId": nUsuId, "nHistId": nHistId, "nUHistId": nUHistId, "cMensaje": cMensaje },
+                    terminado: function (data, textStatus, jqXHR) {
+                        SetEstadoObservado();
+                        $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Observación registrada correctamente." });
+                        ListarMisInvSue(null,null,false);
+                    },
+                    bloqueo: true
+                });
+            } else {
+                $("#msgObservacion").html(msgObs);
+                $("#txtObservacion").focus();
+            }
+       });
+
+    }
+
+    function Rechazar() {
+        $.fn.Ventana({
+            id: "vntMotivoRechazar",
+            titulo: "Registre motivo del Rechazo",
+            tamano: "md"
+        });
+
+        let html = `
+                    <textarea class="form-control" id="txtRechazo" name="txtRechazo" rows="10" placeholder="Ingrese aquí el motivo del rechazo" value="" minlength="1"></textarea>
+                    <div class="col-sm-12 hr-line-dashed"></div>
+                        <div class="col-sm-12 text-center">
+                        <button id="btnRecAceptar" type="submit" class="btn btn-sm btn-primary m-r-5">Aceptar</button>
+                        <button id="btnRecCancelar" type="submit" data-dismiss="modal" aria-hidden="true" class="btn btn-sm btn-default">Cancelar</button>
+                    </div>`;
+
+        $("#vntMotivoRechazar .panel-body").html(html);
+        $('#vntMotivoRechazar').modal('show');
+
+        $("#btnRecAceptar").bind("click", function () {
+            let nInvSueId = suelosId.val();
+            let nHistId = historialId.val();
+            let nUHistId = UHistId.val();
+            let cMensaje = $("#txtRechazo").val();
+            let nUsuId = usuarioId.val();
+
+            $.fn.Conexion({
+                direccion: '@Url.Action("RegistrarRechazoInvSue", "Inventario")',
+                datos: { "nInvSueId": nInvSueId, "nUsuId": nUsuId, "nHistId": nHistId, "nUHistId": nUHistId, "cMensaje": cMensaje },
+                durante: function () {
+                    $('#vntMotivoRechazar').modal('hide');
+                },
+                terminado: function (data, textStatus, jqXHR) {
+                    SetEstadoRechazado();
+                    $.fn.Mensaje({ titulo: "Mensaje", mensaje: "Rechazo registrado correctamente." });
+                    ListarMisInvSue(null, null, false);
+                },
+                    bloqueo: true
+                });
+        });
+    }
+
+    $('#btenviarCorrecion').click(function () {
+        let nSueId = suelosId.val();
+        let nHistId = historialId.val();
+        let nUHistId = UHistId.val();
+
+        if (nSueId != "") {
+            let inventario = {
+                'nSuelosId': nSueId,
+                'oHist.nHistorialId': nHistId,
+                'oHist.cUniqueId': nUHistId
+            }
+
+            $.fn.Conexion({
+                direccion: '@Url.Action("EnviarCorrecionInventarioSuelos", "Inventario")',
+                bloqueo: true,
+                datos: inventario,
+                terminado: function (data) {
+                    let id = JSON.parse(data);
+                    console.log(data);
+
+                    if (id > 0) {
+                        $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación se realizó correctamente." });
+
+                        sueId.val("");
+                        suelosId.val("");
+                        ListarMisInvSue();
+                        RegresarListaPrincipal();
+                    } else {
+                        $.fn.Mensaje({ titulo: "Mensaje", mensaje: "La operación no se realizó correctamente" });
+                    }
+                }
+            });
+        } 
+
+    });
+
+    if (window.location.hash !== '') {
+        var hash = window.location.hash.replace('#map=', '').substr(1);
+        var parts = hash.split('/');
+
+        console.log(hash);
+        console.log(parts);
+        if (parts[3] != undefined) {
+            console.log("Ingreso");
+            ListarPerfilModal(parts[3]);
+        }
+    }
+
 
 </script>

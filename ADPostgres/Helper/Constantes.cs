@@ -100,7 +100,7 @@ namespace ADPostgres.Helper
         public const string usp_listar_mis_inventarios_suelos_paginado = "usp_listar_mis_inventarios_suelos_paginado";
         public const string usp_obtener_mis_inventarios_suelos_cantpag = "usp_obtener_mis_inventarios_suelos_cantpag";
         public const string usp_cargar_datos_inventario_suelos = "usp_cargar_datos_inventario_suelos";
-
+        public const string usp_actualiza_inventario_suelos_estado = "usp_actualiza_inventario_suelos_estado";
 
         /*INVENTARIO DE SUELOS - PERFIL MODAL*/
 

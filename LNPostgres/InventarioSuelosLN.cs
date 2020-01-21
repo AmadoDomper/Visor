@@ -38,5 +38,10 @@ namespace LNPostgres
         {
             return oInventarioSuelosAD.ListarMisInventariosSuelosPag(nInvEst, nPage, nSize, cNombreProy, cAno, cNombreColector, nUsuarioId);
         }
+
+        public int ActualizaEstadoInventarioSuelos(int nSuelosId, int nEstado)
+        {
+            return oInventarioSuelosAD.ActualizaEstadoInventarioSuelos(nSuelosId, nEstado);
+        }
     }
 }

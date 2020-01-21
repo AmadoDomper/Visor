@@ -385,6 +385,7 @@
     <Content Include="Views\Reset\Index.cshtml" />
     <Content Include="Views\Historial\Publicaciones.cshtml" />
     <Content Include="Views\Historial\InventarioVegetaciones.cshtml" />
+    <Content Include="Views\Historial\InventarioSuelos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ADPostgres\ADPostgres.csproj">

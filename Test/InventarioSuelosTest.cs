@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EPostgres;
+using EPostgres.Helper;
 using LNPostgres;
 
 namespace Test
@@ -78,6 +79,17 @@ namespace Test
             oListaVeg = oInvSueLN.ListarMisInventariosSuelos(1, 1, 5, "", "", "",1);
 
             Assert.IsNotNull(oListaVeg);
+        }
+
+        [TestMethod]
+        public void Test_ActualizaEstadoInventarioSuelos()
+        {
+            InventarioSuelosLN oInvSueLN = new InventarioSuelosLN();
+            var nSuelosId = 3;
+
+            var res = oInvSueLN.ActualizaEstadoInventarioSuelos(nSuelosId,(int)EstadoSolicitud.Rechazado);
+
+            Assert.IsTrue(res > 0, "Resultado no es mayor que 0");
         }
 
 

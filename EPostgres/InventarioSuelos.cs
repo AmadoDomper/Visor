@@ -17,6 +17,8 @@ namespace EPostgres
         private Usuario _oUsuario;
         private List<SuelosPerfilModal> _ListaPerfilModal;
         private int _nEstado;
+        private string _cEstado;
+        private Historial _oHist;
 
         [JsonProperty(PropertyName = "nSuelosId")]
         public int nSuelosId
@@ -93,6 +95,20 @@ namespace EPostgres
         {
             get { return _nEstado; }
             set { _nEstado = value; }
+        }
+
+        [JsonProperty(PropertyName = "cEstado")]
+        public string cEstado
+        {
+            get { return _cEstado; }
+            set { _cEstado = value; }
+        }
+
+        [JsonProperty(PropertyName = "oHist")]
+        public Historial oHist
+        {
+            get { return _oHist; }
+            set { _oHist = value; }
         }
     }
 }

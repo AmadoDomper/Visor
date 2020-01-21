@@ -5,7 +5,7 @@ using System.Data;
 using ADPostgres.Helper;
 using EPostgres;
 using Npgsql;
-
+using EPostgres.Helper;
 
 namespace ADPostgres
 {
@@ -34,6 +34,31 @@ namespace ADPostgres
                         cmd.Parameters.AddWithValue("_FechaRegistro", oInvSue.dFechaRegistro.ToString("yyyyMMdd"));
                         cmd.Parameters.AddWithValue("_UsuarioId", oInvSue.nUsuarioId);
                         cmd.Parameters.AddWithValue("_Estado", oInvSue.nEstado);
+
+                        id = (int)cmd.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return id;
+        }
+
+        public int ActualizaEstadoInventarioSuelos(int nSuelosId, int nEstado)
+        {
+            var conexion = new ConexionPosgreSQL();
+            int id = 0;
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_actualiza_inventario_suelos_estado))
+                    {
+                        cmd.Parameters.AddWithValue("_suelosid", nSuelosId);
+                        cmd.Parameters.AddWithValue("_estado", nEstado);
 
                         id = (int)cmd.ExecuteScalar();
                     }
@@ -139,6 +164,7 @@ namespace ADPostgres
                         }
                     }
 
+                    oSue.oHist = new HistorialAD().GetHistorialByReferenciaId(nSueId, TipoReferencia.InventarioSuelos);
                     oSue.ListaPerfilModal = new SuelosPerfilModalAD().CargaListaInventarioSuelosPerfilModal(nSueId);
                 }
                 catch (Exception ex)
@@ -186,7 +212,9 @@ namespace ADPostgres
                             oInvSuelos.oUsuario.nUsuarioId = (int)reader["usuarioid"];
                             oInvSuelos.oUsuario.cNombres = (string)reader["usuario_nombres"];
                             oInvSuelos.oUsuario.cInstitucion = (string)reader["usuario_institucion"];
-                            oInvSuelos.nEstado = (int)reader["estado"];
+                            oInvSuelos.cEstado = (string)reader["estado"];
+                            oInvSuelos.oHist = new Historial();
+                            oInvSuelos.oHist.cUniqueId = (string)reader["hist_unique_id"];
 
                             ListaInvPag.oLista.Add(oInvSuelos);
                         }

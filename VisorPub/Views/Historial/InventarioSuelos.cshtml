@@ -1,0 +1,117 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Historial Inventario de Suelos</title>
+    <link href="~/Content/css/historial/historial.css" rel="stylesheet" />
+    <script src="~/Content/js/historial/historial.js"></script>
+
+    <script type="text/javascript">
+        var x;
+        function CargaHistorialDet() {
+
+            let id = window.location.href.split("/")[5];
+
+            let req = new XMLHttpRequest();
+            req.open('GET', 'http://localhost:59423/api/PublicacionApi/GetHistorialDet?id=' + id, true);
+            req.setRequestHeader('Content-Type', 'application/json');
+
+            req.onload = function () {
+                if (req.status >= 200 && req.status < 400) {
+                    console.log(JSON.parse(req.responseText));
+
+                    let list = JSON.parse(req.responseText);
+                    ListHistoryTemplate(list.Historial);
+                } else {
+                    console.log('We encountered an error!');
+                }
+            }
+
+            req.send();
+        }
+
+        CargaHistorialDet();
+
+        function ListHistoryTemplate(list) {
+
+            let html = "";
+            if (list != undefined) {
+                for (let i = 0, j = list.length; i < j; i++) {
+
+                    let fecha = list[i].fecha.substring(0, 10).split("-");
+                    fecha = fecha[2] + "/" + fecha[1] + "/" + fecha[0];
+                    html += `<div class="cd-timeline__block">
+                                <div class="cd-timeline__img ${GetImage(list[i].estado)}">
+                                    <img src="../../Content/img/historial/${GetImage(list[i].estado)}.svg" alt="Picture">
+                                </div>
+                                <div class="cd-timeline__content text-component">
+                                    <h2>${GetTitle(list[i].estado)}</h2>
+                                    <p class="color-contrast-medium">
+                                        ${ list[i].estado == 1 ? list[i].nombre + ', ha registrado una nueva solicitud de Inventario de Suelos. Favor de revisar su contenido.' :
+                                            list[i].estado == 2 ?  'Muchas gracias por registrar su Inventario de Suelos.' : list[i].desc}
+                                    </p>
+                                    <div class="flex justify-between items-center">
+                                        <span class="cd-timeline__date">${fecha + " " + list[i].fecha.substring(11, 16)}</span>
+
+                                    </div>
+                                </div>
+                            </div>`;
+
+                    console.log(list[i]);
+                }
+                document.getElementById("ctnList").innerHTML = html;
+            }
+        }
+
+        function GetImage(e) {
+            switch (e) {
+                case 1:
+                    return "solicitado";
+                    break;
+                case 2:
+                    return "aprobado";
+                    break;
+                case 3:
+                    return "observado";
+                    break;
+                case 4:
+                    return "rechazado";
+                    break;
+            }
+        }
+
+        function GetTitle(e) {
+            switch (e) {
+                case 1:
+                    return "Solicitud de Aprobación";
+                    break;
+                case 2:
+                    return "¡Solicitud Aprobada!";
+                    break;
+                case 3:
+                    return "Se encontrarón observaciones";
+                    break;
+                case 4:
+                    return "Solicitud Rechazada";
+                    break;
+            }
+        }
+
+
+
+    </script>
+</head>
+<body>
+    <section class="cd-timeline js-cd-timeline">
+        <div class="header"><h3>HISTORIAL</h3></div>
+        <div id="ctnList" class="container max-width-lg cd-timeline__container">
+        </div>
+    </section>
+</body>
+</html>
