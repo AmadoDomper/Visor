@@ -5,6 +5,7 @@ using System.Web;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using EPostgres;
+using EPostgres.Helper;
 using LNPostgres;
 using SendEmail;
 
@@ -18,27 +19,47 @@ namespace VisorPub.Controllers
             return View();
         }
 
+        public ActionResult Activate(string id)
+        {
+            UsuarioLN oUsuarioLN = new UsuarioLN();
+            var res = oUsuarioLN.ActualizaEstadoConfirmacionEmail(id);
+            ViewBag.status = res;
+            return View();
+        }
+
 
 
         [AcceptVerbs(HttpVerbs.Post)]
         [HttpPost]
         public async Task<JsonResult> SaveAccount(Usuario oUser)
         {
-            int resultado;
+            string cUniqueId;
+            int res = -1;
             try
             {
                 if (ValidationOK(oUser)) { 
                     UsuarioLN oUsuarioLN = new UsuarioLN();
 
-                    resultado = oUsuarioLN.RegistrarModificarUsuario(oUser);
-                    resultado = 0;
+                    //Rol por defecto - Investigador
+                    oUser.nRolId = (int)RolId.Investigador;
 
-                    await GmailClient.SendEmailAsync(oUser.cEmail, "Your Account Is Successfully Created", "<h1>HI!</h1>","");
+                    cUniqueId = oUsuarioLN.RegistrarModificarUsuario(oUser);
+
+                    if(cUniqueId != "")
+                    {
+                        res = 0;
+
+                        var callbackUrl = Url.Action("activate", "Join", null, protocol: Request.Url.Scheme);
+                        await GmailClient.SendEmailAsync(oUser.cEmail, "Activación de cuenta | VISOR IIAP", "<p>Estimado/a " + oUser.cNombres + $"</p><p>Muchas gracias por registrar tu cuenta. Necesitamos que confirmes tu dirección de email: </p>" + $"<a href='{callbackUrl}/" + cUniqueId + "' target='_blank'>Verificar Email </a>", "");
+
+                    }
+                    
+                    
                 }
                 else
                 {
                     //There is something wrong
-                    resultado = -10;
+                    res = -10;
                 }
             }
             catch (Exception ex)
@@ -46,7 +67,7 @@ namespace VisorPub.Controllers
                 throw ex;
             }
 
-            return Json(resultado, JsonRequestBehavior.AllowGet);
+            return Json(res, JsonRequestBehavior.AllowGet);
         }
 
         public bool ValidationOK(Usuario oUser)

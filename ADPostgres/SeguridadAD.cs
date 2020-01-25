@@ -37,6 +37,7 @@ namespace ADPostgres
                             oUsuario.cRolDesc = (string)reader["croldesc"];
                             oUsuario.cEmail = (string)reader["usu_cemail"];
                             oUsuario.bEsInterno = (bool)reader["usu_es_interno"];
+                            oUsuario.bEmailConfirmed = (bool)reader["usu_email_confirmed"];
                             oUsuario.nEstado = (int)reader["usu_nestado"];
                         }
                     }

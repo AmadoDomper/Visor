@@ -18,6 +18,7 @@ namespace EPostgres
         private string _cSexo;
         private string _cInstitucion;
         private bool _bEsInterno;
+        private bool _bEmailConfirmed;
         private string _cTipoUsuario;
         private int _nPaisId;
         private string _cPais;
@@ -91,6 +92,13 @@ namespace EPostgres
         {
             get { return _bEsInterno; }
             set { _bEsInterno = value; }
+        }
+
+        [JsonProperty(PropertyName = "bEmailConfirmed")]
+        public bool bEmailConfirmed
+        {
+            get { return _bEmailConfirmed; }
+            set { _bEmailConfirmed = value; }
         }
 
         [JsonProperty(PropertyName = "cTipUsu")]

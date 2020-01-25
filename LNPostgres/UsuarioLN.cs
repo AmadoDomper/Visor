@@ -29,9 +29,30 @@ namespace LNPostgres
             return oUsuarioAD.CargarDatosUsuario(nUsuId);
         }
 
-        public int RegistrarModificarUsuario(Usuario oUsuario)
+        public string RegistrarModificarUsuario(Usuario oUsuario)
         {
             return oUsuarioAD.RegistrarModificarUsuario(oUsuario);
         }
+
+        public int ActualizaEstadoConfirmacionEmail(string nUniqueId)
+        {
+            return oUsuarioAD.ActualizaEstadoConfirmacionEmail(nUniqueId);
+        }
+
+        public string GenerarNuevoResetId(string cEmail)
+        {
+            return oUsuarioAD.GenerarNuevoResetId(cEmail);
+        }
+
+        public bool IsEstadoPasswordResetActivo(string cResetId = "")
+        {
+            return oUsuarioAD.IsEstadoPasswordResetActivo(cResetId);
+        }
+
+        public int RestablecerPassword(string cResetId, string cPassword)
+        {
+            return oUsuarioAD.RestablecerPassword(cResetId, cPassword);
+        }
+
     }
 }

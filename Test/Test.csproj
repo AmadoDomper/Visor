@@ -54,6 +54,8 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SeguridadTest.cs" />
+    <Compile Include="UsuarioTest.cs" />
     <Compile Include="InventarioSuelosTest.cs" />
     <Compile Include="InventarioVegetacionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

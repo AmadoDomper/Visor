@@ -386,6 +386,8 @@
     <Content Include="Views\Historial\Publicaciones.cshtml" />
     <Content Include="Views\Historial\InventarioVegetaciones.cshtml" />
     <Content Include="Views\Historial\InventarioSuelos.cshtml" />
+    <Content Include="Views\Join\Activate.cshtml" />
+    <Content Include="Views\Reset\NewPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ADPostgres\ADPostgres.csproj">

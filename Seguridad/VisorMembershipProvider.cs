@@ -5,6 +5,7 @@ using System.Text;
 using System.Web.Security;
 using LNPostgres;
 using EPostgres;
+using EPostgres.Helper;
 
 using System.Web;
 
@@ -169,7 +170,7 @@ namespace Seguridad
                 bool validar = false;
                 if (oUsuario != null)
                 {
-                    if (oUsuario.nEstado == 1)
+                    if (oUsuario.nEstado == 1 && oUsuario.bEmailConfirmed)
                     {
                         HttpContext.Current.Session["Datos"] = oUsuario;
                         validar = true;

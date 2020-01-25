@@ -50,6 +50,10 @@ namespace ADPostgres.Helper
         public const string usp_ObtenerPaginadoUsuarios = "usp_ObtenerPaginadoUsuarios";
         public const string usp_CargarDatosUsuario = "usp_CargarDatosUsuario";
         public const string usp_Crear_o_ModificarUsuario = "usp_Crear_o_ModificarUsuario";
+        public const string usp_actualiza_estado_confirmacion_email = "usp_actualiza_estado_confirmacion_email";
+        public const string usp_restablecer_password = "usp_restablecer_password";
+        public const string usp_generar_nuevo_reset_id = "usp_generar_nuevo_reset_id";
+        public const string usp_verifica_estado_password_reset_id = "usp_verifica_estado_password_reset_id";
         /*END USUARIOS*/
 
 

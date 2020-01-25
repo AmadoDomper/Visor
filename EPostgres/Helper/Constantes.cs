@@ -27,6 +27,14 @@ namespace EPostgres.Helper
             RevisionInventarios = 2
         }
 
+        public enum ValidaLogin
+        {
+            UsuarioNoExiste = 1,
+            ClaveIncorrecta = 2,
+            UsuarioNoActivo = 3,
+            UsuarioNoConfirmaEmail = 4
+        }
+
     /// <summary>
     /// Devuelve el Id único de acuerdo a su Rol
     /// </summary>

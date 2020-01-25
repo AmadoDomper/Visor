@@ -1,0 +1,116 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="http://iiap.org.pe/favicon.ico" type="image/x-icon">
+
+
+    <style type="text/css">
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            background: #98d684;
+        }
+
+        body {
+            background: #98d684;
+            margin: 0;
+            padding: 0;
+            font-family: 'Lato', sans-serif;
+        }
+
+        span {
+            min-height: 17px;
+            color: #353a3f;
+            font-size: 12px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        section.content-center {
+            text-align: center;
+            width: 500px;
+            background-color: #fff;
+            border-radius: 10px;
+            margin: 60px auto;
+        }
+
+        .content-img {
+            background: radial-gradient(ellipse at center, #47cf73 0%, #439335 100%);
+            border-radius: 10px 10px 0px 0px;
+            padding: 14px;
+        }
+
+        a {
+            font-family: 'Lato', sans-serif;
+            font-weight: 400;
+            background: #ec8021;
+            display: block;
+            margin: 5px auto 0 auto;
+            width: 50%;
+            border: none;
+            border-radius: 3px;
+            padding: 8px;
+            font-size: 17px;
+            color: #fffcfc;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .content-body {
+            padding: 15px;
+        }
+
+        h2 {
+            margin: 0px;
+            color: #e66f07;
+        }
+
+        p {
+            line-height: 27px;
+        }
+
+    </style>
+
+</head>
+<body cz-shortcut-listen="true">
+
+
+    <section class="content-center">
+        <div class="content-img">
+            <img class=" pull-right" src="http://iiap.org.pe/visor/img/logoiiap.png" alt="DSpace logo" style="width: 85px;">
+        </div>
+        <div class="content-body">
+            @if (ViewBag.status == 1)
+            {
+                <h2> ¡Bienvenido! </h2>
+                <p> Tu cuenta ha sido activada. Ingresar a la intranet con tu usuario y contraseña.</p>
+            }
+            else
+            {
+                <p> Su cuenta ya se encuentra activada.</p>
+            }
+            <a href="/LogIn/"> Ir a Intranet </a>
+        </div>
+
+
+
+    </section>
+
+
+
+</body>
+</html>

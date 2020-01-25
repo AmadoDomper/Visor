@@ -58,10 +58,10 @@ namespace ADPostgres
             return ListaUsuPag;
         }
 
-        public int RegistrarModificarUsuario(Usuario oUsu)
+        public string RegistrarModificarUsuario(Usuario oUsu)
         {
             var conexion = new ConexionPosgreSQL();
-            var resultado = -1;
+            var resultado = "";
 
             using (var db = conexion.AbreConexion())
             {
@@ -86,7 +86,7 @@ namespace ADPostgres
 
                         while (reader.Read())
                         {
-                            resultado = Int32.Parse(reader[0].ToString());
+                            resultado = reader[0].ToString();
                         }
                     }
                 }
@@ -167,6 +167,104 @@ namespace ADPostgres
                     throw;
                 }
             }
+        }
+
+        public int ActualizaEstadoConfirmacionEmail(string nUniqueId)
+        {
+            var conexion = new ConexionPosgreSQL();
+            int id = 0;
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_actualiza_estado_confirmacion_email))
+                    {
+                        cmd.Parameters.AddWithValue("_usu_unique_id", nUniqueId);
+
+                        id = (int)cmd.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return id;
+        }
+
+        public string GenerarNuevoResetId(string cEmail)
+        {
+            var conexion = new ConexionPosgreSQL();
+            string id = "";
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_generar_nuevo_reset_id))
+                    {
+                        cmd.Parameters.AddWithValue("_cEmail", cEmail);
+
+                        id = (string)cmd.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return id;
+        }
+
+        public bool IsEstadoPasswordResetActivo(string cResetId)
+        {
+            var conexion = new ConexionPosgreSQL();
+            bool estado = false;
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_verifica_estado_password_reset_id))
+                    {
+                        cmd.Parameters.AddWithValue("_usu_reset_id", cResetId);
+
+                        estado = (bool)cmd.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    estado = false;
+                }
+            }
+            return estado;
+        }
+
+        
+        public int RestablecerPassword(string cResetId, string cPassword)
+        {
+            var conexion = new ConexionPosgreSQL();
+            int id = 0;
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_restablecer_password))
+                    {
+                        cmd.Parameters.AddWithValue("_usu_reset_id", cResetId);
+                        cmd.Parameters.AddWithValue("_usu_ccontrasena", cPassword);
+
+                        id = (int)cmd.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return id;
         }
 
     }
