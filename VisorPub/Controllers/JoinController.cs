@@ -40,21 +40,27 @@ namespace VisorPub.Controllers
                 if (ValidationOK(oUser)) { 
                     UsuarioLN oUsuarioLN = new UsuarioLN();
 
-                    //Rol por defecto - Investigador
-                    oUser.nRolId = (int)RolId.Investigador;
 
-                    cUniqueId = oUsuarioLN.RegistrarModificarUsuario(oUser);
+                    if (!oUsuarioLN.VerificaExisteEmail(oUser.cEmail)) { 
 
-                    if(cUniqueId != "")
-                    {
-                        res = 0;
+                        //Rol por defecto - Investigador
+                        oUser.nRolId = (int)RolId.Investigador;
 
-                        var callbackUrl = Url.Action("activate", "Join", null, protocol: Request.Url.Scheme);
-                        await GmailClient.SendEmailAsync(oUser.cEmail, "Activación de cuenta | VISOR IIAP", "<p>Estimado/a " + oUser.cNombres + $"</p><p>Muchas gracias por registrar tu cuenta. Necesitamos que confirmes tu dirección de email: </p>" + $"<a href='{callbackUrl}/" + cUniqueId + "' target='_blank'>Verificar Email </a>", "");
+                        cUniqueId = oUsuarioLN.RegistrarModificarUsuario(oUser);
 
+                        if(cUniqueId != "")
+                        {
+                            res = 0;
+
+                            var callbackUrl = Url.Action("activate", "Join", null, protocol: Request.Url.Scheme);
+                            await GmailClient.SendEmailAsync(oUser.cEmail, "Activación de cuenta | VISOR IIAP", "<p>Estimado/a " + oUser.cNombres + $"</p><p>Muchas gracias por registrar tu cuenta. Necesitamos que confirmes tu dirección de email: </p>" + $"<a href='{callbackUrl}/" + cUniqueId + "' target='_blank'>Verificar Email </a>", "");
+
+                        }
                     }
-                    
-                    
+                    else
+                    {
+                        res = -2;
+                    }
                 }
                 else
                 {
@@ -64,6 +70,7 @@ namespace VisorPub.Controllers
             }
             catch (Exception ex)
             {
+                res = -1;
                 throw ex;
             }
 

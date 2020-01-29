@@ -54,6 +54,8 @@ namespace ADPostgres.Helper
         public const string usp_restablecer_password = "usp_restablecer_password";
         public const string usp_generar_nuevo_reset_id = "usp_generar_nuevo_reset_id";
         public const string usp_verifica_estado_password_reset_id = "usp_verifica_estado_password_reset_id";
+        public const string usp_verifica_existe_email = "usp_verifica_existe_email";
+        
         /*END USUARIOS*/
 
 

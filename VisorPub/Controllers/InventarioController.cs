@@ -22,8 +22,6 @@ namespace VisorPub.Controllers
 {
     public class InventarioController : Controller
     {
-        string cHistorialUrl = @"http://localhost:59423/Historial/InventarioVegetaciones/";
-
         // GET: Inventario
         public ActionResult MisInventariosVegetacion()
         {
@@ -152,6 +150,8 @@ namespace VisorPub.Controllers
                 //Obtener Unique Historial
                 var cHistUniqueId = oHistorialLN.GetRecordUniqueIdByReferenciaId(oInvVeg.nVegetacionId, TipoReferencia.InventarioVegetaciones);
 
+                string cHistorialUrl = Url.Action("InventarioVegetaciones", "Historial", null, protocol: Request.Url.Scheme) + "/";
+
                 //Enviar correo usuario registra
                 await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, $"Solicitud Inventario de Vegetación N° {oInvVeg.nVegetacionId} - Nueva Solicitud | VISOR IIAP", "<p>Estimado/a " + oUsuarioReg.cNombres + $"</p><p> Se ha registrado su solicitud de Inventario de Vegetación N° {oInvVeg.nVegetacionId} y estará en proceso de evaluación. Muchas Gracias </p><a href='{cHistorialUrl}" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
 
@@ -192,6 +192,8 @@ namespace VisorPub.Controllers
                 // Registra historial - Solicitud Registrada
                 RegistrarHistorial(oInvVeg.oHist.nHistorialId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Solicitado);
 
+                string cHistorialUrl = Url.Action("InventarioVegetaciones", "Historial", null, protocol: Request.Url.Scheme) + "/";
+
                 //Enviar correo usuario registra
                 await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, $"Solicitud Inventario de Vegetación N° {oInvVeg.nVegetacionId} - Corregida | VISOR IIAP", "<p>Estimado/a " + oUsuarioReg.cNombres + $"</p><p> Se ha registrado su solicitud de Inventario de Vegetación N° {oInvVeg.nVegetacionId} y estará en proceso de evaluación. Muchas Gracias </p><a href='{cHistorialUrl}" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
 
@@ -230,6 +232,8 @@ namespace VisorPub.Controllers
             UsuarioLN oUsuarioLN = new UsuarioLN();
             var oUsuarioPub = oUsuarioLN.CargarDatosUsuario(nUsuId);
 
+            string cHistorialUrl = Url.Action("InventarioVegetaciones", "Historial", null, protocol: Request.Url.Scheme) + "/";
+
             // Registra historial - Observación
             var nHisDet = RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Observado, cMensaje);
 
@@ -259,6 +263,8 @@ namespace VisorPub.Controllers
             // Registra historial - Rechazado
             var nHisDet = RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Rechazado, cMensaje);
 
+            string cHistorialUrl = Url.Action("InventarioVegetaciones", "Historial", null, protocol: Request.Url.Scheme) + "/";
+
             //Registrar alerta para el usuario
             RegistrarAlerta(oUsuarioPub.nUsuarioId, $"Solicitud Inventario de Vegetación N° {nInvVegId} - Rechazada", "Se ha rechazado su solicitud. Por favor de revisar los comentarios en el historial.", $"/Inventario/MisInventariosVegetacion/{nInvVegId}", AlertIcon.Rechazado, AlertColor.Rechazado);
 
@@ -283,6 +289,8 @@ namespace VisorPub.Controllers
 
             // Registra historial - Aprobado
             var nHisDet = RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Aprobado);
+
+            string cHistorialUrl = Url.Action("InventarioVegetaciones", "Historial", null, protocol: Request.Url.Scheme) + "/";
 
             //Registrar alerta para el usuario
             RegistrarAlerta(oUsuarioPub.nUsuarioId, $"Solicitud Inventario de Vegetación N° {nInvVegId} - ¡Aprobada!", "Se ha aprobado su solicitud. Muchas gracias por su gran trabajo.", $"/Inventario/MisInventariosVegetacion/{nInvVegId}", AlertIcon.Aprobado, AlertColor.Aprobado);
@@ -424,6 +432,8 @@ namespace VisorPub.Controllers
                 //Obtener Unique Historial
                 var cHistUniqueId = oHistorialLN.GetRecordUniqueIdByReferenciaId(oInvSue.nSuelosId, TipoReferencia.InventarioSuelos);
 
+                string cHistorialUrl = Url.Action("InventarioSuelos", "Historial", null, protocol: Request.Url.Scheme) + "/";
+
                 //Enviar correo usuario registra
                 await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, $"Solicitud Inventario de Suelos N° {oInvSue.nSuelosId} - Nueva Solicitud | VISOR IIAP", "<p>Estimado/a " + oUsuarioReg.cNombres + $"</p><p> Se ha registrado su solicitud de Inventario de Suelos N° {oInvSue.nSuelosId} y estará en proceso de evaluación. Muchas Gracias </p><a href='{cHistorialUrl}" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
 
@@ -440,7 +450,7 @@ namespace VisorPub.Controllers
 
                     //Enviar correo usuarios perfil supervisor
                     var cSupervisorEmails = String.Join(", ", oSupervisores.Select(u => u.cEmail).ToArray());
-                    await GmailClient.SendEmailAsync(cSupervisorEmails, $"Solicitud Inventario de Suelos N° {oInvSue.nSuelosId} - Nueva Solicitud | VISOR IIAP", "<p> Se ha registrado una nueva solicitud de Suelos con código  " + oInvSue.nSuelosId + $", favor de ingresar a la intranet para proceder con su validación. </p><a href='{cHistorialUrl}" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
+                    await GmailClient.SendEmailAsync(cSupervisorEmails, $"Solicitud Inventario de Suelos N° {oInvSue.nSuelosId} - Nueva Solicitud | VISOR IIAP", "<p> Se ha registrado una nueva solicitud de Inventario de  Suelos con código  " + oInvSue.nSuelosId + $", favor de ingresar a la intranet para proceder con su validación. </p><a href='{cHistorialUrl}" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
                 }
 
             }
@@ -464,6 +474,8 @@ namespace VisorPub.Controllers
                 // Registra historial - Solicitud Registrada
                 RegistrarHistorial(oInvSue.oHist.nHistorialId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Solicitado);
 
+                string cHistorialUrl = Url.Action("InventarioSuelos", "Historial", null, protocol: Request.Url.Scheme) + "/";
+
                 //Enviar correo usuario registra
                 await GmailClient.SendEmailAsync(oUsuarioReg.cEmail, $"Solicitud Inventario de Suelos N° {oInvSue.nSuelosId} - Corregida | VISOR IIAP", "<p>Estimado/a " + oUsuarioReg.cNombres + $"</p><p> Se ha registrado su solicitud de Inventario de Suelos N° {oInvSue.nSuelosId} y estará en proceso de evaluación. Muchas Gracias </p><a href='{cHistorialUrl}" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
 
@@ -480,7 +492,7 @@ namespace VisorPub.Controllers
 
                     //Enviar correo usuarios perfil supervisor
                     var cSupervisorEmails = String.Join(", ", oSupervisores.Select(u => u.cEmail).ToArray());
-                    await GmailClient.SendEmailAsync(cSupervisorEmails, $"Solicitud Inventario de Suelos N° {oInvSue.nSuelosId} - Corregida | VISOR IIAP", "<p> Se ha registrado una nueva solicitud de Suelos con código  " + oInvSue.nSuelosId + $", favor de ingresar a la intranet para proceder con su validación. </p><a href='{cHistorialUrl}" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
+                    await GmailClient.SendEmailAsync(cSupervisorEmails, $"Solicitud Inventario de Suelos N° {oInvSue.nSuelosId} - Corregida | VISOR IIAP", "<p> Se ha registrado una nueva solicitud de Inventario de Suelos con código  " + oInvSue.nSuelosId + $", favor de ingresar a la intranet para proceder con su validación. </p><a href='{cHistorialUrl}" + cHistUniqueId + "' target='_blank'> Revisar Historial </a>", "");
                 }
 
             }
@@ -503,6 +515,8 @@ namespace VisorPub.Controllers
 
             // Registra historial - Observación
             var nHisDet = RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Observado, cMensaje);
+
+            string cHistorialUrl = Url.Action("InventarioSuelos", "Historial", null, protocol: Request.Url.Scheme) + "/";
 
             //Registrar alerta para el usuario
             RegistrarAlerta(oUsuarioPub.nUsuarioId, $"Solicitud Inventario de Suelos N° {nInvSueId} - Observada", "Se ha encontrado observaciones en su solicitud. Favor de revisar los detalles en el historial.", $"/Inventario/MisInventariosSuelos/{nInvSueId}", AlertIcon.Observado, AlertColor.Observado);
@@ -530,6 +544,8 @@ namespace VisorPub.Controllers
             // Registra historial - Rechazado
             var nHisDet = RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Rechazado, cMensaje);
 
+            string cHistorialUrl = Url.Action("InventarioSuelos", "Historial", null, protocol: Request.Url.Scheme) + "/";
+
             //Registrar alerta para el usuario
             RegistrarAlerta(oUsuarioPub.nUsuarioId, $"Solicitud Inventario de Suelos N° {nInvSueId} - Rechazada", "Se ha rechazado su solicitud. Por favor de revisar los comentarios en el historial.", $"/Inventario/MisInventariosSuelos/{nInvSueId}", AlertIcon.Rechazado, AlertColor.Rechazado);
 
@@ -555,12 +571,14 @@ namespace VisorPub.Controllers
             // Registra historial - Aprobado
             var nHisDet = RegistrarHistorial(nHistId, oUsuarioReg.nUsuarioId, EstadoSolicitud.Aprobado);
 
+            string cHistorialUrl = Url.Action("InventarioSuelos", "Historial", null, protocol: Request.Url.Scheme) + "/";
+
             //Registrar alerta para el usuario
             RegistrarAlerta(oUsuarioPub.nUsuarioId, $"Solicitud Inventario de Suelos N° {nInvSueId} - ¡Aprobada!", "Se ha aprobado su solicitud. Muchas gracias por su gran trabajo.", $"/Inventario/MisInventariosSuelos/{nInvSueId}", AlertIcon.Aprobado, AlertColor.Aprobado);
 
             HistorialLN oHistorialLN = new HistorialLN();
             //Supervisor envia correo a usuario registro
-            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, $"Solicitud Inventario de Suelos N° {nInvSueId} - ¡Aprobada! | VISOR IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + $"</p><p>Su solicitud de Suelos N° {nInvSueId} ha sido aprobada. Muchas gracias por su colaboración. </p>" + $"<a href='{cHistorialUrl}" + nUHistId + "' target='_blank'> Ver Detalle </a>", "");
+            await GmailClient.SendEmailAsync(oUsuarioPub.cEmail, $"Solicitud Inventario de Suelos N° {nInvSueId} - ¡Aprobada! | VISOR IIAP", "<p>Estimado/a " + oUsuarioPub.cNombres + $"</p><p>Su solicitud de Inventario de Suelos N° {nInvSueId} ha sido aprobada. Muchas gracias por su colaboración. </p>" + $"<a href='{cHistorialUrl}" + nUHistId + "' target='_blank'> Ver Detalle </a>", "");
 
             return Json(JsonConvert.SerializeObject(nHisDet));
         }

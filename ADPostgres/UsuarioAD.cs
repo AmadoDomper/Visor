@@ -267,5 +267,29 @@ namespace ADPostgres
             return id;
         }
 
+        public bool VerificaExisteEmail(string cEmail)
+        {
+            var conexion = new ConexionPosgreSQL();
+            bool res = false;
+
+            using (var db = conexion.AbreConexion())
+            {
+                try
+                {
+                    using (NpgsqlCommand cmd = ConexionPosgreSQL.Procedimiento(Procedimiento.usp_verifica_existe_email))
+                    {
+                        cmd.Parameters.AddWithValue("_cEmail", cEmail);
+
+                        res = (bool)cmd.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return res;
+        }
+
     }
 }

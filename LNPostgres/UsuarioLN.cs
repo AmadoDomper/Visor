@@ -54,5 +54,10 @@ namespace LNPostgres
             return oUsuarioAD.RestablecerPassword(cResetId, cPassword);
         }
 
+        public bool VerificaExisteEmail(string cEmail)
+        {
+            return oUsuarioAD.VerificaExisteEmail(cEmail);
+        }
+
     }
 }

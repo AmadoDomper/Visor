@@ -12,10 +12,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   </PropertyGroup>
   <ItemGroup>
     <File Include="bin/ADPostgres.dll">
-      <publishTime>11/25/2019 11:14:19</publishTime>
+      <publishTime>01/27/2020 01:22:01</publishTime>
     </File>
     <File Include="bin/ADPostgres.pdb">
-      <publishTime>11/25/2019 11:14:19</publishTime>
+      <publishTime>01/27/2020 01:22:01</publishTime>
     </File>
     <File Include="bin/ADSql.dll">
       <publishTime>09/28/2017 12:01:02</publishTime>
@@ -24,10 +24,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/21/2013 12:28:06</publishTime>
     </File>
     <File Include="bin/EPostgres.dll">
-      <publishTime>11/25/2019 11:14:18</publishTime>
+      <publishTime>01/26/2020 21:04:09</publishTime>
     </File>
     <File Include="bin/EPostgres.pdb">
-      <publishTime>11/25/2019 11:14:18</publishTime>
+      <publishTime>01/26/2020 21:04:09</publishTime>
     </File>
     <File Include="bin/es/Npgsql.resources.dll">
       <publishTime>12/21/2013 12:28:06</publishTime>
@@ -90,10 +90,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/21/2013 12:28:06</publishTime>
     </File>
     <File Include="bin/LNPostgres.dll">
-      <publishTime>11/25/2019 11:14:19</publishTime>
+      <publishTime>01/27/2020 01:22:01</publishTime>
     </File>
     <File Include="bin/LNPostgres.pdb">
-      <publishTime>11/25/2019 11:14:19</publishTime>
+      <publishTime>01/27/2020 01:22:01</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNet.WebApi.Extensions.Compression.Server.dll">
       <publishTime>01/28/2016 14:57:02</publishTime>
@@ -119,6 +119,12 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="bin/Newtonsoft.Json.dll">
       <publishTime>03/24/2018 17:44:14</publishTime>
     </File>
+    <File Include="bin/NLog.config">
+      <publishTime>01/27/2020 01:04:08</publishTime>
+    </File>
+    <File Include="bin/NLog.dll">
+      <publishTime>11/04/2019 21:13:18</publishTime>
+    </File>
     <File Include="bin/Npgsql.dll">
       <publishTime>12/21/2013 12:28:06</publishTime>
     </File>
@@ -126,10 +132,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/21/2013 12:28:06</publishTime>
     </File>
     <File Include="bin/Seguridad.dll">
-      <publishTime>11/25/2019 11:14:19</publishTime>
+      <publishTime>01/27/2020 01:22:01</publishTime>
     </File>
     <File Include="bin/Seguridad.pdb">
-      <publishTime>11/25/2019 11:14:19</publishTime>
+      <publishTime>01/27/2020 01:22:01</publishTime>
+    </File>
+    <File Include="bin/SendEmail.dll">
+      <publishTime>01/27/2020 01:22:01</publishTime>
+    </File>
+    <File Include="bin/SendEmail.pdb">
+      <publishTime>01/27/2020 01:22:01</publishTime>
     </File>
     <File Include="bin/System.Net.Http.dll">
       <publishTime>10/25/2017 16:19:01</publishTime>
@@ -183,10 +195,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/10/2018 22:42:40</publishTime>
     </File>
     <File Include="bin/VisorPub.dll">
-      <publishTime>11/25/2019 11:14:20</publishTime>
+      <publishTime>01/27/2020 01:22:02</publishTime>
     </File>
     <File Include="bin/VisorPub.pdb">
-      <publishTime>11/25/2019 11:14:20</publishTime>
+      <publishTime>01/27/2020 01:22:02</publishTime>
     </File>
     <File Include="bin/WebMatrix.Data.dll">
       <publishTime>05/10/2018 22:41:32</publishTime>
@@ -201,7 +213,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/11/2019 23:32:41</publishTime>
     </File>
     <File Include="Content/css/bootstrap.css">
-      <publishTime>08/11/2019 23:32:41</publishTime>
+      <publishTime>01/02/2020 19:33:25</publishTime>
     </File>
     <File Include="Content/css/bootstrap.min.css">
       <publishTime>08/11/2019 23:32:41</publishTime>
@@ -214,6 +226,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="Content/css/dataTables/dataTables.bootstrap.min.css">
       <publishTime>09/27/2019 21:17:34</publishTime>
+    </File>
+    <File Include="Content/css/historial/historial.css">
+      <publishTime>12/20/2019 16:52:10</publishTime>
     </File>
     <File Include="Content/css/jsgrid-theme.css">
       <publishTime>08/11/2019 23:32:41</publishTime>
@@ -228,7 +243,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/11/2019 23:32:41</publishTime>
     </File>
     <File Include="Content/css/mainGestion.css">
-      <publishTime>10/01/2019 14:37:02</publishTime>
+      <publishTime>01/12/2020 13:43:52</publishTime>
     </File>
     <File Include="Content/css/navbar/navbar.css">
       <publishTime>11/18/2019 15:43:32</publishTime>
@@ -422,6 +437,18 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Content/img/favicon.ico">
       <publishTime>08/11/2019 23:32:41</publishTime>
     </File>
+    <File Include="Content/img/historial/aprobado.svg">
+      <publishTime>12/20/2019 01:11:30</publishTime>
+    </File>
+    <File Include="Content/img/historial/observado.svg">
+      <publishTime>12/20/2019 01:00:40</publishTime>
+    </File>
+    <File Include="Content/img/historial/rechazado.svg">
+      <publishTime>12/20/2019 01:04:20</publishTime>
+    </File>
+    <File Include="Content/img/historial/solicitado.svg">
+      <publishTime>12/20/2019 00:55:04</publishTime>
+    </File>
     <File Include="Content/img/linea.png">
       <publishTime>08/11/2019 23:32:41</publishTime>
     </File>
@@ -444,13 +471,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/11/2019 23:32:41</publishTime>
     </File>
     <File Include="Content/js/base/mensaje-1.0.0.js">
-      <publishTime>08/11/2019 23:32:41</publishTime>
+      <publishTime>12/29/2019 16:47:38</publishTime>
     </File>
     <File Include="Content/js/base/tabla-1.0.0.js">
-      <publishTime>08/11/2019 23:32:41</publishTime>
+      <publishTime>12/22/2019 18:48:25</publishTime>
     </File>
     <File Include="Content/js/base/ventana-1.0.0.js">
-      <publishTime>08/11/2019 23:32:41</publishTime>
+      <publishTime>01/19/2020 23:04:51</publishTime>
     </File>
     <File Include="Content/js/bootstrap-multiselect.js">
       <publishTime>08/11/2019 23:32:41</publishTime>
@@ -468,7 +495,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/14/2019 16:00:55</publishTime>
     </File>
     <File Include="Content/js/conexion-1.0.0.js">
-      <publishTime>09/30/2019 23:05:52</publishTime>
+      <publishTime>01/19/2020 23:05:35</publishTime>
     </File>
     <File Include="Content/js/conexion-1.0.0.min.js">
       <publishTime>08/11/2019 23:32:41</publishTime>
@@ -480,13 +507,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/11/2019 23:32:41</publishTime>
     </File>
     <File Include="Content/js/content/publicacion/Registrar.js">
-      <publishTime>08/11/2019 23:32:41</publishTime>
+      <publishTime>12/30/2019 23:32:21</publishTime>
     </File>
     <File Include="Content/js/dataTables/dataTables.bootstrap.js">
       <publishTime>09/27/2019 21:19:02</publishTime>
     </File>
     <File Include="Content/js/dataTables/jquery.dataTables.min.js">
       <publishTime>09/27/2019 21:19:02</publishTime>
+    </File>
+    <File Include="Content/js/historial/historial.js">
+      <publishTime>12/20/2019 00:26:46</publishTime>
     </File>
     <File Include="Content/js/jquery.js">
       <publishTime>08/11/2019 23:32:41</publishTime>
@@ -555,7 +585,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/11/2019 23:32:41</publishTime>
     </File>
     <File Include="Content/js/visor/data.js">
-      <publishTime>11/18/2019 17:22:47</publishTime>
+      <publishTime>01/26/2020 23:14:58</publishTime>
     </File>
     <File Include="Controllers/InicioController.cs">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -741,7 +771,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/30/2019 16:38:51</publishTime>
     </File>
     <File Include="Views/Gestion/Index.cshtml">
-      <publishTime>08/11/2019 23:32:41</publishTime>
+      <publishTime>01/10/2020 14:56:11</publishTime>
+    </File>
+    <File Include="Views/Historial/InventarioSuelos.cshtml">
+      <publishTime>01/26/2020 18:52:49</publishTime>
+    </File>
+    <File Include="Views/Historial/InventarioVegetaciones.cshtml">
+      <publishTime>01/26/2020 18:53:53</publishTime>
+    </File>
+    <File Include="Views/Historial/Publicaciones.cshtml">
+      <publishTime>01/26/2020 18:54:05</publishTime>
     </File>
     <File Include="Views/Inicio/Acerca.cshtml">
       <publishTime>08/11/2019 23:32:41</publishTime>
@@ -750,7 +789,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/11/2019 23:32:41</publishTime>
     </File>
     <File Include="Views/Inicio/Index.cshtml">
-      <publishTime>11/18/2019 18:21:23</publishTime>
+      <publishTime>12/03/2019 15:10:57</publishTime>
     </File>
     <File Include="Views/Inicio/IndexAnt.cshtml">
       <publishTime>10/10/2019 18:57:49</publishTime>
@@ -759,13 +798,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/06/2019 17:06:40</publishTime>
     </File>
     <File Include="Views/Inventario/MisInventariosSuelos.cshtml">
-      <publishTime>10/06/2019 17:22:37</publishTime>
+      <publishTime>01/25/2020 00:56:57</publishTime>
+    </File>
+    <File Include="Views/Inventario/MisInventariosVegetacion.cshtml">
+      <publishTime>01/25/2020 00:55:26</publishTime>
+    </File>
+    <File Include="Views/Join/Activate.cshtml">
+      <publishTime>01/23/2020 11:56:56</publishTime>
+    </File>
+    <File Include="Views/Join/Index.cshtml">
+      <publishTime>01/24/2020 12:58:38</publishTime>
+    </File>
+    <File Include="Views/Login/Index.cshtml">
+      <publishTime>12/16/2019 16:05:34</publishTime>
     </File>
     <File Include="Views/Login/Login.cshtml">
       <publishTime>08/11/2019 23:32:41</publishTime>
     </File>
     <File Include="Views/Menu/_Menu.cshtml">
-      <publishTime>09/05/2019 07:03:14</publishTime>
+      <publishTime>12/28/2019 00:47:09</publishTime>
     </File>
     <File Include="Views/publicacion/Editar.cshtml">
       <publishTime>08/11/2019 23:32:41</publishTime>
@@ -774,19 +825,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/11/2019 23:32:41</publishTime>
     </File>
     <File Include="Views/publicacion/MisPublicaciones.cshtml">
-      <publishTime>09/25/2019 22:01:40</publishTime>
+      <publishTime>01/25/2020 00:58:01</publishTime>
     </File>
     <File Include="Views/publicacion/Registrar.cshtml">
       <publishTime>08/11/2019 23:32:41</publishTime>
     </File>
     <File Include="Views/publicacion/RevisionDeSolicitudes.cshtml">
-      <publishTime>10/26/2019 20:07:39</publishTime>
+      <publishTime>01/26/2020 20:53:11</publishTime>
+    </File>
+    <File Include="Views/Reset/Index.cshtml">
+      <publishTime>01/25/2020 00:01:34</publishTime>
+    </File>
+    <File Include="Views/Reset/NewPassword.cshtml">
+      <publishTime>01/25/2020 00:06:01</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
       <publishTime>10/10/2019 12:53:39</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutGestion.cshtml">
-      <publishTime>10/03/2019 15:45:01</publishTime>
+      <publishTime>01/26/2020 21:01:00</publishTime>
     </File>
     <File Include="Views/Usuario/GestionarUsuarios.cshtml">
       <publishTime>08/11/2019 23:32:41</publishTime>
@@ -801,7 +858,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/11/2019 23:32:41</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>11/25/2019 11:14:20</publishTime>
+      <publishTime>01/27/2020 01:22:03</publishTime>
     </File>
   </ItemGroup>
 </Project>

@@ -202,7 +202,7 @@
 
         function GetAlertas(nPage, nSize) {
             $.fn.Conexion({
-                direccion: 'http://localhost:59423/Gestion/GetAlertas',
+                direccion: '@Url.Action("GetAlertas", "Gestion", null, protocol: Request.Url.Scheme)',
                 datos: { "nPage": nPage, "nSize": nSize },
                 bloqueo: false,
                 terminado: function (data) {
@@ -215,7 +215,7 @@
 
         function ActualizarAlertasVisto() {
             $.fn.Conexion({
-                direccion: 'http://localhost:59423/Gestion/ActualizaAlertaVisto',
+                direccion: '@Url.Action("ActualizaAlertaVisto", "Gestion", null, protocol: Request.Url.Scheme)',
                 bloqueo: false,
                 terminado: function (data) {
                     var d = JSON.parse(data);
@@ -228,7 +228,7 @@
 
         function ActualizarRevisado(id) {
             $.fn.Conexion({
-                direccion: 'http://localhost:59423/Gestion/ActualizaAlertaRevisado',
+                direccion: '@Url.Action("ActualizaAlertaRevisado", "Gestion", null, protocol: Request.Url.Scheme)',
                 datos: { "nAlertaId": id},
                 bloqueo: false,
                 terminado: function (data) {

@@ -265,7 +265,7 @@
                         let cHistid = fila.find("td").eq(6).html();
 
                         window.open(
-                            'http://localhost:59423/Historial/Publicaciones/' + cHistid,
+                            '@Url.Action("Publicaciones", "Historial", null, protocol: Request.Url.Scheme)/' + cHistid,
                             '_blank'
                         );
                     },  
@@ -373,7 +373,7 @@
         let cHistid = $("#hdnUHistId").val();
 
         window.open(
-            'http://localhost:59423/Historial/Publicaciones/' + cHistid,
+            '@Url.Action("Publicaciones", "Historial", null, protocol: Request.Url.Scheme)/' + cHistid,
             '_blank'
         );
     });

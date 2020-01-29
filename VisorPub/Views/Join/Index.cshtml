@@ -303,10 +303,18 @@
 
                 req.onload = function () {
                     if (req.status >= 200 && req.status < 400) {
-                        info = JSON.parse(req.responseText);
-                        console.log(info);
-                        document.getElementById('create').style.display = "none";
-                        document.getElementById('success').style.display = "";
+                        let res = JSON.parse(req.responseText);
+                        console.log(res);
+                        if (res == 0) {
+                            document.getElementById('create').style.display = "none";
+                            document.getElementById('success').style.display = "";
+                        } else if (res == -1) {
+                            ShowError("No se pudo registrar la cuenta. Por favor inténtelo en otro momento.")
+                        } else if (res == -2) {
+                            ShowError("El correo ya se encuentra registrado. Intente con otro correo.")
+                        } else if (res == -10) {
+                            ShowError("Los datos no cumplen las validaciones necesarias.")
+                        }
                     } else {
                         console.log('We encountered an error!');
                     }

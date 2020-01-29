@@ -36,7 +36,7 @@
             box-shadow: 0 1px #19a948 inset, 0 0 10px 5px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
             width: 360px;
-            height: 341px;
+            height: 360px;
             margin: 60px auto;
             padding: 30px 30px 0 30px;
             text-align: center;
@@ -125,6 +125,35 @@
         .content-body {
             padding: 15px;
         }
+
+        .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+
+        .alert-dismissable, .alert-dismissible {
+            padding-right: 35px;
+        }
+
+        .alert-dismissable, .alert-dismissible {
+            padding-right: 35px;
+        }
+
+        .alert {
+            padding: 5px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .alert-dismissable .close, .alert-dismissible .close {
+            position: relative;
+            top: -2px;
+            right: -21px;
+            color: inherit;
+        }
     </style>
 
 </head>
@@ -132,17 +161,18 @@
     <section id="create" class="login-form-wrap">
         <img class="pull-right" src="http://iiap.org.pe/visor/img/logoiiap.png" alt="DSpace logo" style="width: 50px;">
 
-        <form class="login-form" autocomplete="off">
+        <div class="login-form" autocomplete="off">
             <h1>Restablece tu contraseña</h1>
 
             <div class="form-group">
                 <label>Ingrese la dirección de correo electrónico verificada de su cuenta de usuario y le enviaremos un enlace para restablecer su contraseña.</label>
                 <input type="text" id="txtEmail" placeholder="Ingrese su correo" name="txtEmail" required="">
             </div>
+            <div id="msg"></div>
             <div class="form-group required">
             </div>
             <button id="btnEnviar" type="button"> Enviar </button>
-        </form>
+        </div>
     </section>
     <section id="success" class="content-center" style="display:none;" >
         <div class="content-img">
@@ -171,10 +201,18 @@
 
                 req.onload = function () {
                     if (req.status >= 200 && req.status < 400) {
-                        info = JSON.parse(req.responseText);
-                        console.log(info);
-                        document.getElementById('create').style.display = "none";
-                        document.getElementById('success').style.display = "";
+                        let res = JSON.parse(req.responseText);
+                        console.log(res);
+
+                        if (res == 0) {
+                            document.getElementById('create').style.display = "none";
+                            document.getElementById('success').style.display = "";
+                        } else if (res == -1) {
+                            ShowError("Hay un error. Por favor inténtelo en otro momento.")
+                        } else if (res == -2) {
+                            ShowError("Este correo no se encuentra registrado.")
+                        }
+
                     } else {
                         console.log('We encountered an error!');
                     }
@@ -187,6 +225,14 @@
         function ValidateEmail(email){
             let emailRegex = /^[-\w.%+]{1,64}@@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
             return emailRegex.test(email);
+        }
+
+        function ShowError(msg) {
+
+            document.getElementById("msg").innerHTML =
+                `<div class="alert alert-danger alert-dismissible text-center" role="alert" style="margin-bottom: 10px;">
+                    <strong>Error! </strong>${msg}
+                </div>`;
         }
     </script>
 

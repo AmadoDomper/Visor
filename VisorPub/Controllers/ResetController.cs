@@ -46,7 +46,11 @@ namespace VisorPub.Controllers
             try
             {
                 UsuarioLN oUsuarioLN = new UsuarioLN();
-                cResetId = oUsuarioLN.GenerarNuevoResetId(cEmail);
+
+                if (oUsuarioLN.VerificaExisteEmail(cEmail))
+                {
+
+                    cResetId = oUsuarioLN.GenerarNuevoResetId(cEmail);
 
                     if (cResetId != "")
                     {
@@ -56,7 +60,11 @@ namespace VisorPub.Controllers
                         await GmailClient.SendEmailAsync(cEmail, "Restablecer constraseña | VISOR IIAP", "¿Olvidaste tu contraseña? No hay problema, sólo presiona el enlace abajo o copia la dirección en tu navegador para restablecerla. Al ir a este enlace, podrás ingresar y confirmar tu nueva contraseña." + $"<a href='{callbackUrl}/" + cResetId + "' target='_blank'>Verificar Email </a>", "");
 
                     }
-
+                }
+                else
+                {
+                    res = -2;
+                }
             }
             catch (Exception ex)
             {

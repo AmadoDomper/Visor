@@ -24,7 +24,7 @@
     <input id="hdnUHistId" type="hidden" />
 
     <div id="target1" class="panel move panel-inverse active m-t-5">
-        <div class="panel-heading"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Mis Inventarios de Suelos</div>
+        <div class="panel-heading"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> <span id="title"></span></div>
         <div class="panel-body">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -406,7 +406,7 @@
                         let cHistid = fila.find("td").eq(6).html();
 
                         window.open(
-                            'http://localhost:59423/Historial/InventarioSuelos/' + cHistid,
+                            '@Url.Action("InventarioSuelos", "Historial", null, protocol: Request.Url.Scheme)/' + cHistid,
                             '_blank'
                         );
                     },
@@ -919,7 +919,7 @@
         let cHistid = $("#hdnUHistId").val();
 
         window.open(
-            'http://localhost:59423/Historial/InventarioSuelos/' + cHistid,
+            '@Url.Action("InventarioSuelos", "Historial", null, protocol: Request.Url.Scheme)/' + cHistid,
             '_blank'
         );
     });

@@ -42,6 +42,17 @@ namespace Test
             Assert.IsTrue(res >= 0, "Resultado no es diferente a vacío");
         }
 
+        [TestMethod]
+        public void Test_VerificaExisteEmail()
+        {
+            UsuarioLN oUsuarioLN = new UsuarioLN();
+            string email = "amado.domper@gmail.com";
+
+            var res = oUsuarioLN.VerificaExisteEmail(email);
+
+            Assert.IsTrue(res, "No existe");
+        }
+
 
 
     }
